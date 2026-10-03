@@ -53,7 +53,7 @@ st.markdown("""
         min-height: 100vh;
     }
 
-    /* Fixed Scroll Progress Bar along top edge */
+    /* Fixed Spring-Smoothed Scroll Progress Bar along top edge */
     #scroll-progress-indicator {
         position: fixed;
         top: 0;
@@ -62,8 +62,47 @@ st.markdown("""
         background: linear-gradient(90deg, #E50914 0%, #D4AF37 100%);
         z-index: 99999;
         width: 0%;
-        box-shadow: 0 0 12px rgba(229, 9, 20, 0.8);
-        transition: width 0.1s ease-out;
+        box-shadow: 0 0 14px rgba(229, 9, 20, 0.85);
+        pointer-events: none;
+        will-change: width;
+    }
+
+    /* Ambient Neural Glows (Background Floating Lissajous Orbs) */
+    .ambient-glow-orb-1 {
+        position: fixed;
+        top: 10%;
+        left: -8%;
+        width: 520px;
+        height: 520px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(229, 9, 20, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
+        filter: blur(70px);
+        pointer-events: none;
+        z-index: 0;
+        animation: ambientDrift1 20s ease-in-out infinite alternate;
+    }
+    .ambient-glow-orb-2 {
+        position: fixed;
+        top: 50%;
+        right: -10%;
+        width: 560px;
+        height: 560px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(212, 175, 55, 0.06) 0%, rgba(0, 0, 0, 0) 70%);
+        filter: blur(80px);
+        pointer-events: none;
+        z-index: 0;
+        animation: ambientDrift2 24s ease-in-out infinite alternate;
+    }
+    @keyframes ambientDrift1 {
+        0% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(110px, 70px) scale(1.15); }
+        100% { transform: translate(40px, -60px) scale(0.92); }
+    }
+    @keyframes ambientDrift2 {
+        0% { transform: translate(0, 0) scale(1.1); }
+        50% { transform: translate(-90px, -80px) scale(0.9); }
+        100% { transform: translate(70px, 50px) scale(1.05); }
     }
 
     /* Top Navigation Bar with Centered Floating Pill Navbar */
@@ -151,7 +190,8 @@ st.markdown("""
         background: linear-gradient(135deg, #e6c04e 0%, #D4AF37 55%, #b89326 100%);
         border-radius: 9999px;
         box-shadow: 0 0 18px rgba(212, 175, 55, 0.65), 0 2px 10px rgba(0, 0, 0, 0.4);
-        transition: all 0.38s cubic-bezier(0.25, 1, 0.5, 1);
+        transition: left 0.38s cubic-bezier(0.16, 1, 0.3, 1), width 0.38s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s ease, opacity 0.2s ease;
+        will-change: left, width, transform;
         pointer-events: none;
         z-index: 1;
         opacity: 0;
@@ -239,37 +279,38 @@ st.markdown("""
         background: #E50914;
         color: #ffffff !important;
         border-color: #E50914;
-        transform: translateY(-2px) scale(1.03);
-        box-shadow: 0 4px 14px rgba(229, 9, 20, 0.4);
+        transform: translateY(-3px) scale(1.04);
+        box-shadow: 0 6px 18px rgba(229, 9, 20, 0.45);
     }
 
-    /* Netflix Poster Cards (Neat, Organized, Zero Clutter) */
+    /* Netflix Poster Cards (Cinematic Parallax Scaling & Depth) */
     .netflix-card {
         text-decoration: none !important;
         display: block;
         color: inherit !important;
         cursor: pointer;
         position: relative;
-        border-radius: 6px;
+        border-radius: 8px;
         overflow: hidden;
         background: #181818;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
-        transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease, border-color 0.35s ease;
-        margin-bottom: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        animation: cardFadeIn 0.5s ease backwards;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+        margin-bottom: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        animation: cardCascadeIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        will-change: transform, box-shadow;
     }
     
-    @keyframes cardFadeIn {
-        from { opacity: 0; transform: translateY(12px); }
-        to { opacity: 1; transform: translateY(0); }
+    @keyframes cardCascadeIn {
+        from { opacity: 0; transform: translateY(22px) scale(0.95); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
     }
     
     .netflix-card:hover {
-        transform: scale(1.07) translateY(-6px);
+        transform: translateY(-8px) scale(1.045);
         z-index: 30;
-        box-shadow: 0 18px 36px rgba(0, 0, 0, 0.9), 0 0 22px rgba(229, 9, 20, 0.4);
-        border-color: rgba(229, 9, 20, 0.8);
+        box-shadow: 0 22px 40px rgba(0, 0, 0, 0.95), 0 0 26px rgba(229, 9, 20, 0.45);
+        border-color: rgba(229, 9, 20, 0.75);
     }
 
     .card-poster-img {
@@ -410,13 +451,45 @@ st.markdown("""
         margin-bottom: 18px;
     }
 
-    /* Spinner Loading Animation */
+    /* Luxury Cinema Dual-Arc Spinner Loading Animation */
+    div[data-testid="stSpinner"] {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 26px 0;
+    }
     div[data-testid="stSpinner"] > div {
+        position: relative;
+        width: 44px !important;
+        height: 44px !important;
+        border-radius: 50% !important;
+        border: 3px solid transparent !important;
         border-top-color: #E50914 !important;
-        border-right-color: transparent !important;
         border-bottom-color: #E50914 !important;
-        border-left-color: transparent !important;
-        animation: spin 0.75s linear infinite !important;
+        box-shadow: 0 0 22px rgba(229, 9, 20, 0.5);
+        animation: dualSpinRed 0.85s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite !important;
+    }
+    div[data-testid="stSpinner"] > div::after {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        right: 3px;
+        bottom: 3px;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        border-left-color: #D4AF37;
+        border-right-color: #D4AF37;
+        box-shadow: 0 0 14px rgba(212, 175, 55, 0.55);
+        animation: dualSpinGold 1.3s linear infinite;
+    }
+    @keyframes dualSpinRed {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    @keyframes dualSpinGold {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(-360deg); }
     }
 
     /* Profile / Footer Card */
@@ -578,12 +651,18 @@ st.markdown("""<div class="netflix-nav-container">
 <span style="font-size: 0.78rem; color: #46d369; font-weight: 700;">● Online</span>
 </div>
 </div>
+<div class="ambient-glow-orb-1"></div>
+<div class="ambient-glow-orb-2"></div>
 <div id="home-section"></div>""", unsafe_allow_html=True)
 
-# Client-Side Framer-Motion Golden Pill Spring Animation & Scroll Spy
+# Client-Side Framer-Motion Golden Pill Spring Animation, Easing Scroll & Scroll Spy
 components.html("""
 <script>
 (function() {
+    let isClickScrolling = false;
+    let targetProgress = 0;
+    let currentProgress = 0;
+
     function setup() {
         const parentDoc = window.parent.document;
         const navbar = parentDoc.getElementById('netflixNavbar');
@@ -593,34 +672,93 @@ components.html("""
             return;
         }
 
+        // Shared Layout Animation: Spring stretch & Glide
         function glidePill(targetEl) {
             if (!targetEl) return;
             const navRect = navbar.getBoundingClientRect();
             const targetRect = targetEl.getBoundingClientRect();
-            pill.style.left = (targetRect.left - navRect.left) + 'px';
+            const targetLeft = targetRect.left - navRect.left;
+            const currentLeft = parseFloat(pill.style.left || 0);
+            const dist = Math.abs(targetLeft - currentLeft);
+
+            // Dynamic spring stretch physics when traveling across buttons
+            if (dist > 35) {
+                pill.style.transform = 'scaleX(1.08)';
+                setTimeout(function() {
+                    pill.style.transform = 'scaleX(1.0)';
+                }, 180);
+            }
+
+            pill.style.left = targetLeft + 'px';
             pill.style.top = (targetRect.top - navRect.top) + 'px';
             pill.style.width = targetRect.width + 'px';
             pill.style.height = targetRect.height + 'px';
             pill.style.opacity = '1';
         }
 
+        // Programmatic Easing Curve: cubic-bezier [0.16, 1, 0.3, 1] exponential deceleration
+        function easeOutQuart(t) {
+            return 1 - Math.pow(1 - t, 4);
+        }
+
+        function smoothScrollTo(targetY, duration) {
+            duration = duration || 750;
+            const scrollEl = parentDoc.querySelector('[data-testid="stAppViewContainer"]') || window.parent;
+            const startY = scrollEl === window.parent ? (window.parent.scrollY || 0) : scrollEl.scrollTop;
+            const diff = targetY - startY;
+            if (Math.abs(diff) < 2) {
+                isClickScrolling = false;
+                return;
+            }
+            const startTime = performance.now();
+
+            function step(now) {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const ease = easeOutQuart(progress);
+                const current = startY + diff * ease;
+
+                if (scrollEl === window.parent) {
+                    window.parent.scrollTo(0, current);
+                } else {
+                    scrollEl.scrollTop = current;
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                    // Unlock scroll spy 50ms after scroll completes
+                    setTimeout(function() {
+                        isClickScrolling = false;
+                    }, 50);
+                }
+            }
+            requestAnimationFrame(step);
+        }
+
+        // Click Handler with Scroll-Lock Ref
         const items = navbar.querySelectorAll('.capsule-item');
         items.forEach(function(item) {
             item.onclick = function(e) {
                 e.preventDefault();
+                isClickScrolling = true; // Lock scroll spy during programmatic glide
+
                 items.forEach(function(el) { el.classList.remove('active'); });
                 this.classList.add('active');
                 glidePill(this);
 
                 const targetId = this.getAttribute('data-target');
                 if (targetId === 'home-section') {
-                    const sc = parentDoc.querySelector('[data-testid="stAppViewContainer"]') || window.parent;
-                    if (sc && sc.scrollTo) sc.scrollTo({ top: 0, behavior: 'smooth' });
-                    window.parent.scrollTo({ top: 0, behavior: 'smooth' });
+                    smoothScrollTo(0, 700);
                 } else {
                     const targetEl = parentDoc.getElementById(targetId);
                     if (targetEl) {
-                        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        const scrollEl = parentDoc.querySelector('[data-testid="stAppViewContainer"]') || parentDoc.documentElement;
+                        const rect = targetEl.getBoundingClientRect();
+                        const currentScroll = scrollEl ? scrollEl.scrollTop : (window.parent.scrollY || 0);
+                        const targetY = currentScroll + rect.top - 80; // 80px offset
+                        smoothScrollTo(targetY, 750);
+
                         if (targetId === 'tech-stack-section') {
                             const details = parentDoc.querySelector('details');
                             if (details) details.open = true;
@@ -630,9 +768,33 @@ components.html("""
             };
         });
 
+        // Spring-Smoothed Reading Progress Bar (Inertia Spring Loop: stiffness 100, damping 30)
+        function springProgressLoop() {
+            currentProgress += (targetProgress - currentProgress) * 0.12;
+            const bar = parentDoc.getElementById('scroll-progress-indicator');
+            if (bar) {
+                bar.style.width = currentProgress.toFixed(2) + '%';
+            }
+            requestAnimationFrame(springProgressLoop);
+        }
+        requestAnimationFrame(springProgressLoop);
+
+        // Viewport Intersection Offset Tuning
         const scrollContainer = parentDoc.querySelector('[data-testid="stAppViewContainer"]') || window.parent;
 
         function handleScroll() {
+            const scrollEl = parentDoc.querySelector('[data-testid="stAppViewContainer"]') || parentDoc.documentElement;
+            const scrollTop = scrollEl ? scrollEl.scrollTop : (window.parent.scrollY || 0);
+            const scrollHeight = scrollEl ? scrollEl.scrollHeight : parentDoc.documentElement.scrollHeight;
+            const clientHeight = scrollEl ? scrollEl.clientHeight : window.parent.innerHeight;
+
+            if (scrollHeight > clientHeight) {
+                targetProgress = Math.min(100, Math.max(0, (scrollTop / (scrollHeight - clientHeight)) * 100));
+            }
+
+            // Silence scroll observer when click-scrolling
+            if (isClickScrolling) return;
+
             const sections = [
                 'contact-section',
                 'tech-stack-section',
@@ -640,17 +802,6 @@ components.html("""
                 'search-section',
                 'home-section'
             ];
-
-            const scrollEl = parentDoc.querySelector('[data-testid="stAppViewContainer"]') || parentDoc.documentElement;
-            const scrollTop = scrollEl ? scrollEl.scrollTop : (window.parent.scrollY || 0);
-            const scrollHeight = scrollEl ? scrollEl.scrollHeight : parentDoc.documentElement.scrollHeight;
-            const clientHeight = scrollEl ? scrollEl.clientHeight : window.parent.innerHeight;
-
-            const progressBar = parentDoc.getElementById('scroll-progress-indicator');
-            if (progressBar && scrollHeight > clientHeight) {
-                const pct = Math.min(100, Math.max(0, (scrollTop / (scrollHeight - clientHeight)) * 100));
-                progressBar.style.width = pct + '%';
-            }
 
             let currentTarget = 'home-section';
             const isBottom = (scrollTop + clientHeight) >= (scrollHeight - 80);
@@ -660,11 +811,12 @@ components.html("""
             } else if (scrollTop < 120) {
                 currentTarget = 'home-section';
             } else {
+                // Focus zone evaluation (middle vertical strip of the screen)
                 for (let i = 0; i < sections.length; i++) {
                     const el = parentDoc.getElementById(sections[i]);
                     if (el) {
                         const rect = el.getBoundingClientRect();
-                        if (rect.top <= window.parent.innerHeight * 0.45) {
+                        if (rect.top <= window.parent.innerHeight * 0.42) {
                             currentTarget = sections[i];
                             break;
                         }
