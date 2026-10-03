@@ -870,66 +870,7 @@ if mode == "Similar Movie Intelligence":
             label_visibility="collapsed"
         )
 
-        # HTML5 Datalist for Real-Time Autocomplete & Autofill (Screenshot 3 Fix)
-        datalist_options_html = "".join([f'<option value="{t}">' for t in AUTOFILL_TITLES[:300]])
-        st.markdown(f'<datalist id="movies-datalist">{datalist_options_html}</datalist>', unsafe_allow_html=True)
-        st.markdown("""
-<svg style="display:none;" onload="
-(function() {
-    function setupAutofillAndLoaders() {
-        var input = document.querySelector('input[data-testid=\"stTextInput\"], input[aria-label=\"Search Movie\"]');
-        if (input && input.getAttribute('list') !== 'movies-datalist') {
-            input.setAttribute('list', 'movies-datalist');
-            input.setAttribute('autocomplete', 'on');
-        }
-    }
-    setupAutofillAndLoaders();
-    if (window.MutationObserver) {
-        new MutationObserver(setupAutofillAndLoaders).observe(document.body, {childList: true, subtree: true});
-    }
-
-    // Capture-phase listener for 0ms instant visual response on poster or chip clicks
-    document.addEventListener('click', function(e) {
-        var card = e.target.closest('.netflix-card');
-        var chip = e.target.closest('.netflix-chip');
-        var logo = e.target.closest('.brand-logo-link');
-        var overlay = document.getElementById('cinema-instant-overlay');
-        if (overlay && (card || chip || logo)) {
-            var titleEl = document.getElementById('instant-loader-title');
-            var subEl = document.getElementById('instant-loader-subtitle');
-            if (card && titleEl) {
-                titleEl.innerText = 'STREAMING CINEMATIC CLUSTERS...';
-                if (subEl) subEl.innerText = 'Evaluating latent embedding vectors across 32M ratings';
-            } else if (chip && titleEl) {
-                titleEl.innerText = 'SEARCHING NEURAL CATALOG...';
-                if (subEl) subEl.innerText = 'Querying TMDB global index & latent vectors';
-            } else if (logo && titleEl) {
-                titleEl.innerText = 'RETURNING HOME...';
-                if (subEl) subEl.innerText = 'Restoring curated top IMDb catalog';
-            }
-            overlay.classList.add('is-visible');
-        }
-    }, true);
-
-    // Capture-phase listener for Enter key on search input
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            var input = document.querySelector('input[data-testid=\"stTextInput\"], input[aria-label=\"Search Movie\"]');
-            var overlay = document.getElementById('cinema-instant-overlay');
-            if (input && overlay && document.activeElement === input && input.value.trim().length > 0) {
-                var titleEl = document.getElementById('instant-loader-title');
-                var subEl = document.getElementById('instant-loader-subtitle');
-                if (titleEl) titleEl.innerText = 'SEARCHING NEURAL CATALOG...';
-                if (subEl) subEl.innerText = 'Analyzing query against 32M interactions';
-                overlay.classList.add('is-visible');
-            }
-        }
-    }, true);
-})();
-"></svg>
-""", unsafe_allow_html=True)
-        
-        # Popular Picks (CSS Flex: No colliding columns!)
+        # Quick Suggestions / Popular Picks (CSS Flex: No colliding columns!)
         st.markdown("""<div id="popular-picks" class="quick-chips-wrapper">
 <span class="quick-chips-label">Popular Picks:</span>
 <a href="?search=Dune" target="_self" class="netflix-chip">🏜️ Dune</a>
@@ -945,6 +886,7 @@ if mode == "Similar Movie Intelligence":
 <a href="?search=Rocky" target="_self" class="netflix-chip">🥊 Rocky</a>
 <a href="?search=(500)+Days+of+Summer" target="_self" class="netflix-chip">☀️ (500) Days of Summer</a>
 <a href="?search=Oppenheimer" target="_self" class="netflix-chip">⚛️ Oppenheimer</a>
+<a href="?search=Requiem+for+a+Dream" target="_self" class="netflix-chip">💊 Requiem for a Dream</a>
 </div>""", unsafe_allow_html=True)
 
     # Process search if typed
