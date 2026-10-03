@@ -22,6 +22,8 @@ TMDB_GENRES = {
 
 _SIMILAR_CACHE = {}
 _DETAILS_CACHE = {}
+_SEARCH_CACHE = {}
+_TMDB_CACHE = {}
 
 def normalize_movie_title(raw_title):
     """Normalizes titles by stripping release years, flipping 'Title, The' -> 'The Title', and removing brackets."""
@@ -36,7 +38,10 @@ def normalize_movie_title(raw_title):
     return t.lower().strip()
 
 def fetch_tmdb_data(endpoint):
-    """Robust TMDB API fetcher with requests + curl.exe fallback with IPv4 & retry."""
+    """Robust TMDB API fetcher with requests + curl.exe fallback with IPv4 & retry, cached in memory."""
+    if endpoint in _TMDB_CACHE:
+        return _TMDB_CACHE[endpoint]
+
     key = os.getenv("TMDB_API_KEY", "3a1ff8b883fd4c71a563201decf380b1")
     url = f"https://api.themoviedb.org/3/{endpoint}"
     sep = "&" if "?" in endpoint else "?"
@@ -46,7 +51,9 @@ def fetch_tmdb_data(endpoint):
     try:
         resp = requests.get(full_url, timeout=2.0)
         if resp.status_code == 200:
-            return resp.json()
+            data = resp.json()
+            _TMDB_CACHE[endpoint] = data
+            return data
     except Exception:
         pass
 
@@ -63,6 +70,7 @@ def fetch_tmdb_data(endpoint):
             if res.returncode == 0 and res.stdout:
                 data = json.loads(res.stdout)
                 if isinstance(data, dict):
+                    _TMDB_CACHE[endpoint] = data
                     return data
         except Exception:
             pass
@@ -122,6 +130,10 @@ def search_movies_hybrid(query, limit=10):
     clean_q = query.strip()
     if not clean_q or len(clean_q) < 2:
         return []
+
+    cache_key = f"{clean_q.lower()}_{limit}"
+    if cache_key in _SEARCH_CACHE:
+        return _SEARCH_CACHE[cache_key]
 
     q_norm = normalize_movie_title(clean_q)
     q_stripped = re.sub(r"^(the|a|an)\s+", "", q_norm).strip()
@@ -267,7 +279,9 @@ def search_movies_hybrid(query, limit=10):
 
     # Sort descending by calculated relevance score
     scored.sort(key=lambda x: x[0], reverse=True)
-    return [s[1] for s in scored[:limit]]
+    res = [s[1] for s in scored[:limit]]
+    _SEARCH_CACHE[cache_key] = res
+    return res
 
 def get_similar_movies_for_target(target_movie, limit=8):
     """

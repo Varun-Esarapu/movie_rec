@@ -142,62 +142,71 @@ st.markdown("""
         z-index: 50;
     }
     
-    .brand-logo-link {
-        text-decoration: none !important;
+    /* Authentic Pure CSS Vector Brand Component (Zero Staircasing, Anti-Aliased GPU Render) */
+    .cinematch-brand {
         display: inline-flex;
         align-items: center;
-        gap: 2px;
+        gap: 14px;
+        user-select: none;
+        text-decoration: none !important;
         cursor: pointer;
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale !important;
+        text-rendering: optimizeLegibility !important;
         transition: transform 0.25s ease;
     }
-    .brand-logo-link:hover {
+    .cinematch-brand:hover {
         transform: scale(1.03);
     }
-    
-    .logo-brand-text {
-        font-family: 'Bebas Neue', 'Montserrat', sans-serif !important;
-        font-size: 2.5rem;
-        color: #ffffff;
-        letter-spacing: 0.04em;
+    .cinematch-title {
+        font-family: 'Bebas Neue', sans-serif !important;
+        font-size: 2.85rem;
+        letter-spacing: 2.5px;
+        color: #FFFFFF;
         line-height: 1;
+        margin: 0;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
         display: inline-flex;
         align-items: center;
         -webkit-font-smoothing: antialiased !important;
         -moz-osx-font-smoothing: grayscale !important;
         text-rendering: optimizeLegibility !important;
     }
-    .logo-netflix-n {
+    .cinematch-accent {
         color: #E50914 !important;
-        font-size: 2.85rem;
-        font-weight: 900;
-        margin: 0 0.5px;
-        text-shadow: 0 0 10px rgba(229, 9, 20, 0.55), 0 1px 2px rgba(0, 0, 0, 0.8);
+        position: relative;
         display: inline-block;
-        transform: translateY(-1px);
-        transition: transform 0.25s ease, text-shadow 0.25s ease;
+        filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.6));
+        transition: filter 0.25s ease, transform 0.25s ease;
         -webkit-font-smoothing: antialiased !important;
         -moz-osx-font-smoothing: grayscale !important;
     }
-    .brand-logo-link:hover .logo-netflix-n {
-        transform: translateY(-2px) scale(1.08);
-        text-shadow: 0 0 18px rgba(229, 9, 20, 0.9), 0 0 30px rgba(229, 9, 20, 0.4);
+    .cinematch-brand:hover .cinematch-accent {
+        filter: drop-shadow(0 0 16px rgba(229, 9, 20, 0.95));
+        transform: translateY(-1px);
     }
-    .logo-play-ai-container {
+    .cinematch-ai-badge {
+        background: linear-gradient(135deg, #E50914, #B81D24);
+        color: #FFFFFF !important;
+        font-family: 'Inter', -apple-system, sans-serif !important;
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        padding: 4px 10px;
+        border-radius: 4px;
+        box-shadow: 0 0 12px rgba(229, 9, 20, 0.5);
+        text-transform: uppercase;
         display: inline-flex;
         align-items: center;
-        margin-left: 9px;
-        filter: drop-shadow(0 0 6px rgba(229, 9, 20, 0.6));
-        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
+        clip-path: polygon(0% 0%, 82% 0%, 100% 50%, 82% 100%, 0% 100%);
+        padding-right: 14px;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale !important;
     }
-    .logo-play-ai-svg {
-        width: 44px;
-        height: 28px;
-        display: block;
-        overflow: visible;
-    }
-    .brand-logo-link:hover .logo-play-ai-container {
+    .cinematch-brand:hover .cinematch-ai-badge {
         transform: scale(1.08) translateX(2px);
-        filter: drop-shadow(0 0 14px rgba(229, 9, 20, 0.95));
+        box-shadow: 0 0 18px rgba(229, 9, 20, 0.85);
     }
 
     .nav-middle-tagline {
@@ -307,6 +316,41 @@ st.markdown("""
         border-color: #E50914;
         transform: translateY(-3px) scale(1.04);
         box-shadow: 0 6px 18px rgba(229, 9, 20, 0.45);
+    }
+
+    /* Native Streamlit Pills Styled as Glowing Netflix Chips (No Page Reload) */
+    div[data-testid="stPills"] {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 6px 0 24px 0 !important;
+    }
+    div[data-testid="stPills"] button {
+        background: rgba(38, 38, 38, 0.75) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        color: #e5e5e5 !important;
+        font-size: 0.82rem !important;
+        font-weight: 600 !important;
+        border-radius: 9999px !important;
+        padding: 6px 14px !important;
+        transition: all 0.24s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        white-space: nowrap !important;
+        cursor: pointer !important;
+    }
+    div[data-testid="stPills"] button:hover {
+        background: #E50914 !important;
+        color: #ffffff !important;
+        border-color: #E50914 !important;
+        transform: translateY(-3px) scale(1.04) !important;
+        box-shadow: 0 6px 18px rgba(229, 9, 20, 0.45) !important;
+    }
+    div[data-testid="stPills"] button[aria-selected="true"] {
+        background: #E50914 !important;
+        color: #ffffff !important;
+        border-color: #E50914 !important;
+        box-shadow: 0 0 16px rgba(229, 9, 20, 0.6) !important;
     }
 
     /* Netflix Poster Cards (Equal Proportions & Depth - Natural 2:3 Aspect Ratio) */
@@ -772,14 +816,11 @@ st.markdown("""
 </div>
 
 <div class="netflix-nav-container">
-<a href="?home=true" target="_self" class="brand-logo-link" title="Return to Home">
-<span class="logo-brand-text">CI<span class="logo-netflix-n">N</span>EMATCH</span>
-<span class="logo-play-ai-container" title="Cinematic AI Recommender">
-<svg class="logo-play-ai-svg" viewBox="0 0 46 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M5 3.5C5 2.0 6.7 1.1 8.0 1.9L41.2 12.4C42.7 13.2 42.7 14.8 41.2 15.6L8.0 26.1C6.7 26.9 5 26.0 5 24.5V3.5Z" fill="#E50914"/>
-<text x="18" y="14" text-anchor="middle" dominant-baseline="central" fill="#ffffff" font-family="'Inter', -apple-system, sans-serif" font-weight="900" font-size="11" letter-spacing="0.04em">AI</text>
-</svg>
-</span>
+<a href="?home=true" target="_self" class="cinematch-brand" title="Return to Home">
+  <div class="cinematch-title">
+    CI<span class="cinematch-accent">N</span>EMATCH
+  </div>
+  <div class="cinematch-ai-badge">AI</div>
 </a>
 <div class="nav-middle-tagline">
 <span>🎬 Distributed PySpark ALS Recommender</span>
@@ -799,11 +840,49 @@ st.markdown("""
 <div class="ambient-glow-orb-2"></div>
 """, unsafe_allow_html=True)
 
+# Fast Memory-Cached Backend API Helpers (0ms repeat latency, eliminates blank screen delays)
+@st.cache_data(ttl=3600, show_spinner=False)
+def api_search_movies(query: str):
+    clean = query.strip()
+    if not clean or len(clean) < 2:
+        return []
+    try:
+        resp = requests.get(f"{API_BASE_URL}/movies/search/?q={urllib.parse.quote(clean)}", timeout=4)
+        if resp.status_code == 200:
+            return resp.json()
+    except Exception:
+        pass
+    return []
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def api_get_similar(movie_id: int, limit: int):
+    try:
+        resp = requests.get(f"{API_BASE_URL}/movies/{movie_id}/similar/?limit={limit}", timeout=5)
+        if resp.status_code == 200:
+            return resp.json()
+    except Exception:
+        pass
+    return {}
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def api_get_recommendations(user_id: int, limit: int):
+    try:
+        resp = requests.get(f"{API_BASE_URL}/recommendations/{user_id}/?limit={limit}", timeout=4)
+        if resp.status_code == 200:
+            return resp.json()
+    except Exception:
+        pass
+    return {}
+
 # State management
 if "selected_movie" not in st.session_state:
     st.session_state["selected_movie"] = None
 if "search_input" not in st.session_state:
     st.session_state["search_input"] = ""
+if "last_search" not in st.session_state:
+    st.session_state["last_search"] = ""
+if "last_pill" not in st.session_state:
+    st.session_state["last_pill"] = None
 if "search_matches" not in st.session_state:
     st.session_state["search_matches"] = []
 
@@ -811,6 +890,8 @@ if "search_matches" not in st.session_state:
 if "home" in st.query_params:
     st.session_state["selected_movie"] = None
     st.session_state["search_input"] = ""
+    st.session_state["last_search"] = ""
+    st.session_state["last_pill"] = None
     st.session_state["search_matches"] = []
     st.query_params.clear()
 
@@ -828,20 +909,16 @@ if "search" in st.query_params:
     sq = st.query_params.get("search")
     if sq:
         st.session_state["search_input"] = sq
+        st.session_state["last_search"] = sq
         local_hit = next((m for m in FAMOUS_CATALOG if m["title"].lower() == sq.lower()), None)
         if local_hit:
             st.session_state["selected_movie"] = local_hit
             st.session_state["search_matches"] = [local_hit]
         else:
-            try:
-                resp = requests.get(f"{API_BASE_URL}/movies/search/?q={urllib.parse.quote(sq)}", timeout=4)
-                if resp.status_code == 200:
-                    found = resp.json()
-                    if found:
-                        st.session_state["selected_movie"] = found[0]
-                        st.session_state["search_matches"] = found[:3]
-            except Exception:
-                pass
+            found = api_search_movies(sq)
+            if found:
+                st.session_state["selected_movie"] = found[0]
+                st.session_state["search_matches"] = found[:3]
     st.query_params.clear()
 
 # Sidebar settings (Engine Controls)
@@ -870,24 +947,35 @@ if mode == "Similar Movie Intelligence":
             label_visibility="collapsed"
         )
 
-        # Quick Suggestions / Popular Picks (CSS Flex: No colliding columns!)
-        st.markdown("""<div id="popular-picks" class="quick-chips-wrapper">
-<span class="quick-chips-label">Popular Picks:</span>
-<a href="?search=Dune" target="_self" class="netflix-chip">🏜️ Dune</a>
-<a href="?search=The+Godfather" target="_self" class="netflix-chip">🍷 The Godfather</a>
-<a href="?search=The+Dark+Knight" target="_self" class="netflix-chip">🦇 The Dark Knight</a>
-<a href="?search=Fight+Club" target="_self" class="netflix-chip">🕶️ Fight Club</a>
-<a href="?search=Kill+Bill" target="_self" class="netflix-chip">🗡️ Kill Bill</a>
-<a href="?search=Gladiator" target="_self" class="netflix-chip">⚔️ Gladiator</a>
-<a href="?search=Inception" target="_self" class="netflix-chip">🌀 Inception</a>
-<a href="?search=Interstellar" target="_self" class="netflix-chip">🌌 Interstellar</a>
-<a href="?search=Shutter+Island" target="_self" class="netflix-chip">🏝️ Shutter Island</a>
-<a href="?search=300" target="_self" class="netflix-chip">🛡️ 300</a>
-<a href="?search=Rocky" target="_self" class="netflix-chip">🥊 Rocky</a>
-<a href="?search=(500)+Days+of+Summer" target="_self" class="netflix-chip">☀️ (500) Days of Summer</a>
-<a href="?search=Oppenheimer" target="_self" class="netflix-chip">⚛️ Oppenheimer</a>
-<a href="?search=Requiem+for+a+Dream" target="_self" class="netflix-chip">💊 Requiem for a Dream</a>
-</div>""", unsafe_allow_html=True)
+        # Native Instant Popular Picks Pills (No Browser Unload / Zero Black Screen)
+        POPULAR_CHIPS = [
+            "🏜️ Dune", "🍷 The Godfather", "🦇 The Dark Knight", "🕶️ Fight Club",
+            "🗡️ Kill Bill", "⚔️ Gladiator", "🌀 Inception", "🌌 Interstellar",
+            "🏝️ Shutter Island", "🛡️ 300", "🥊 Rocky", "☀️ (500) Days of Summer",
+            "⚛️ Oppenheimer", "💊 Requiem for a Dream"
+        ]
+        st.markdown("<div class='quick-chips-label' style='text-align:center; margin-bottom: 2px;'>POPULAR PICKS:</div>", unsafe_allow_html=True)
+        selected_pill = st.pills(
+            "Popular Picks",
+            options=POPULAR_CHIPS,
+            label_visibility="collapsed",
+            key="popular_picks_pills"
+        )
+        if selected_pill and selected_pill != st.session_state.get("last_pill"):
+            st.session_state["last_pill"] = selected_pill
+            chip_clean = re.sub(r"^[^\w\s\(\)]+\s*", "", selected_pill).strip()
+            st.session_state["search_input"] = chip_clean
+            st.session_state["last_search"] = chip_clean
+            local_hit = next((m for m in FAMOUS_CATALOG if m["title"].lower() == chip_clean.lower()), None)
+            if local_hit:
+                st.session_state["selected_movie"] = local_hit
+                st.session_state["search_matches"] = [local_hit]
+            else:
+                found = api_search_movies(chip_clean)
+                if found:
+                    st.session_state["selected_movie"] = found[0]
+                    st.session_state["search_matches"] = found[:3]
+            st.rerun()
 
     # Process search if typed
     if search_query.strip() and search_query != st.session_state.get("last_search"):
@@ -895,16 +983,14 @@ if mode == "Similar Movie Intelligence":
         try:
             search_loader = st.empty()
             search_loader.markdown(render_play_loader("SEARCHING NEURAL CATALOG...", f"Querying global index & latent vectors for '{search_query.strip()}'"), unsafe_allow_html=True)
-            resp = requests.get(f"{API_BASE_URL}/movies/search/?q={urllib.parse.quote(search_query.strip())}", timeout=4)
+            found = api_search_movies(search_query.strip())
             search_loader.empty()
-            if resp.status_code == 200:
-                found = resp.json()
-                if found:
-                    st.session_state["selected_movie"] = found[0]
-                    st.session_state["search_matches"] = found[:3]
-                else:
-                    st.session_state["search_matches"] = []
-                    st.warning(f"No catalog match found for '{search_query}'.")
+            if found:
+                st.session_state["selected_movie"] = found[0]
+                st.session_state["search_matches"] = found[:3]
+            else:
+                st.session_state["search_matches"] = []
+                st.warning(f"No catalog match found for '{search_query}'.")
         except Exception as e:
             st.error(f"Backend search failed: {e}")
 
@@ -932,22 +1018,24 @@ if mode == "Similar Movie Intelligence":
             if st.button("← Return to All Movies", key="btn_back"):
                 st.session_state["selected_movie"] = None
                 st.session_state["search_input"] = ""
+                st.session_state["last_search"] = ""
+                st.session_state["last_pill"] = None
                 st.session_state["search_matches"] = []
                 st.rerun()
 
-        # Fetch Similar Movies & Details from Backend
+        # Fetch Similar Movies & Details from Backend (Cached for Instant Response)
         sim_data = []
         details = {}
         try:
             loader_box = st.empty()
             loader_box.markdown(render_play_loader("STREAMING CINEMATIC CLUSTERS...", "Evaluating latent embedding vectors across 32M ratings"), unsafe_allow_html=True)
-            sim_resp = requests.get(f"{API_BASE_URL}/movies/{target['movie_id']}/similar/?limit={num_recs}", timeout=5)
+            data_json = api_get_similar(target['movie_id'], num_recs)
             loader_box.empty()
-            if sim_resp.status_code == 200:
-                data_json = sim_resp.json()
-                sim_data = data_json.get("results", [])
-                source_movie = data_json.get("source_movie", {})
-                details = source_movie.get("details", {})
+            sim_data = data_json.get("results", [])
+            source_movie = data_json.get("source_movie", {})
+            details = source_movie.get("details", {})
+        except Exception as e:
+            st.error(f"Could not reach recommendation service: {e}")
         except Exception as e:
             st.error(f"Could not reach recommendation service: {e}")
 
@@ -1016,7 +1104,7 @@ if mode == "Similar Movie Intelligence":
                 poster = m.get("poster_url") or SAFE_PLACEHOLDER
                 
                 with col:
-                    card_html = f"""<a href="?movie={m['movie_id']}" target="_self" class="netflix-card">
+                    card_html = f"""<a href="?movie={m['movie_id']}" target="_self" class="netflix-card" onclick="var o=document.getElementById('cinema-instant-overlay');if(o)o.classList.add('is-visible');">
 <img src="{poster}" class="card-poster-img" />
 <div class="card-footer">
 <div class="card-movie-title">{m['title']}</div>
@@ -1041,7 +1129,7 @@ if mode == "Similar Movie Intelligence":
         for i in range(5):
             movie = FAMOUS_CATALOG[i]
             with row1_cols[i]:
-                card_html = f"""<a href="?movie={movie['movie_id']}" target="_self" class="netflix-card">
+                card_html = f"""<a href="?movie={movie['movie_id']}" target="_self" class="netflix-card" onclick="var o=document.getElementById('cinema-instant-overlay');if(o)o.classList.add('is-visible');">
 <img src="{movie['poster_url']}" class="card-poster-img" />
 <div class="card-footer">
 <div class="card-movie-title">{movie['title']}</div>
@@ -1061,7 +1149,7 @@ if mode == "Similar Movie Intelligence":
         for i in range(5, 10):
             movie = FAMOUS_CATALOG[i]
             with row2_cols[i - 5]:
-                card_html = f"""<a href="?movie={movie['movie_id']}" target="_self" class="netflix-card">
+                card_html = f"""<a href="?movie={movie['movie_id']}" target="_self" class="netflix-card" onclick="var o=document.getElementById('cinema-instant-overlay');if(o)o.classList.add('is-visible');">
 <img src="{movie['poster_url']}" class="card-poster-img" />
 <div class="card-footer">
 <div class="card-movie-title">{movie['title']}</div>
@@ -1081,7 +1169,7 @@ if mode == "Similar Movie Intelligence":
         for i in range(10, 15):
             movie = FAMOUS_CATALOG[i]
             with row3_cols[i - 10]:
-                card_html = f"""<a href="?movie={movie['movie_id']}" target="_self" class="netflix-card">
+                card_html = f"""<a href="?movie={movie['movie_id']}" target="_self" class="netflix-card" onclick="var o=document.getElementById('cinema-instant-overlay');if(o)o.classList.add('is-visible');">
 <img src="{movie['poster_url']}" class="card-poster-img" />
 <div class="card-footer">
 <div class="card-movie-title">{movie['title']}</div>
@@ -1106,21 +1194,20 @@ else:
     try:
         cf_loader = st.empty()
         cf_loader.markdown(render_play_loader("COMPUTING PYSPARK MATRIX FACTORIZATION...", f"Serving latent dot-products for User #{user_id} across 32M interactions"), unsafe_allow_html=True)
-        u_resp = requests.get(f"{API_BASE_URL}/recommendations/{user_id}/?limit={num_recs}", timeout=4)
+        u_data = api_get_recommendations(user_id, num_recs)
         cf_loader.empty()
-        if u_resp.status_code == 200:
-            recs_data = u_resp.json().get("results", [])
-            is_fallback = u_resp.json().get("fallback", False)
-            if is_fallback:
-                st.info(f"User {user_id} is in cold-start. Showing top curated catalog recommendations.")
-            
-            cols = st.columns(4)
-            for idx, item in enumerate(recs_data):
-                m = item["movie"]
-                col = cols[idx % 4]
-                poster = m.get("poster_url") or SAFE_PLACEHOLDER
-                with col:
-                    card_html = f"""<a href="?movie={m['movie_id']}" target="_self" class="netflix-card">
+        recs_data = u_data.get("results", [])
+        is_fallback = u_data.get("fallback", False)
+        if is_fallback:
+            st.info(f"User {user_id} is in cold-start. Showing top curated catalog recommendations.")
+        
+        cols = st.columns(4)
+        for idx, item in enumerate(recs_data):
+            m = item["movie"]
+            col = cols[idx % 4]
+            poster = m.get("poster_url") or SAFE_PLACEHOLDER
+            with col:
+                card_html = f"""<a href="?movie={m['movie_id']}" target="_self" class="netflix-card" onclick="var o=document.getElementById('cinema-instant-overlay');if(o)o.classList.add('is-visible');">
 <img src="{poster}" class="card-poster-img" />
 <div class="card-footer">
 <div class="card-movie-title">{m['title']}</div>
@@ -1131,7 +1218,7 @@ else:
 </div>
 </div>
 </a>"""
-                    st.markdown(card_html, unsafe_allow_html=True)
+                st.markdown(card_html, unsafe_allow_html=True)
     except Exception as e:
         st.error(f"Cannot load recommendations for User {user_id}: {e}")
 
