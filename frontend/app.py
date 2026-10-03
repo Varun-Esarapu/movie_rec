@@ -5,6 +5,7 @@ import urllib.parse
 import socket
 import requests
 import streamlit as st
+import streamlit.components.v1 as components
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -126,50 +127,80 @@ st.markdown("""
 
     /* Centered Floating Capsule Pill Navbar (Framer-Motion Replica from Portfolio) */
     .netflix-capsule-navbar {
-        background: rgba(15, 12, 10, 0.88);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(229, 9, 20, 0.35);
+        position: relative;
+        background: rgba(18, 14, 12, 0.94);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid rgba(212, 175, 55, 0.4);
         border-radius: 9999px;
-        padding: 5px 8px;
+        padding: 5px 6px;
         display: inline-flex;
         align-items: center;
-        gap: 4px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75), 0 0 18px rgba(229, 9, 20, 0.2);
+        gap: 2px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 175, 55, 0.15);
+        z-index: 100;
     }
     
+    /* The animated sliding golden pill */
+    .capsule-active-pill {
+        position: absolute;
+        top: 5px;
+        left: 6px;
+        width: 0;
+        height: 0;
+        background: linear-gradient(135deg, #e6c04e 0%, #D4AF37 55%, #b89326 100%);
+        border-radius: 9999px;
+        box-shadow: 0 0 18px rgba(212, 175, 55, 0.65), 0 2px 10px rgba(0, 0, 0, 0.4);
+        transition: all 0.38s cubic-bezier(0.25, 1, 0.5, 1);
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0;
+    }
+
     .capsule-item {
-        font-size: 0.74rem;
+        position: relative;
+        z-index: 2;
+        font-size: 0.72rem;
         font-weight: 700;
-        letter-spacing: 0.12em;
+        letter-spacing: 0.11em;
         text-transform: uppercase;
         color: #b5b0a1 !important;
-        padding: 8px 18px;
+        padding: 7px 16px;
         border-radius: 9999px;
         text-decoration: none !important;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: color 0.22s ease, transform 0.2s ease;
         display: inline-block;
         white-space: nowrap;
+        cursor: pointer;
+        user-select: none;
     }
     .capsule-item:hover {
         color: #fdfbf7 !important;
-        background: rgba(255, 255, 255, 0.08);
-        transform: translateY(-1px);
     }
     .capsule-item.active {
-        background: #E50914;
-        color: #ffffff !important;
-        font-weight: 800;
-        box-shadow: 0 0 16px rgba(229, 9, 20, 0.6);
-    }
-    .capsule-item-gold {
-        background: #D4AF37;
         color: #0F0C0A !important;
         font-weight: 800;
-        box-shadow: 0 0 14px rgba(212, 175, 55, 0.35);
     }
-    .capsule-item-gold:hover {
-        background: #e6c04e;
+
+    .nav-portfolio-link {
+        background: rgba(212, 175, 55, 0.12);
+        border: 1px solid #D4AF37;
+        color: #D4AF37 !important;
+        font-size: 0.73rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        padding: 6px 14px;
+        border-radius: 9999px;
+        text-decoration: none !important;
+        transition: all 0.22s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .nav-portfolio-link:hover {
+        background: #D4AF37;
+        color: #0F0C0A !important;
+        box-shadow: 0 0 16px rgba(212, 175, 55, 0.55);
         transform: translateY(-1px);
     }
 
@@ -446,26 +477,19 @@ st.markdown("""
         color: #e5e5e5;
         transition: all 0.2s ease;
     }
-    div[data-testid="stButton"] > button:hover {
-        border-color: #E50914;
-        color: #ffffff;
-        background: #E50914;
+    div[data-testid="stCustomComponentV1"] {
+        display: none !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    #home-section, #search-section, #trending-section, #tech-stack-section, #contact-section {
+        scroll-margin-top: 100px;
     }
 </style>
 
 <div id="scroll-progress-indicator"></div>
-
-<script>
-    window.addEventListener('scroll', function() {
-        var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
-        var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        var scrolled = (winScroll / height) * 100;
-        var el = document.getElementById("scroll-progress-indicator");
-        if (el) {
-            el.style.width = scrolled + "%";
-        }
-    });
-</script>
 """, unsafe_allow_html=True)
 
 # Top 15 IMDb Rated & Iconic Films Catalog (Verified Metadata & 200 OK Posters)
@@ -532,25 +556,148 @@ if "search" in st.query_params:
             pass
     st.query_params.clear()
 
-# Top Netflix Bar with Centered Floating Capsule Navbar (Screenshot 3 Replica)
+# Top Netflix Bar with Centered Floating Capsule Navbar (Interactive Framer-Motion Replica)
 st.markdown("""<div class="netflix-nav-container">
 <a href="?home=true" target="_self" class="brand-logo-link" title="Return to Home">
 <span class="logo-n-badge">N</span>
 <span class="logo-cine">CINE</span><span class="logo-match">MATCH</span>
 <span class="logo-ai-badge">AI</span>
 </a>
-<div class="netflix-capsule-navbar">
-<a href="?home=true" target="_self" class="capsule-item active">HOME</a>
-<a href="#popular-picks" class="capsule-item">POPULAR</a>
-<a href="#trending" class="capsule-item">TOP 15 IMDB</a>
-<a href="#tech-stack" class="capsule-item">TECH STACK</a>
-<a href="https://github.com/Varun-Esarapu/movie_rec" target="_blank" class="capsule-item">GITHUB</a>
-<a href="https://e-varun-portfolio.vercel.app/#intro" target="_blank" class="capsule-item capsule-item-gold">PORTFOLIO</a>
+<div class="netflix-capsule-navbar" id="netflixNavbar">
+<div class="capsule-active-pill" id="capsuleActivePill"></div>
+<a href="#home-section" class="capsule-item active" data-target="home-section">HOME</a>
+<a href="#search-section" class="capsule-item" data-target="search-section">SEARCH BAR</a>
+<a href="#trending-section" class="capsule-item" data-target="trending-section">TOP 15 IMDB</a>
+<a href="#tech-stack-section" class="capsule-item" data-target="tech-stack-section">TECH STACK</a>
+<a href="#contact-section" class="capsule-item" data-target="contact-section">CONTACT ME</a>
 </div>
-<div style="font-size: 0.8rem; color: #8c8c8c;">
-<span style="color:#46d369; font-weight:700;">● Engine Online</span>
+<div style="display: flex; align-items: center; gap: 10px;">
+<a href="https://e-varun-portfolio.vercel.app/#intro" target="_blank" class="nav-portfolio-link" title="Explore Varun's Portfolio">
+<span>🌐</span> PORTFOLIO
+</a>
+<span style="font-size: 0.78rem; color: #46d369; font-weight: 700;">● Online</span>
 </div>
-</div>""", unsafe_allow_html=True)
+</div>
+<div id="home-section"></div>""", unsafe_allow_html=True)
+
+# Client-Side Framer-Motion Golden Pill Spring Animation & Scroll Spy
+components.html("""
+<script>
+(function() {
+    function setup() {
+        const parentDoc = window.parent.document;
+        const navbar = parentDoc.getElementById('netflixNavbar');
+        const pill = parentDoc.getElementById('capsuleActivePill');
+        if (!navbar || !pill) {
+            setTimeout(setup, 60);
+            return;
+        }
+
+        function glidePill(targetEl) {
+            if (!targetEl) return;
+            const navRect = navbar.getBoundingClientRect();
+            const targetRect = targetEl.getBoundingClientRect();
+            pill.style.left = (targetRect.left - navRect.left) + 'px';
+            pill.style.top = (targetRect.top - navRect.top) + 'px';
+            pill.style.width = targetRect.width + 'px';
+            pill.style.height = targetRect.height + 'px';
+            pill.style.opacity = '1';
+        }
+
+        const items = navbar.querySelectorAll('.capsule-item');
+        items.forEach(function(item) {
+            item.onclick = function(e) {
+                e.preventDefault();
+                items.forEach(function(el) { el.classList.remove('active'); });
+                this.classList.add('active');
+                glidePill(this);
+
+                const targetId = this.getAttribute('data-target');
+                if (targetId === 'home-section') {
+                    const sc = parentDoc.querySelector('[data-testid="stAppViewContainer"]') || window.parent;
+                    if (sc && sc.scrollTo) sc.scrollTo({ top: 0, behavior: 'smooth' });
+                    window.parent.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    const targetEl = parentDoc.getElementById(targetId);
+                    if (targetEl) {
+                        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        if (targetId === 'tech-stack-section') {
+                            const details = parentDoc.querySelector('details');
+                            if (details) details.open = true;
+                        }
+                    }
+                }
+            };
+        });
+
+        const scrollContainer = parentDoc.querySelector('[data-testid="stAppViewContainer"]') || window.parent;
+
+        function handleScroll() {
+            const sections = [
+                'contact-section',
+                'tech-stack-section',
+                'trending-section',
+                'search-section',
+                'home-section'
+            ];
+
+            const scrollEl = parentDoc.querySelector('[data-testid="stAppViewContainer"]') || parentDoc.documentElement;
+            const scrollTop = scrollEl ? scrollEl.scrollTop : (window.parent.scrollY || 0);
+            const scrollHeight = scrollEl ? scrollEl.scrollHeight : parentDoc.documentElement.scrollHeight;
+            const clientHeight = scrollEl ? scrollEl.clientHeight : window.parent.innerHeight;
+
+            const progressBar = parentDoc.getElementById('scroll-progress-indicator');
+            if (progressBar && scrollHeight > clientHeight) {
+                const pct = Math.min(100, Math.max(0, (scrollTop / (scrollHeight - clientHeight)) * 100));
+                progressBar.style.width = pct + '%';
+            }
+
+            let currentTarget = 'home-section';
+            const isBottom = (scrollTop + clientHeight) >= (scrollHeight - 80);
+
+            if (isBottom) {
+                currentTarget = 'contact-section';
+            } else if (scrollTop < 120) {
+                currentTarget = 'home-section';
+            } else {
+                for (let i = 0; i < sections.length; i++) {
+                    const el = parentDoc.getElementById(sections[i]);
+                    if (el) {
+                        const rect = el.getBoundingClientRect();
+                        if (rect.top <= window.parent.innerHeight * 0.45) {
+                            currentTarget = sections[i];
+                            break;
+                        }
+                    }
+                }
+            }
+
+            const activeTab = navbar.querySelector('.capsule-item[data-target="' + currentTarget + '"]');
+            if (activeTab && !activeTab.classList.contains('active')) {
+                items.forEach(function(el) { el.classList.remove('active'); });
+                activeTab.classList.add('active');
+                glidePill(activeTab);
+            }
+        }
+
+        if (scrollContainer && scrollContainer !== window.parent) {
+            scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
+        }
+        window.parent.addEventListener('scroll', handleScroll, { passive: true });
+        window.parent.addEventListener('resize', function() {
+            const cur = navbar.querySelector('.capsule-item.active') || items[0];
+            glidePill(cur);
+        });
+
+        // Initial alignment
+        const initial = navbar.querySelector('.capsule-item.active') || items[0];
+        glidePill(initial);
+        setTimeout(function() { glidePill(initial); }, 250);
+    }
+    setup();
+})();
+</script>
+""", height=0)
 
 # Sidebar settings (Engine Controls)
 with st.sidebar:
@@ -568,6 +715,7 @@ with st.sidebar:
 
 if mode == "Similar Movie Intelligence":
     # Search Bar with Top 3 IMDb rated movies in placeholder
+    st.markdown("<div id='search-section'></div>", unsafe_allow_html=True)
     c_left, c_search, c_right = st.columns([1, 2.8, 1])
     with c_search:
         search_query = st.text_input(
@@ -695,7 +843,7 @@ if mode == "Similar Movie Intelligence":
 </div>"""
         st.markdown(hero_html, unsafe_allow_html=True)
 
-        st.markdown(f"<div class='section-header-title'>✨ More Like *{title_str}*</div>", unsafe_allow_html=True)
+        st.markdown(f"<div id='trending-section' class='section-header-title'>✨ More Like *{title_str}*</div>", unsafe_allow_html=True)
         st.markdown("<div class='section-header-caption'>Deep thematic matches based on genre overlap, director signatures, and collaborative viewer behavior (Click any card to explore)</div>", unsafe_allow_html=True)
 
         if sim_data:
@@ -723,7 +871,7 @@ if mode == "Similar Movie Intelligence":
 
     # VIEW 2: Default Showcase -> Top 15 IMDb Rated & Iconic Films (3 Rows of 5 Cards)
     else:
-        st.markdown("<div id='trending' class='section-header-title'>🔥 Top 15 IMDb Rated & Iconic Films</div>", unsafe_allow_html=True)
+        st.markdown("<div id='trending-section' class='section-header-title'>🔥 Top 15 IMDb Rated & Iconic Films</div>", unsafe_allow_html=True)
         st.markdown("<div class='section-header-caption'>Click any title to instantly explore its plot synopsis, director, full cast, and ML-generated similarity cluster</div>", unsafe_allow_html=True)
 
         # Row 1 (5 movies)
@@ -824,7 +972,7 @@ else:
         st.error(f"Cannot load recommendations for User {user_id}: {e}")
 
 # Tech Stack & Engineering Pipeline Section
-st.markdown("<div id='tech-stack'></div>", unsafe_allow_html=True)
+st.markdown("<div id='tech-stack-section'></div>", unsafe_allow_html=True)
 with st.expander("🛠️ System Architecture & Engineering Tech Stack (Production Pipeline)", expanded=False):
     t_c1, t_c2, t_c3 = st.columns(3)
     with t_c1:
@@ -856,7 +1004,7 @@ with st.expander("🛠️ System Architecture & Engineering Tech Stack (Producti
 </div>""", unsafe_allow_html=True)
 
 # Developer Profile & Portfolio Card (Varun Esarapu)
-st.markdown("""<div class="netflix-footer">
+st.markdown("""<div id="contact-section" class="netflix-footer">
 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
 <div>
 <div style="font-size: 0.76rem; color: #E50914; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em;">Designed & Engineered By</div>
