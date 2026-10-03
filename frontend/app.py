@@ -36,7 +36,7 @@ st.set_page_config(
 # Netflix & Portfolio-Inspired Capsule Theme & Smooth Animations
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
     
     html {
         scroll-behavior: smooth;
@@ -44,6 +44,9 @@ st.markdown("""
     
     html, body, [class*="css"] {
         font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale !important;
+        text-rendering: optimizeLegibility !important;
     }
     
     /* Eliminate Streamlit Default Header Bar & Black Gap (Screenshot 2 Fix) */
@@ -152,43 +155,49 @@ st.markdown("""
     }
     
     .logo-brand-text {
-        font-family: 'Bebas Neue', sans-serif;
-        font-size: 2.45rem;
+        font-family: 'Bebas Neue', 'Montserrat', sans-serif !important;
+        font-size: 2.5rem;
         color: #ffffff;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.04em;
         line-height: 1;
         display: inline-flex;
         align-items: center;
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale !important;
+        text-rendering: optimizeLegibility !important;
     }
     .logo-netflix-n {
         color: #E50914 !important;
-        font-size: 2.75rem;
+        font-size: 2.85rem;
         font-weight: 900;
         margin: 0 0.5px;
-        text-shadow: 0 0 18px rgba(229, 9, 20, 0.8), 0 2px 4px rgba(0, 0, 0, 0.9);
+        text-shadow: 0 0 10px rgba(229, 9, 20, 0.55), 0 1px 2px rgba(0, 0, 0, 0.8);
         display: inline-block;
         transform: translateY(-1px);
         transition: transform 0.25s ease, text-shadow 0.25s ease;
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale !important;
     }
     .brand-logo-link:hover .logo-netflix-n {
         transform: translateY(-2px) scale(1.08);
-        text-shadow: 0 0 28px rgba(229, 9, 20, 1), 0 0 45px rgba(229, 9, 20, 0.6);
+        text-shadow: 0 0 18px rgba(229, 9, 20, 0.9), 0 0 30px rgba(229, 9, 20, 0.4);
     }
     .logo-play-ai-container {
         display: inline-flex;
         align-items: center;
-        margin-left: 8px;
-        filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.65));
+        margin-left: 9px;
+        filter: drop-shadow(0 0 6px rgba(229, 9, 20, 0.6));
         transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
     }
     .logo-play-ai-svg {
-        width: 38px;
+        width: 44px;
         height: 28px;
         display: block;
+        overflow: visible;
     }
     .brand-logo-link:hover .logo-play-ai-container {
-        transform: scale(1.1) translateX(2px);
-        filter: drop-shadow(0 0 16px rgba(229, 9, 20, 0.95));
+        transform: scale(1.08) translateX(2px);
+        filter: drop-shadow(0 0 14px rgba(229, 9, 20, 0.95));
     }
 
     .nav-middle-tagline {
@@ -555,6 +564,30 @@ st.markdown("""
         letter-spacing: 0.02em;
     }
 
+    /* Instant Cinema Loading Screen Overlay (0ms response on click/enter) */
+    .cinema-instant-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(14, 14, 14, 0.88);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        z-index: 9999999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+        pointer-events: none;
+    }
+    .cinema-instant-overlay.is-visible {
+        display: flex !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
+
     /* Profile / Footer Card */
     .netflix-footer {
         background: #0f0f0f;
@@ -687,6 +720,31 @@ IMDB_VERIFIED_RATINGS = {
     "(500) days of summer": 7.7,
 }
 
+AUTOFILL_TITLES = [
+    "Requiem for a Dream", "The Usual Suspects", "Dead Poets Society", "Dune", "Dune (2021)",
+    "Oppenheimer", "The Shawshank Redemption", "The Godfather", "The Dark Knight",
+    "The Godfather Part II", "12 Angry Men", "Schindler's List",
+    "The Lord of the Rings: The Return of the King", "Pulp Fiction",
+    "The Lord of the Rings: The Fellowship of the Ring", "Fight Club", "Forrest Gump",
+    "Inception", "The Lord of the Rings: The Two Towers", "Goodfellas", "The Matrix",
+    "Interstellar", "The Green Mile", "Gladiator", "Kill Bill: Vol. 1", "Shutter Island",
+    "300", "Rocky", "(500) Days of Summer", "Heat", "Memento", "The Prestige", "Whiplash",
+    "Se7en", "Leon: The Professional", "American Psycho", "Taxi Driver", "Scarface",
+    "A Clockwork Orange", "The Shining", "Good Will Hunting", "Back to the Future",
+    "Blade Runner 2049", "Parasite", "Casablanca", "Apocalypse Now", "Saving Private Ryan",
+    "Braveheart", "Reservoir Dogs", "Snatch", "Django Unchained", "Inglourious Basterds",
+    "The Departed", "No Country for Old Men", "There Will Be Blood", "The Silence of the Lambs"
+]
+try:
+    with open("backend/top_titles.json", "r") as f:
+        _ext = json.load(f)
+        for _t in _ext:
+            _cl = re.sub(r"\s*\(\d{4}\)", "", _t).strip()
+            if _cl and _cl not in AUTOFILL_TITLES:
+                AUTOFILL_TITLES.append(_cl)
+except Exception:
+    pass
+
 def render_play_loader(title="STREAMING CINEMATIC CLUSTERS...", subtitle="Evaluating latent embedding vectors across 32M ratings"):
     return f"""<div class="play-loader-container">
 <div class="play-loader-circle">
@@ -698,62 +756,28 @@ def render_play_loader(title="STREAMING CINEMATIC CLUSTERS...", subtitle="Evalua
 <div class="play-loader-subtitle">{subtitle}</div>
 </div>"""
 
-# State management
-if "selected_movie" not in st.session_state:
-    st.session_state["selected_movie"] = None
-if "search_input" not in st.session_state:
-    st.session_state["search_input"] = ""
-if "search_matches" not in st.session_state:
-    st.session_state["search_matches"] = []
+# Render Navbar, Ambient Glow & Instant Overlay First (Eliminates Blank Screen Delays - Screenshot 4 & 5 Fix)
+st.markdown("""
+<!-- Instant Cinema Loading Screen Overlay (0ms response on click/enter) -->
+<div id="cinema-instant-overlay" class="cinema-instant-overlay">
+  <div class="play-loader-container">
+    <div class="play-loader-circle">
+      <div class="play-loader-track-ring"></div>
+      <div class="play-loader-spin-ring"></div>
+      <div class="play-loader-center-triangle"></div>
+    </div>
+    <div class="play-loader-title" id="instant-loader-title">STREAMING CINEMATIC CLUSTERS...</div>
+    <div class="play-loader-subtitle" id="instant-loader-subtitle">Evaluating latent embedding vectors across 32M ratings</div>
+  </div>
+</div>
 
-# URL Query Param Navigation Handling
-# 1. Home link reset
-if "home" in st.query_params:
-    st.session_state["selected_movie"] = None
-    st.session_state["search_input"] = ""
-    st.session_state["search_matches"] = []
-    st.query_params.clear()
-
-# 2. Movie link click (?movie=318)
-if "movie" in st.query_params:
-    mid = st.query_params.get("movie")
-    if mid:
-        try:
-            r = requests.get(f"{API_BASE_URL}/movies/{mid}/similar/?limit=1", timeout=4)
-            if r.status_code == 200:
-                data = r.json()
-                st.session_state["selected_movie"] = data.get("source_movie")
-        except Exception:
-            pass
-    st.query_params.clear()
-
-# 3. Direct quick search chip click (?search=The+Godfather)
-if "search" in st.query_params:
-    sq = st.query_params.get("search")
-    if sq:
-        st.session_state["search_input"] = sq
-        try:
-            chip_loader = st.empty()
-            chip_loader.markdown(render_play_loader("SEARCHING NEURAL CATALOG...", f"Fetching cluster data for '{sq}'"), unsafe_allow_html=True)
-            resp = requests.get(f"{API_BASE_URL}/movies/search/?q={urllib.parse.quote(sq)}", timeout=4)
-            chip_loader.empty()
-            if resp.status_code == 200:
-                found = resp.json()
-                if found:
-                    st.session_state["selected_movie"] = found[0]
-                    st.session_state["search_matches"] = found[:3]
-        except Exception:
-            pass
-    st.query_params.clear()
-
-# Authentic Netflix Top Navigation Bar (Logo: CINEMATCH with Netflix N & Play AI Badge)
-st.markdown("""<div class="netflix-nav-container">
+<div class="netflix-nav-container">
 <a href="?home=true" target="_self" class="brand-logo-link" title="Return to Home">
 <span class="logo-brand-text">CI<span class="logo-netflix-n">N</span>EMATCH</span>
 <span class="logo-play-ai-container" title="Cinematic AI Recommender">
-<svg class="logo-play-ai-svg" viewBox="0 0 38 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M4 2.8C4 1.3 5.6 0.4 6.9 1.2L33.6 12.4C34.9 13.2 34.9 14.8 33.6 15.6L6.9 26.8C5.6 27.6 4 26.7 4 25.2V2.8Z" fill="#E50914"/>
-<text x="14" y="18" fill="#ffffff" font-family="'Inter', -apple-system, sans-serif" font-weight="900" font-size="11" letter-spacing="0.08em">AI</text>
+<svg class="logo-play-ai-svg" viewBox="0 0 46 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M5 3.5C5 2.0 6.7 1.1 8.0 1.9L41.2 12.4C42.7 13.2 42.7 14.8 41.2 15.6L8.0 26.1C6.7 26.9 5 26.0 5 24.5V3.5Z" fill="#E50914"/>
+<text x="18" y="14" text-anchor="middle" dominant-baseline="central" fill="#ffffff" font-family="'Inter', -apple-system, sans-serif" font-weight="900" font-size="11" letter-spacing="0.04em">AI</text>
 </svg>
 </span>
 </a>
@@ -772,7 +796,53 @@ st.markdown("""<div class="netflix-nav-container">
 </div>
 </div>
 <div class="ambient-glow-orb-1"></div>
-<div class="ambient-glow-orb-2"></div>""", unsafe_allow_html=True)
+<div class="ambient-glow-orb-2"></div>
+""", unsafe_allow_html=True)
+
+# State management
+if "selected_movie" not in st.session_state:
+    st.session_state["selected_movie"] = None
+if "search_input" not in st.session_state:
+    st.session_state["search_input"] = ""
+if "search_matches" not in st.session_state:
+    st.session_state["search_matches"] = []
+
+# URL Query Param Navigation Handling (Streamlined, Non-Blocking)
+if "home" in st.query_params:
+    st.session_state["selected_movie"] = None
+    st.session_state["search_input"] = ""
+    st.session_state["search_matches"] = []
+    st.query_params.clear()
+
+if "movie" in st.query_params:
+    mid = st.query_params.get("movie")
+    if mid:
+        found_target = next((m for m in FAMOUS_CATALOG if str(m["movie_id"]) == str(mid)), None)
+        if found_target:
+            st.session_state["selected_movie"] = found_target
+        else:
+            st.session_state["selected_movie"] = {"movie_id": int(mid), "title": "Selected Film"}
+    st.query_params.clear()
+
+if "search" in st.query_params:
+    sq = st.query_params.get("search")
+    if sq:
+        st.session_state["search_input"] = sq
+        local_hit = next((m for m in FAMOUS_CATALOG if m["title"].lower() == sq.lower()), None)
+        if local_hit:
+            st.session_state["selected_movie"] = local_hit
+            st.session_state["search_matches"] = [local_hit]
+        else:
+            try:
+                resp = requests.get(f"{API_BASE_URL}/movies/search/?q={urllib.parse.quote(sq)}", timeout=4)
+                if resp.status_code == 200:
+                    found = resp.json()
+                    if found:
+                        st.session_state["selected_movie"] = found[0]
+                        st.session_state["search_matches"] = found[:3]
+            except Exception:
+                pass
+    st.query_params.clear()
 
 # Sidebar settings (Engine Controls)
 with st.sidebar:
@@ -796,9 +866,68 @@ if mode == "Similar Movie Intelligence":
         search_query = st.text_input(
             "Search Movie",
             value=st.session_state["search_input"],
-            placeholder="Search movie (e.g. The Shawshank Redemption, The Godfather, The Dark Knight...)",
+            placeholder="Search movie (e.g. Requiem for a Dream, Dune, The Godfather, Interstellar...)",
             label_visibility="collapsed"
         )
+
+        # HTML5 Datalist for Real-Time Autocomplete & Autofill (Screenshot 3 Fix)
+        datalist_options_html = "".join([f'<option value="{t}">' for t in AUTOFILL_TITLES[:300]])
+        st.markdown(f'<datalist id="movies-datalist">{datalist_options_html}</datalist>', unsafe_allow_html=True)
+        st.markdown("""
+<svg style="display:none;" onload="
+(function() {
+    function setupAutofillAndLoaders() {
+        var input = document.querySelector('input[data-testid=\"stTextInput\"], input[aria-label=\"Search Movie\"]');
+        if (input && input.getAttribute('list') !== 'movies-datalist') {
+            input.setAttribute('list', 'movies-datalist');
+            input.setAttribute('autocomplete', 'on');
+        }
+    }
+    setupAutofillAndLoaders();
+    if (window.MutationObserver) {
+        new MutationObserver(setupAutofillAndLoaders).observe(document.body, {childList: true, subtree: true});
+    }
+
+    // Capture-phase listener for 0ms instant visual response on poster or chip clicks
+    document.addEventListener('click', function(e) {
+        var card = e.target.closest('.netflix-card');
+        var chip = e.target.closest('.netflix-chip');
+        var logo = e.target.closest('.brand-logo-link');
+        var overlay = document.getElementById('cinema-instant-overlay');
+        if (overlay && (card || chip || logo)) {
+            var titleEl = document.getElementById('instant-loader-title');
+            var subEl = document.getElementById('instant-loader-subtitle');
+            if (card && titleEl) {
+                titleEl.innerText = 'STREAMING CINEMATIC CLUSTERS...';
+                if (subEl) subEl.innerText = 'Evaluating latent embedding vectors across 32M ratings';
+            } else if (chip && titleEl) {
+                titleEl.innerText = 'SEARCHING NEURAL CATALOG...';
+                if (subEl) subEl.innerText = 'Querying TMDB global index & latent vectors';
+            } else if (logo && titleEl) {
+                titleEl.innerText = 'RETURNING HOME...';
+                if (subEl) subEl.innerText = 'Restoring curated top IMDb catalog';
+            }
+            overlay.classList.add('is-visible');
+        }
+    }, true);
+
+    // Capture-phase listener for Enter key on search input
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            var input = document.querySelector('input[data-testid=\"stTextInput\"], input[aria-label=\"Search Movie\"]');
+            var overlay = document.getElementById('cinema-instant-overlay');
+            if (input && overlay && document.activeElement === input && input.value.trim().length > 0) {
+                var titleEl = document.getElementById('instant-loader-title');
+                var subEl = document.getElementById('instant-loader-subtitle');
+                if (titleEl) titleEl.innerText = 'SEARCHING NEURAL CATALOG...';
+                if (subEl) subEl.innerText = 'Analyzing query against 32M interactions';
+                overlay.classList.add('is-visible');
+            }
+        }
+    }, true);
+})();
+"></svg>
+""", unsafe_allow_html=True)
         
         # Popular Picks (CSS Flex: No colliding columns!)
         st.markdown("""<div id="popular-picks" class="quick-chips-wrapper">
