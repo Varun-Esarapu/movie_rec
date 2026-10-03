@@ -46,9 +46,29 @@ st.markdown("""
         font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
     
+    /* Eliminate Streamlit Default Header Bar & Black Gap (Screenshot 2 Fix) */
+    header[data-testid="stHeader"] {
+        background: transparent !important;
+        height: 0px !important;
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    [data-testid="stAppViewContainer"] > .main {
+        padding-top: 0 !important;
+    }
+
+    .block-container {
+        padding-top: 1.2rem !important;
+        padding-bottom: 3rem !important;
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+        max-width: 100% !important;
+    }
+
     .stApp {
         background-color: #141414;
-        background-image: radial-gradient(circle at 50% 0%, #24090c 0%, #141414 55%, #0b0b0b 100%);
+        background-image: radial-gradient(circle at 50% 0%, #2b0b0e 0%, #141414 45%, #0b0b0b 100%);
         color: #e5e5e5;
         min-height: 100vh;
     }
@@ -105,16 +125,18 @@ st.markdown("""
         100% { transform: translate(70px, 50px) scale(1.05); }
     }
 
-    /* Top Navigation Bar with Centered Floating Pill Navbar */
+    /* Authentic Netflix Top Bar (Clean, High-End & Robust) */
     .netflix-nav-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 12px 6px 18px 6px;
+        padding: 6px 0 16px 0;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         margin-bottom: 24px;
         flex-wrap: wrap;
         gap: 16px;
+        position: relative;
+        z-index: 50;
     }
     
     .brand-logo-link {
@@ -126,7 +148,7 @@ st.markdown("""
         transition: transform 0.25s ease;
     }
     .brand-logo-link:hover {
-        transform: scale(1.05);
+        transform: scale(1.03);
     }
     
     .logo-n-badge {
@@ -164,84 +186,74 @@ st.markdown("""
         letter-spacing: 0.08em;
     }
 
-    /* Centered Floating Capsule Pill Navbar (Framer-Motion Replica from Portfolio) */
-    .netflix-capsule-navbar {
-        position: relative;
-        background: rgba(18, 14, 12, 0.94);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        border: 1px solid rgba(212, 175, 55, 0.4);
-        border-radius: 9999px;
-        padding: 5px 6px;
+    .nav-middle-tagline {
+        font-size: 0.88rem;
+        color: #a3a3a3;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    @media (max-width: 768px) {
+        .nav-middle-tagline {
+            display: none;
+        }
+    }
+
+    .nav-right-links {
         display: inline-flex;
         align-items: center;
-        gap: 2px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 175, 55, 0.15);
-        z-index: 100;
+        gap: 10px;
     }
-    
-    /* The animated sliding golden pill */
-    .capsule-active-pill {
-        position: absolute;
-        top: 5px;
-        left: 6px;
-        width: 0;
-        height: 0;
-        background: linear-gradient(135deg, #e6c04e 0%, #D4AF37 55%, #b89326 100%);
-        border-radius: 9999px;
-        box-shadow: 0 0 18px rgba(212, 175, 55, 0.65), 0 2px 10px rgba(0, 0, 0, 0.4);
-        transition: left 0.38s cubic-bezier(0.16, 1, 0.3, 1), width 0.38s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s ease, opacity 0.2s ease;
-        will-change: left, width, transform;
-        pointer-events: none;
-        z-index: 1;
-        opacity: 0;
-    }
-
-    .capsule-item {
-        position: relative;
-        z-index: 2;
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.11em;
-        text-transform: uppercase;
-        color: #b5b0a1 !important;
-        padding: 7px 16px;
-        border-radius: 9999px;
-        text-decoration: none !important;
-        transition: color 0.22s ease, transform 0.2s ease;
-        display: inline-block;
-        white-space: nowrap;
-        cursor: pointer;
-        user-select: none;
-    }
-    .capsule-item:hover {
-        color: #fdfbf7 !important;
-    }
-    .capsule-item.active {
-        color: #0F0C0A !important;
-        font-weight: 800;
-    }
-
-    .nav-portfolio-link {
-        background: rgba(212, 175, 55, 0.12);
-        border: 1px solid #D4AF37;
-        color: #D4AF37 !important;
-        font-size: 0.73rem;
-        font-weight: 800;
-        letter-spacing: 0.08em;
-        padding: 6px 14px;
-        border-radius: 9999px;
-        text-decoration: none !important;
-        transition: all 0.22s ease;
+    .nav-link-btn {
         display: inline-flex;
         align-items: center;
         gap: 6px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        padding: 7px 15px;
+        border-radius: 9999px;
+        text-decoration: none !important;
+        transition: all 0.22s ease;
     }
-    .nav-portfolio-link:hover {
+    .nav-portfolio-btn {
         background: #D4AF37;
         color: #0F0C0A !important;
-        box-shadow: 0 0 16px rgba(212, 175, 55, 0.55);
-        transform: translateY(-1px);
+        box-shadow: 0 0 14px rgba(212, 175, 55, 0.35);
+    }
+    .nav-portfolio-btn:hover {
+        background: #e6c04e;
+        transform: translateY(-2px);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+    }
+    .nav-github-btn {
+        background: rgba(255, 255, 255, 0.08);
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .nav-github-btn:hover {
+        background: rgba(255, 255, 255, 0.16);
+        border-color: rgba(255, 255, 255, 0.35);
+        transform: translateY(-2px);
+    }
+
+    /* Equal Proportion Tech Stack Cards (Screenshot 3 Fix) */
+    .tech-stack-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 18px 20px;
+        min-height: 180px !important;
+        height: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        box-sizing: border-box !important;
+        transition: border-color 0.25s ease, transform 0.25s ease;
+    }
+    .tech-stack-card:hover {
+        border-color: rgba(229, 9, 20, 0.5);
+        transform: translateY(-2px);
     }
 
     /* Popular Picks (CSS Flex: No colliding columns) */
@@ -283,10 +295,11 @@ st.markdown("""
         box-shadow: 0 6px 18px rgba(229, 9, 20, 0.45);
     }
 
-    /* Netflix Poster Cards (Cinematic Parallax Scaling & Depth) */
+    /* Netflix Poster Cards (Equal Proportions & Depth - Screenshot 4 Fix) */
     .netflix-card {
         text-decoration: none !important;
-        display: block;
+        display: flex !important;
+        flex-direction: column !important;
         color: inherit !important;
         cursor: pointer;
         position: relative;
@@ -294,15 +307,17 @@ st.markdown("""
         overflow: hidden;
         background: #181818;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
-        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
         margin-bottom: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        height: 380px !important;
+        box-sizing: border-box !important;
         animation: cardCascadeIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) backwards;
         will-change: transform, box-shadow;
     }
     
     @keyframes cardCascadeIn {
-        from { opacity: 0; transform: translateY(22px) scale(0.95); }
+        from { opacity: 0; transform: translateY(20px) scale(0.96); }
         to { opacity: 1; transform: translateY(0) scale(1); }
     }
     
@@ -314,23 +329,29 @@ st.markdown("""
     }
 
     .card-poster-img {
-        width: 100%;
-        aspect-ratio: 2 / 3;
-        object-fit: cover;
-        display: block;
+        width: 100% !important;
+        height: 310px !important;
+        object-fit: cover !important;
+        display: block !important;
+        background: #111111;
         transition: transform 0.4s ease;
     }
 
     .card-footer {
-        padding: 9px 10px 11px 10px;
+        height: 70px !important;
+        padding: 10px 12px !important;
         background: #181818;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        box-sizing: border-box !important;
     }
 
     .card-movie-title {
-        font-size: 0.84rem;
+        font-size: 0.86rem;
         font-weight: 700;
         color: #ffffff;
-        margin-bottom: 4px;
+        margin-bottom: 2px;
         line-height: 1.25;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -629,227 +650,29 @@ if "search" in st.query_params:
             pass
     st.query_params.clear()
 
-# Top Netflix Bar with Centered Floating Capsule Navbar (Interactive Framer-Motion Replica)
+# Authentic Netflix Top Navigation Bar
 st.markdown("""<div class="netflix-nav-container">
 <a href="?home=true" target="_self" class="brand-logo-link" title="Return to Home">
 <span class="logo-n-badge">N</span>
 <span class="logo-cine">CINE</span><span class="logo-match">MATCH</span>
 <span class="logo-ai-badge">AI</span>
 </a>
-<div class="netflix-capsule-navbar" id="netflixNavbar">
-<div class="capsule-active-pill" id="capsuleActivePill"></div>
-<a href="#home-section" class="capsule-item active" data-target="home-section">HOME</a>
-<a href="#search-section" class="capsule-item" data-target="search-section">SEARCH BAR</a>
-<a href="#trending-section" class="capsule-item" data-target="trending-section">TOP 15 IMDB</a>
-<a href="#tech-stack-section" class="capsule-item" data-target="tech-stack-section">TECH STACK</a>
-<a href="#contact-section" class="capsule-item" data-target="contact-section">CONTACT ME</a>
+<div class="nav-middle-tagline">
+<span>🎬 Distributed PySpark ALS Recommender</span>
+<span style="color: rgba(255,255,255,0.25); margin: 0 8px;">•</span>
+<span style="color: #46d369; font-weight:700;">● Engine Online</span>
 </div>
-<div style="display: flex; align-items: center; gap: 10px;">
-<a href="https://e-varun-portfolio.vercel.app/#intro" target="_blank" class="nav-portfolio-link" title="Explore Varun's Portfolio">
-<span>🌐</span> PORTFOLIO
+<div class="nav-right-links">
+<a href="https://github.com/Varun-Esarapu/movie_rec" target="_blank" class="nav-link-btn nav-github-btn" title="GitHub Repository">
+<span>🐙</span> GitHub
 </a>
-<span style="font-size: 0.78rem; color: #46d369; font-weight: 700;">● Online</span>
+<a href="https://e-varun-portfolio.vercel.app/#intro" target="_blank" class="nav-link-btn nav-portfolio-btn" title="Explore Varun's Portfolio">
+<span>🌐</span> Portfolio
+</a>
 </div>
 </div>
 <div class="ambient-glow-orb-1"></div>
-<div class="ambient-glow-orb-2"></div>
-<div id="home-section"></div>""", unsafe_allow_html=True)
-
-# Client-Side Framer-Motion Golden Pill Spring Animation, Easing Scroll & Scroll Spy
-components.html("""
-<script>
-(function() {
-    let isClickScrolling = false;
-    let targetProgress = 0;
-    let currentProgress = 0;
-
-    function setup() {
-        const parentDoc = window.parent.document;
-        const navbar = parentDoc.getElementById('netflixNavbar');
-        const pill = parentDoc.getElementById('capsuleActivePill');
-        if (!navbar || !pill) {
-            setTimeout(setup, 60);
-            return;
-        }
-
-        // Shared Layout Animation: Spring stretch & Glide
-        function glidePill(targetEl) {
-            if (!targetEl) return;
-            const navRect = navbar.getBoundingClientRect();
-            const targetRect = targetEl.getBoundingClientRect();
-            const targetLeft = targetRect.left - navRect.left;
-            const currentLeft = parseFloat(pill.style.left || 0);
-            const dist = Math.abs(targetLeft - currentLeft);
-
-            // Dynamic spring stretch physics when traveling across buttons
-            if (dist > 35) {
-                pill.style.transform = 'scaleX(1.08)';
-                setTimeout(function() {
-                    pill.style.transform = 'scaleX(1.0)';
-                }, 180);
-            }
-
-            pill.style.left = targetLeft + 'px';
-            pill.style.top = (targetRect.top - navRect.top) + 'px';
-            pill.style.width = targetRect.width + 'px';
-            pill.style.height = targetRect.height + 'px';
-            pill.style.opacity = '1';
-        }
-
-        // Programmatic Easing Curve: cubic-bezier [0.16, 1, 0.3, 1] exponential deceleration
-        function easeOutQuart(t) {
-            return 1 - Math.pow(1 - t, 4);
-        }
-
-        function smoothScrollTo(targetY, duration) {
-            duration = duration || 750;
-            const scrollEl = parentDoc.querySelector('[data-testid="stAppViewContainer"]') || window.parent;
-            const startY = scrollEl === window.parent ? (window.parent.scrollY || 0) : scrollEl.scrollTop;
-            const diff = targetY - startY;
-            if (Math.abs(diff) < 2) {
-                isClickScrolling = false;
-                return;
-            }
-            const startTime = performance.now();
-
-            function step(now) {
-                const elapsed = now - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const ease = easeOutQuart(progress);
-                const current = startY + diff * ease;
-
-                if (scrollEl === window.parent) {
-                    window.parent.scrollTo(0, current);
-                } else {
-                    scrollEl.scrollTop = current;
-                }
-
-                if (progress < 1) {
-                    requestAnimationFrame(step);
-                } else {
-                    // Unlock scroll spy 50ms after scroll completes
-                    setTimeout(function() {
-                        isClickScrolling = false;
-                    }, 50);
-                }
-            }
-            requestAnimationFrame(step);
-        }
-
-        // Click Handler with Scroll-Lock Ref
-        const items = navbar.querySelectorAll('.capsule-item');
-        items.forEach(function(item) {
-            item.onclick = function(e) {
-                e.preventDefault();
-                isClickScrolling = true; // Lock scroll spy during programmatic glide
-
-                items.forEach(function(el) { el.classList.remove('active'); });
-                this.classList.add('active');
-                glidePill(this);
-
-                const targetId = this.getAttribute('data-target');
-                if (targetId === 'home-section') {
-                    smoothScrollTo(0, 700);
-                } else {
-                    const targetEl = parentDoc.getElementById(targetId);
-                    if (targetEl) {
-                        const scrollEl = parentDoc.querySelector('[data-testid="stAppViewContainer"]') || parentDoc.documentElement;
-                        const rect = targetEl.getBoundingClientRect();
-                        const currentScroll = scrollEl ? scrollEl.scrollTop : (window.parent.scrollY || 0);
-                        const targetY = currentScroll + rect.top - 80; // 80px offset
-                        smoothScrollTo(targetY, 750);
-
-                        if (targetId === 'tech-stack-section') {
-                            const details = parentDoc.querySelector('details');
-                            if (details) details.open = true;
-                        }
-                    }
-                }
-            };
-        });
-
-        // Spring-Smoothed Reading Progress Bar (Inertia Spring Loop: stiffness 100, damping 30)
-        function springProgressLoop() {
-            currentProgress += (targetProgress - currentProgress) * 0.12;
-            const bar = parentDoc.getElementById('scroll-progress-indicator');
-            if (bar) {
-                bar.style.width = currentProgress.toFixed(2) + '%';
-            }
-            requestAnimationFrame(springProgressLoop);
-        }
-        requestAnimationFrame(springProgressLoop);
-
-        // Viewport Intersection Offset Tuning
-        const scrollContainer = parentDoc.querySelector('[data-testid="stAppViewContainer"]') || window.parent;
-
-        function handleScroll() {
-            const scrollEl = parentDoc.querySelector('[data-testid="stAppViewContainer"]') || parentDoc.documentElement;
-            const scrollTop = scrollEl ? scrollEl.scrollTop : (window.parent.scrollY || 0);
-            const scrollHeight = scrollEl ? scrollEl.scrollHeight : parentDoc.documentElement.scrollHeight;
-            const clientHeight = scrollEl ? scrollEl.clientHeight : window.parent.innerHeight;
-
-            if (scrollHeight > clientHeight) {
-                targetProgress = Math.min(100, Math.max(0, (scrollTop / (scrollHeight - clientHeight)) * 100));
-            }
-
-            // Silence scroll observer when click-scrolling
-            if (isClickScrolling) return;
-
-            const sections = [
-                'contact-section',
-                'tech-stack-section',
-                'trending-section',
-                'search-section',
-                'home-section'
-            ];
-
-            let currentTarget = 'home-section';
-            const isBottom = (scrollTop + clientHeight) >= (scrollHeight - 80);
-
-            if (isBottom) {
-                currentTarget = 'contact-section';
-            } else if (scrollTop < 120) {
-                currentTarget = 'home-section';
-            } else {
-                // Focus zone evaluation (middle vertical strip of the screen)
-                for (let i = 0; i < sections.length; i++) {
-                    const el = parentDoc.getElementById(sections[i]);
-                    if (el) {
-                        const rect = el.getBoundingClientRect();
-                        if (rect.top <= window.parent.innerHeight * 0.42) {
-                            currentTarget = sections[i];
-                            break;
-                        }
-                    }
-                }
-            }
-
-            const activeTab = navbar.querySelector('.capsule-item[data-target="' + currentTarget + '"]');
-            if (activeTab && !activeTab.classList.contains('active')) {
-                items.forEach(function(el) { el.classList.remove('active'); });
-                activeTab.classList.add('active');
-                glidePill(activeTab);
-            }
-        }
-
-        if (scrollContainer && scrollContainer !== window.parent) {
-            scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
-        }
-        window.parent.addEventListener('scroll', handleScroll, { passive: true });
-        window.parent.addEventListener('resize', function() {
-            const cur = navbar.querySelector('.capsule-item.active') || items[0];
-            glidePill(cur);
-        });
-
-        // Initial alignment
-        const initial = navbar.querySelector('.capsule-item.active') || items[0];
-        glidePill(initial);
-        setTimeout(function() { glidePill(initial); }, 250);
-    }
-    setup();
-})();
-</script>
-""", height=0)
+<div class="ambient-glow-orb-2"></div>""", unsafe_allow_html=True)
 
 # Sidebar settings (Engine Controls)
 with st.sidebar:
@@ -1128,7 +951,7 @@ st.markdown("<div id='tech-stack-section'></div>", unsafe_allow_html=True)
 with st.expander("🛠️ System Architecture & Engineering Tech Stack (Production Pipeline)", expanded=False):
     t_c1, t_c2, t_c3 = st.columns(3)
     with t_c1:
-        st.markdown("""<div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px;">
+        st.markdown("""<div class="tech-stack-card">
 <h4 style="margin: 0 0 6px 0; color: #E50914;">⚡ Big Data & Distributed ML</h4>
 <div style="font-size: 0.85rem; color: #b3b3b3; line-height: 1.5;">
 • <b>Apache Spark 3.5 & MLlib</b>: Distributed ALS Matrix Factorization.<br>
@@ -1137,7 +960,7 @@ with st.expander("🛠️ System Architecture & Engineering Tech Stack (Producti
 </div>
 </div>""", unsafe_allow_html=True)
     with t_c2:
-        st.markdown("""<div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px;">
+        st.markdown("""<div class="tech-stack-card">
 <h4 style="margin: 0 0 6px 0; color: #ffffff;">🚀 Microservice Serving Layer</h4>
 <div style="font-size: 0.85rem; color: #b3b3b3; line-height: 1.5;">
 • <b>Django REST Framework</b>: Production serving boundary.<br>
@@ -1146,7 +969,7 @@ with st.expander("🛠️ System Architecture & Engineering Tech Stack (Producti
 </div>
 </div>""", unsafe_allow_html=True)
     with t_c3:
-        st.markdown("""<div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px;">
+        st.markdown("""<div class="tech-stack-card">
 <h4 style="margin: 0 0 6px 0; color: #46d369;">🎬 Real-Time Enrichment Graph</h4>
 <div style="font-size: 0.85rem; color: #b3b3b3; line-height: 1.5;">
 • <b>TMDB Live Graph API</b>: Real-time posters, director credits & starring cast.<br>
