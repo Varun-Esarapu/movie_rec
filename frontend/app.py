@@ -295,7 +295,7 @@ st.markdown("""
         box-shadow: 0 6px 18px rgba(229, 9, 20, 0.45);
     }
 
-    /* Netflix Poster Cards (Equal Proportions & Depth - Screenshot 4 Fix) */
+    /* Netflix Poster Cards (Equal Proportions & Depth - Natural 2:3 Aspect Ratio) */
     .netflix-card {
         text-decoration: none !important;
         display: flex !important;
@@ -310,7 +310,6 @@ st.markdown("""
         transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
         margin-bottom: 16px;
         border: 1px solid rgba(255, 255, 255, 0.08);
-        height: 380px !important;
         box-sizing: border-box !important;
         animation: cardCascadeIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) backwards;
         will-change: transform, box-shadow;
@@ -330,7 +329,8 @@ st.markdown("""
 
     .card-poster-img {
         width: 100% !important;
-        height: 310px !important;
+        aspect-ratio: 2 / 3 !important;
+        height: auto !important;
         object-fit: cover !important;
         display: block !important;
         background: #111111;
@@ -338,7 +338,7 @@ st.markdown("""
     }
 
     .card-footer {
-        height: 70px !important;
+        min-height: 64px !important;
         padding: 10px 12px !important;
         background: #181818;
         display: flex !important;
@@ -472,45 +472,10 @@ st.markdown("""
         margin-bottom: 18px;
     }
 
-    /* Luxury Cinema Dual-Arc Spinner Loading Animation */
+    /* Clean Minimalist Loading Spinner */
     div[data-testid="stSpinner"] {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 26px 0;
-    }
-    div[data-testid="stSpinner"] > div {
-        position: relative;
-        width: 44px !important;
-        height: 44px !important;
-        border-radius: 50% !important;
-        border: 3px solid transparent !important;
-        border-top-color: #E50914 !important;
-        border-bottom-color: #E50914 !important;
-        box-shadow: 0 0 22px rgba(229, 9, 20, 0.5);
-        animation: dualSpinRed 0.85s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite !important;
-    }
-    div[data-testid="stSpinner"] > div::after {
-        content: '';
-        position: absolute;
-        top: 3px;
-        left: 3px;
-        right: 3px;
-        bottom: 3px;
-        border-radius: 50%;
-        border: 2px solid transparent;
-        border-left-color: #D4AF37;
-        border-right-color: #D4AF37;
-        box-shadow: 0 0 14px rgba(212, 175, 55, 0.55);
-        animation: dualSpinGold 1.3s linear infinite;
-    }
-    @keyframes dualSpinRed {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    @keyframes dualSpinGold {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(-360deg); }
+        margin: 18px 0 !important;
+        padding: 12px 0 !important;
     }
 
     /* Profile / Footer Card */
