@@ -533,28 +533,24 @@ if "search" in st.query_params:
     st.query_params.clear()
 
 # Top Netflix Bar with Centered Floating Capsule Navbar (Screenshot 3 Replica)
-st.markdown("""
-<div class="netflix-nav-container">
-    <a href="?home=true" target="_self" class="brand-logo-link" title="Return to Home">
-        <span class="logo-n-badge">N</span>
-        <span class="logo-cine">CINE</span><span class="logo-match">MATCH</span>
-        <span class="logo-ai-badge">AI</span>
-    </a>
-    
-    <div class="netflix-capsule-navbar">
-        <a href="?home=true" target="_self" class="capsule-item active">HOME</a>
-        <a href="#popular-picks" class="capsule-item">POPULAR</a>
-        <a href="#trending" class="capsule-item">TOP 15 IMDB</a>
-        <a href="#tech-stack" class="capsule-item">TECH STACK</a>
-        <a href="https://github.com/Varun-Esarapu/movie_rec" target="_blank" class="capsule-item">GITHUB</a>
-        <a href="https://e-varun-portfolio.vercel.app/#intro" target="_blank" class="capsule-item capsule-item-gold">PORTFOLIO</a>
-    </div>
-
-    <div style="font-size: 0.8rem; color: #8c8c8c;">
-        <span style="color:#46d369; font-weight:700;">● Engine Online</span>
-    </div>
+st.markdown("""<div class="netflix-nav-container">
+<a href="?home=true" target="_self" class="brand-logo-link" title="Return to Home">
+<span class="logo-n-badge">N</span>
+<span class="logo-cine">CINE</span><span class="logo-match">MATCH</span>
+<span class="logo-ai-badge">AI</span>
+</a>
+<div class="netflix-capsule-navbar">
+<a href="?home=true" target="_self" class="capsule-item active">HOME</a>
+<a href="#popular-picks" class="capsule-item">POPULAR</a>
+<a href="#trending" class="capsule-item">TOP 15 IMDB</a>
+<a href="#tech-stack" class="capsule-item">TECH STACK</a>
+<a href="https://github.com/Varun-Esarapu/movie_rec" target="_blank" class="capsule-item">GITHUB</a>
+<a href="https://e-varun-portfolio.vercel.app/#intro" target="_blank" class="capsule-item capsule-item-gold">PORTFOLIO</a>
 </div>
-""", unsafe_allow_html=True)
+<div style="font-size: 0.8rem; color: #8c8c8c;">
+<span style="color:#46d369; font-weight:700;">● Engine Online</span>
+</div>
+</div>""", unsafe_allow_html=True)
 
 # Sidebar settings (Engine Controls)
 with st.sidebar:
@@ -582,23 +578,21 @@ if mode == "Similar Movie Intelligence":
         )
         
         # Popular Picks (CSS Flex: No colliding columns!)
-        st.markdown("""
-        <div id="popular-picks" class="quick-chips-wrapper">
-            <span class="quick-chips-label">Popular Picks:</span>
-            <a href="?search=The+Godfather" target="_self" class="netflix-chip">🍷 The Godfather</a>
-            <a href="?search=The+Dark+Knight" target="_self" class="netflix-chip">🦇 The Dark Knight</a>
-            <a href="?search=Fight+Club" target="_self" class="netflix-chip">🕶️ Fight Club</a>
-            <a href="?search=Kill+Bill" target="_self" class="netflix-chip">🗡️ Kill Bill</a>
-            <a href="?search=Gladiator" target="_self" class="netflix-chip">⚔️ Gladiator</a>
-            <a href="?search=Inception" target="_self" class="netflix-chip">🌀 Inception</a>
-            <a href="?search=Interstellar" target="_self" class="netflix-chip">🌌 Interstellar</a>
-            <a href="?search=Shutter+Island" target="_self" class="netflix-chip">🏝️ Shutter Island</a>
-            <a href="?search=300" target="_self" class="netflix-chip">🛡️ 300</a>
-            <a href="?search=Rocky" target="_self" class="netflix-chip">🥊 Rocky</a>
-            <a href="?search=(500)+Days+of+Summer" target="_self" class="netflix-chip">☀️ (500) Days of Summer</a>
-            <a href="?search=Oppenheimer" target="_self" class="netflix-chip">⚛️ Oppenheimer</a>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""<div id="popular-picks" class="quick-chips-wrapper">
+<span class="quick-chips-label">Popular Picks:</span>
+<a href="?search=The+Godfather" target="_self" class="netflix-chip">🍷 The Godfather</a>
+<a href="?search=The+Dark+Knight" target="_self" class="netflix-chip">🦇 The Dark Knight</a>
+<a href="?search=Fight+Club" target="_self" class="netflix-chip">🕶️ Fight Club</a>
+<a href="?search=Kill+Bill" target="_self" class="netflix-chip">🗡️ Kill Bill</a>
+<a href="?search=Gladiator" target="_self" class="netflix-chip">⚔️ Gladiator</a>
+<a href="?search=Inception" target="_self" class="netflix-chip">🌀 Inception</a>
+<a href="?search=Interstellar" target="_self" class="netflix-chip">🌌 Interstellar</a>
+<a href="?search=Shutter+Island" target="_self" class="netflix-chip">🏝️ Shutter Island</a>
+<a href="?search=300" target="_self" class="netflix-chip">🛡️ 300</a>
+<a href="?search=Rocky" target="_self" class="netflix-chip">🥊 Rocky</a>
+<a href="?search=(500)+Days+of+Summer" target="_self" class="netflix-chip">☀️ (500) Days of Summer</a>
+<a href="?search=Oppenheimer" target="_self" class="netflix-chip">⚛️ Oppenheimer</a>
+</div>""", unsafe_allow_html=True)
 
     # Process search if typed
     if search_query.strip() and search_query != st.session_state.get("last_search"):
@@ -834,62 +828,54 @@ st.markdown("<div id='tech-stack'></div>", unsafe_allow_html=True)
 with st.expander("🛠️ System Architecture & Engineering Tech Stack (Production Pipeline)", expanded=False):
     t_c1, t_c2, t_c3 = st.columns(3)
     with t_c1:
-        st.markdown("""
-        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px;">
-            <h4 style="margin: 0 0 6px 0; color: #E50914;">⚡ Big Data & Distributed ML</h4>
-            <div style="font-size: 0.85rem; color: #b3b3b3; line-height: 1.5;">
-                • <b>Apache Spark 3.5 & MLlib</b>: Distributed ALS Matrix Factorization.<br>
-                • <b>Dataset</b>: 32,000,204 MovieLens ratings with explicit StructType schemas.<br>
-                • <b>Tuned Hyperparameters</b>: <code>rank=16, partitions=40, coldStartStrategy="drop"</code>.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""<div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px;">
+<h4 style="margin: 0 0 6px 0; color: #E50914;">⚡ Big Data & Distributed ML</h4>
+<div style="font-size: 0.85rem; color: #b3b3b3; line-height: 1.5;">
+• <b>Apache Spark 3.5 & MLlib</b>: Distributed ALS Matrix Factorization.<br>
+• <b>Dataset</b>: 32,000,204 MovieLens ratings with explicit StructType schemas.<br>
+• <b>Tuned Hyperparameters</b>: <code>rank=16, partitions=40, coldStartStrategy="drop"</code>.
+</div>
+</div>""", unsafe_allow_html=True)
     with t_c2:
-        st.markdown("""
-        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px;">
-            <h4 style="margin: 0 0 6px 0; color: #ffffff;">🚀 Microservice Serving Layer</h4>
-            <div style="font-size: 0.85rem; color: #b3b3b3; line-height: 1.5;">
-                • <b>Django REST Framework</b>: Production serving boundary.<br>
-                • <b>Sub-15ms Latency</b>: Serves precomputed vectors without running heavy Spark jobs.<br>
-                • <b>PostgreSQL 15 / SQLite</b>: Indexed on <code>(user_id, rank)</code> for rapid retrieval.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""<div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px;">
+<h4 style="margin: 0 0 6px 0; color: #ffffff;">🚀 Microservice Serving Layer</h4>
+<div style="font-size: 0.85rem; color: #b3b3b3; line-height: 1.5;">
+• <b>Django REST Framework</b>: Production serving boundary.<br>
+• <b>Sub-15ms Latency</b>: Serves precomputed vectors without running heavy Spark jobs.<br>
+• <b>PostgreSQL 15 / SQLite</b>: Indexed on <code>(user_id, rank)</code> for rapid retrieval.
+</div>
+</div>""", unsafe_allow_html=True)
     with t_c3:
-        st.markdown("""
-        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px;">
-            <h4 style="margin: 0 0 6px 0; color: #46d369;">🎬 Real-Time Enrichment Graph</h4>
-            <div style="font-size: 0.85rem; color: #b3b3b3; line-height: 1.5;">
-                • <b>TMDB Live Graph API</b>: Real-time posters, director credits & starring cast.<br>
-                • <b>Hybrid Multi-Strategy Search</b>: Title normalization & post-dataset dynamic ingestion.<br>
-                • <b>Netflix Cinematic UI</b>: Glassmorphism, 3D hover effects & responsive grid.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""<div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px;">
+<h4 style="margin: 0 0 6px 0; color: #46d369;">🎬 Real-Time Enrichment Graph</h4>
+<div style="font-size: 0.85rem; color: #b3b3b3; line-height: 1.5;">
+• <b>TMDB Live Graph API</b>: Real-time posters, director credits & starring cast.<br>
+• <b>Hybrid Multi-Strategy Search</b>: Title normalization & post-dataset dynamic ingestion.<br>
+• <b>Netflix Cinematic UI</b>: Glassmorphism, 3D hover effects & responsive grid.
+</div>
+</div>""", unsafe_allow_html=True)
 
 # Developer Profile & Portfolio Card (Varun Esarapu)
-st.markdown("""
-<div class="netflix-footer">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-        <div>
-            <div style="font-size: 0.76rem; color: #E50914; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em;">Designed & Engineered By</div>
-            <h3 style="margin: 3px 0 4px 0; font-size: 1.6rem; font-weight: 800; color: #ffffff;">Varun Esarapu</h3>
-            <p style="margin: 0; color: #8c8c8c; font-size: 0.9rem;">AI & Data Science Engineer · Big Data & Distributed Machine Learning Pipelines</p>
-        </div>
-        <div style="display: flex; flex-wrap: wrap; align-items: center;">
-            <a href="https://e-varun-portfolio.vercel.app/#intro" target="_blank" class="footer-btn footer-portfolio">
-                <span>🌐</span> Portfolio Website
-            </a>
-            <a href="https://github.com/Varun-Esarapu/movie_rec" target="_blank" class="footer-btn footer-github">
-                <span>🐙</span> GitHub Repository
-            </a>
-            <a href="https://www.linkedin.com/in/varun-esarapu/" target="_blank" class="footer-btn footer-linkedin">
-                <span>💼</span> LinkedIn Profile
-            </a>
-            <a href="mailto:esarapuvarun88596@gmail.com" class="footer-btn footer-github">
-                <span>✉️</span> Contact Varun
-            </a>
-        </div>
-    </div>
+st.markdown("""<div class="netflix-footer">
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+<div>
+<div style="font-size: 0.76rem; color: #E50914; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em;">Designed & Engineered By</div>
+<h3 style="margin: 3px 0 4px 0; font-size: 1.6rem; font-weight: 800; color: #ffffff;">Varun Esarapu</h3>
+<p style="margin: 0; color: #8c8c8c; font-size: 0.9rem;">AI & Data Science Engineer · Big Data & Distributed Machine Learning Pipelines</p>
 </div>
-""", unsafe_allow_html=True)
+<div style="display: flex; flex-wrap: wrap; align-items: center;">
+<a href="https://e-varun-portfolio.vercel.app/#intro" target="_blank" class="footer-btn footer-portfolio">
+<span>🌐</span> Portfolio Website
+</a>
+<a href="https://github.com/Varun-Esarapu/movie_rec" target="_blank" class="footer-btn footer-github">
+<span>🐙</span> GitHub Repository
+</a>
+<a href="https://www.linkedin.com/in/varun-esarapu/" target="_blank" class="footer-btn footer-linkedin">
+<span>💼</span> LinkedIn Profile
+</a>
+<a href="mailto:esarapuvarun88596@gmail.com" class="footer-btn footer-github">
+<span>✉️</span> Contact Varun
+</a>
+</div>
+</div>
+</div>""", unsafe_allow_html=True)
