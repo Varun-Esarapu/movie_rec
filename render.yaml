@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: cinematch-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt && python manage.py migrate
+    startCommand: gunicorn recommender_core.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: TMDB_API_KEY
+        value: 3a1ff8b883fd4c71a563201decf380b1
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "*"

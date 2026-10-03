@@ -1,0 +1,32 @@
+# Python bytecode & environments
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env
+
+# Spark, Hadoop & Checkpoint artifacts
+derby.log
+metastore_db/
+checkpoint/
+spark-warehouse/
+winutils/
+*.jar
+
+# Bulky dataset & model files (Never push 32M raw CSVs or Parquet exports)
+data/
+datasets/
+*.zip
+*.csv
+*.parquet
+*.db
+*.sqlite3
+backend/db.sqlite3
+
+# OS Metadata & IDE files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
