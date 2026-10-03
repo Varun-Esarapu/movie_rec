@@ -6,6 +6,7 @@ import logging
 import urllib.parse
 import subprocess
 import requests
+import math
 from django.db.models import Q
 from api.models import Movie
 from api.serializers import MovieSerializer
@@ -138,6 +139,8 @@ def search_movies_hybrid(query, limit=10):
             poster_path = item.get("poster_path")
             poster_url = f"https://image.tmdb.org/t/p/w500{poster_path}" if poster_path else None
             pop = float(item.get("popularity", 0.0))
+            vote_avg = float(item.get("vote_average", 0.0) or 0.0)
+            vote_cnt = int(item.get("vote_count", 0) or 0)
 
             # Check if this TMDB movie already exists in DB
             existing = Movie.objects.filter(Q(tmdb_id=t_id) | Q(title__iexact=full_title) | Q(title__iexact=title)).first()
@@ -151,7 +154,9 @@ def search_movies_hybrid(query, limit=10):
                     "genres": existing.genres,
                     "tmdb_id": existing.tmdb_id,
                     "poster_url": existing.poster_url,
-                    "popularity": pop + 40.0
+                    "popularity": pop,
+                    "vote_average": vote_avg,
+                    "vote_count": vote_cnt
                 }
             else:
                 # Dynamically register movie in catalog
@@ -175,7 +180,9 @@ def search_movies_hybrid(query, limit=10):
                     "genres": new_movie.genres,
                     "tmdb_id": new_movie.tmdb_id,
                     "poster_url": new_movie.poster_url,
-                    "popularity": pop + 40.0
+                    "popularity": pop,
+                    "vote_average": vote_avg,
+                    "vote_count": vote_cnt
                 }
 
     # 2. Local Database Multi-Strategy Search
@@ -203,10 +210,12 @@ def search_movies_hybrid(query, limit=10):
                 "genres": m.genres,
                 "tmdb_id": m.tmdb_id,
                 "poster_url": m.poster_url,
-                "popularity": 10.0
+                "popularity": 10.0,
+                "vote_average": 6.0,
+                "vote_count": 100
             }
 
-    # 3. High-Precision Relevance Scoring
+    # 3. High-Precision Acclaim & Relevance Scoring
     scored = []
     for item in candidates.values():
         t_norm = normalize_movie_title(item["title"])
@@ -233,12 +242,26 @@ def search_movies_hybrid(query, limit=10):
         if item.get("poster_url"):
             score += 40.0
 
-        # Core catalog boost for iconic MovieLens entries
-        if item.get("movie_id", 999999) < 10000:
-            score += 25.0
+        # Critical Acclaim & Critical Mass Weighting (Prefers highest-rated and critically acclaimed versions)
+        vote_avg = float(item.get("vote_average", 0.0) or 0.0)
+        vote_cnt = float(item.get("vote_count", 0) or 0)
+        pop = float(item.get("popularity", 0.0) or 0.0)
 
-        # Popularity weighting ensures world-famous hits rank above obscure titles
-        score += min(float(item.get("popularity", 0.0)), 80.0)
+        if vote_avg >= 6.5:
+            score += (vote_avg - 6.0) * 22.0
+
+        if vote_cnt > 0:
+            score += min(math.log10(max(vote_cnt, 1.0)) * 16.0, 75.0)
+
+        # Global popularity weighting
+        score += min(pop * 1.5, 95.0)
+
+        # Release year tie-breaker: modern acclaimed versions over vintage obscure ones for identical title matches
+        year_match = re.search(r"\((\d{4})\)", item.get("title", ""))
+        if year_match:
+            yr = int(year_match.group(1))
+            if yr >= 2000:
+                score += min((yr - 2000) * 1.5, 35.0)
 
         scored.append((score, item))
 
