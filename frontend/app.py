@@ -76,42 +76,6 @@ st.markdown("""
         min-height: 100vh;
     }
 
-    /* Force disable Streamlit's dark/stale element dimming veil */
-    [data-stale="true"],
-    [data-stale="true"] *,
-    div[data-stale="true"],
-    .element-container[data-stale="true"],
-    div[data-testid="stElementContainer"][data-stale="true"],
-    div[data-testid="stVerticalBlock"] > div[data-stale="true"],
-    div[data-testid="stVerticalBlock"] [data-stale="true"],
-    [data-testid="stAppViewContainer"],
-    [data-testid="stAppViewBlockContainer"],
-    .stApp[data-test-script-state="running"],
-    div[data-testid="stAppViewContainer"] > div:first-child,
-    div.stApp[data-test-script-state="running"] [data-testid="stVerticalBlock"],
-    div.stApp[data-test-script-state="running"] [data-testid="stAppViewBlockContainer"],
-    div.stApp[data-test-script-state="running"] [data-testid="stMainBlockContainer"],
-    div.stApp[data-test-script-state="running"] > .main {
-        opacity: 1 !important;
-        filter: none !important;
-        transition: none !important;
-    }
-
-    div[data-testid="stVerticalBlock"] {
-        opacity: 1 !important;
-        filter: none !important;
-    }
-
-    /* Hide default top-right execution runner & component iframe */
-    div[data-testid="stStatusWidget"],
-    div[data-testid="stCustomComponentV1"] {
-        display: none !important;
-        visibility: hidden !important;
-        height: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
     /* Fixed Spring-Smoothed Scroll Progress Bar along top edge */
     #scroll-progress-indicator {
         position: fixed;
@@ -634,30 +598,6 @@ st.markdown("""
         letter-spacing: 0.02em;
     }
 
-    /* Instant Cinema Loading Screen Overlay (0ms response on click/enter) */
-    .cinema-instant-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(14, 14, 14, 0.88);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        z-index: 9999999;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: opacity 0.25s ease;
-        pointer-events: none;
-    }
-    .cinema-instant-overlay.is-visible {
-        display: flex !important;
-        opacity: 1 !important;
-        pointer-events: auto !important;
-    }
-
     /* Profile / Footer Card */
     .netflix-footer {
         background: #0f0f0f;
@@ -826,21 +766,8 @@ def render_play_loader(title="STREAMING CINEMATIC CLUSTERS...", subtitle="Evalua
 <div class="play-loader-subtitle">{subtitle}</div>
 </div>"""
 
-# Render Navbar, Ambient Glow & Instant Overlay First (Eliminates Blank Screen Delays - Screenshot 4 & 5 Fix)
+# Render Navbar & Ambient Glow First
 st.markdown("""
-<!-- Instant Cinema Loading Screen Overlay (0ms response on click/enter) -->
-<div id="cinema-instant-overlay" class="cinema-instant-overlay">
-  <div class="play-loader-container">
-    <div class="play-loader-circle">
-      <div class="play-loader-track-ring"></div>
-      <div class="play-loader-spin-ring"></div>
-      <div class="play-loader-center-triangle"></div>
-    </div>
-    <div class="play-loader-title" id="instant-loader-title">STREAMING CINEMATIC CLUSTERS...</div>
-    <div class="play-loader-subtitle" id="instant-loader-subtitle">Evaluating latent embedding vectors across 32M ratings</div>
-  </div>
-</div>
-
 <div class="netflix-nav-container">
 <a href="?home=true" target="_self" class="brand-wrapper" title="Return to Home">
 <div class="brand-title">CI<span class="netflix-n">N</span>EMATCH</div>
@@ -863,79 +790,6 @@ st.markdown("""
 <div class="ambient-glow-orb-1"></div>
 <div class="ambient-glow-orb-2"></div>
 """, unsafe_allow_html=True)
-
-components.html("""
-<script>
-(function() {
-    try {
-        var doc = window.parent.document;
-        var win = window.parent;
-        function getOverlay() { return doc.getElementById('cinema-instant-overlay'); }
-        function showInstant(title, subtitle) {
-            var o = getOverlay();
-            if (o) {
-                var t = doc.getElementById('instant-loader-title');
-                var s = doc.getElementById('instant-loader-subtitle');
-                if (t && title) t.innerText = title;
-                if (s && subtitle) s.innerText = subtitle;
-                o.classList.add('is-visible');
-            }
-        }
-        function hideInstant() {
-            var o = getOverlay();
-            if (o) o.classList.remove('is-visible');
-        }
-
-        if (!win.__cinematch_installed) {
-            win.__cinematch_installed = true;
-
-            doc.addEventListener('click', function(e) {
-                var card = e.target.closest('.netflix-card');
-                if (card) {
-                    showInstant('STREAMING CINEMATIC CLUSTERS...', 'Evaluating latent embedding vectors across 32M ratings');
-                    return;
-                }
-                var pill = e.target.closest('[data-testid="stPill"], [data-testid="stPills"] button, [data-baseweb="tag"]');
-                if (pill) {
-                    var label = (pill.innerText || 'Selection').replace(/^[\\s\\W]+/, '');
-                    showInstant('STREAMING CINEMATIC CLUSTERS...', 'Querying latent vectors for "' + label + '"');
-                    return;
-                }
-                var btn = e.target.closest('button[data-testid^="stBaseButton"], button');
-                if (btn) {
-                    var txt = (btn.innerText || '').trim();
-                    if (txt.includes('Return') || txt.includes('(') || txt.includes('✓')) {
-                        showInstant('STREAMING CINEMATIC CLUSTERS...', 'Loading cinematic intelligence...');
-                    }
-                }
-            }, true);
-
-            doc.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    var input = e.target.closest('input[data-testid="stTextInput"], input[type="text"], input');
-                    if (input && input.value && input.value.trim().length > 0) {
-                        showInstant('SEARCHING NEURAL CATALOG...', 'Querying global index & latent vectors for "' + input.value.trim() + '"');
-                    }
-                }
-            }, true);
-
-            if (win.MutationObserver) {
-                var obs = new win.MutationObserver(function() {
-                    var app = doc.querySelector('.stApp');
-                    if (app && app.getAttribute('data-test-script-state') === 'not_running') {
-                        hideInstant();
-                    }
-                });
-                obs.observe(doc.body, { attributes: true, subtree: true, attributeFilter: ['data-test-script-state'] });
-            }
-        }
-        setTimeout(hideInstant, 350);
-    } catch (e) {
-        console.warn('Cinematch instant hook:', e);
-    }
-})();
-</script>
-""", height=0)
 
 # Fast Memory-Cached Backend API Helpers (0ms repeat latency, eliminates blank screen delays)
 @st.cache_data(ttl=3600, show_spinner=False)
@@ -1072,6 +926,7 @@ if mode == "Similar Movie Intelligence":
                 if found:
                     st.session_state["selected_movie"] = found[0]
                     st.session_state["search_matches"] = found[:3]
+            st.rerun()
 
     # Process search if typed
     if search_query.strip() and search_query != st.session_state.get("last_search"):
@@ -1103,6 +958,7 @@ if mode == "Similar Movie Intelligence":
                     btn_label = f"✓ {cand['title']}" if is_active else cand['title']
                     if st.button(btn_label, key=f"disambig_{cand['movie_id']}_{i}", use_container_width=True):
                         st.session_state["selected_movie"] = cand
+                        st.rerun()
 
     # VIEW 1: A Movie is Selected -> Show Netflix Hero Showcase & Similar Recommendations
     if st.session_state["selected_movie"]:
@@ -1197,7 +1053,7 @@ if mode == "Similar Movie Intelligence":
                 poster = m.get("poster_url") or SAFE_PLACEHOLDER
                 
                 with col:
-                    card_html = f"""<a href="?movie={m['movie_id']}" target="_self" class="netflix-card" onclick="var o=document.getElementById('cinema-instant-overlay');if(o)o.classList.add('is-visible');">
+                    card_html = f"""<a href="?movie={m['movie_id']}" target="_self" class="netflix-card">
 <img src="{poster}" class="card-poster-img" />
 <div class="card-footer">
 <div class="card-movie-title">{m['title']}</div>
@@ -1222,7 +1078,7 @@ if mode == "Similar Movie Intelligence":
         for i in range(5):
             movie = FAMOUS_CATALOG[i]
             with row1_cols[i]:
-                card_html = f"""<a href="?movie={movie['movie_id']}" target="_self" class="netflix-card" onclick="var o=document.getElementById('cinema-instant-overlay');if(o)o.classList.add('is-visible');">
+                card_html = f"""<a href="?movie={movie['movie_id']}" target="_self" class="netflix-card">
 <img src="{movie['poster_url']}" class="card-poster-img" />
 <div class="card-footer">
 <div class="card-movie-title">{movie['title']}</div>
@@ -1242,7 +1098,7 @@ if mode == "Similar Movie Intelligence":
         for i in range(5, 10):
             movie = FAMOUS_CATALOG[i]
             with row2_cols[i - 5]:
-                card_html = f"""<a href="?movie={movie['movie_id']}" target="_self" class="netflix-card" onclick="var o=document.getElementById('cinema-instant-overlay');if(o)o.classList.add('is-visible');">
+                card_html = f"""<a href="?movie={movie['movie_id']}" target="_self" class="netflix-card">
 <img src="{movie['poster_url']}" class="card-poster-img" />
 <div class="card-footer">
 <div class="card-movie-title">{movie['title']}</div>
@@ -1262,7 +1118,7 @@ if mode == "Similar Movie Intelligence":
         for i in range(10, 15):
             movie = FAMOUS_CATALOG[i]
             with row3_cols[i - 10]:
-                card_html = f"""<a href="?movie={movie['movie_id']}" target="_self" class="netflix-card" onclick="var o=document.getElementById('cinema-instant-overlay');if(o)o.classList.add('is-visible');">
+                card_html = f"""<a href="?movie={movie['movie_id']}" target="_self" class="netflix-card">
 <img src="{movie['poster_url']}" class="card-poster-img" />
 <div class="card-footer">
 <div class="card-movie-title">{movie['title']}</div>
@@ -1300,7 +1156,7 @@ else:
             col = cols[idx % 4]
             poster = m.get("poster_url") or SAFE_PLACEHOLDER
             with col:
-                card_html = f"""<a href="?movie={m['movie_id']}" target="_self" class="netflix-card" onclick="var o=document.getElementById('cinema-instant-overlay');if(o)o.classList.add('is-visible');">
+                card_html = f"""<a href="?movie={m['movie_id']}" target="_self" class="netflix-card">
 <img src="{poster}" class="card-poster-img" />
 <div class="card-footer">
 <div class="card-movie-title">{m['title']}</div>
