@@ -76,6 +76,31 @@ st.markdown("""
         min-height: 100vh;
     }
 
+    /* Force disable Streamlit's dark/stale element dimming veil */
+    [data-testid="stAppViewContainer"],
+    [data-testid="stAppViewBlockContainer"],
+    .stApp[data-test-script-state="running"],
+    div[data-testid="stAppViewContainer"] > div:first-child,
+    div.stApp[data-test-script-state="running"] [data-testid="stVerticalBlock"],
+    div.stApp[data-test-script-state="running"] [data-testid="stAppViewBlockContainer"],
+    div.stApp[data-test-script-state="running"] [data-testid="stMainBlockContainer"],
+    div.stApp[data-test-script-state="running"] > .main {
+        opacity: 1 !important;
+        filter: none !important;
+        transition: none !important;
+    }
+
+    div[data-testid="stVerticalBlock"] {
+        opacity: 1 !important;
+        filter: none !important;
+    }
+
+    /* Hide default top-right execution runner */
+    div[data-testid="stStatusWidget"] {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
     /* Fixed Spring-Smoothed Scroll Progress Bar along top edge */
     #scroll-progress-indicator {
         position: fixed;
@@ -142,69 +167,59 @@ st.markdown("""
         z-index: 50;
     }
     
-    /* Authentic Pure CSS Vector Brand Component (Zero Staircasing, Anti-Aliased GPU Render) */
-    .cinematch-brand {
+    /* Flawless Single-String Pure CSS Typography Brand Component */
+    .brand-wrapper {
         display: inline-flex;
         align-items: center;
-        gap: 14px;
-        user-select: none;
+        gap: 12px;
         text-decoration: none !important;
+        user-select: none;
+        padding: 4px 0;
         cursor: pointer;
-        -webkit-font-smoothing: antialiased !important;
-        -moz-osx-font-smoothing: grayscale !important;
-        text-rendering: optimizeLegibility !important;
         transition: transform 0.25s ease;
     }
-    .cinematch-brand:hover {
+    .brand-wrapper:hover {
         transform: scale(1.03);
     }
-    .cinematch-title {
-        font-family: 'Bebas Neue', sans-serif !important;
-        font-size: 2.85rem;
-        letter-spacing: 2.5px;
-        color: #FFFFFF;
+    .brand-title {
+        font-family: 'Bebas Neue', 'Impact', sans-serif !important;
+        font-size: 3.2rem;
         line-height: 1;
+        color: #FFFFFF;
+        letter-spacing: 2px;
         margin: 0;
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-        display: inline-flex;
+        display: flex;
         align-items: center;
         -webkit-font-smoothing: antialiased !important;
         -moz-osx-font-smoothing: grayscale !important;
         text-rendering: optimizeLegibility !important;
     }
-    .cinematch-accent {
+    .netflix-n {
         color: #E50914 !important;
+        text-shadow: 0 0 10px rgba(229, 9, 20, 0.6);
         position: relative;
         display: inline-block;
-        filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.6));
-        transition: filter 0.25s ease, transform 0.25s ease;
-        -webkit-font-smoothing: antialiased !important;
-        -moz-osx-font-smoothing: grayscale !important;
+        transition: transform 0.25s ease, text-shadow 0.25s ease;
     }
-    .cinematch-brand:hover .cinematch-accent {
-        filter: drop-shadow(0 0 16px rgba(229, 9, 20, 0.95));
+    .brand-wrapper:hover .netflix-n {
+        text-shadow: 0 0 18px rgba(229, 9, 20, 0.95);
         transform: translateY(-1px);
     }
-    .cinematch-ai-badge {
-        background: linear-gradient(135deg, #E50914, #B81D24);
+    .ai-badge {
+        background: #E50914;
         color: #FFFFFF !important;
-        font-family: 'Inter', -apple-system, sans-serif !important;
-        font-size: 0.72rem;
-        font-weight: 800;
-        letter-spacing: 1.5px;
-        padding: 4px 10px;
-        border-radius: 4px;
-        box-shadow: 0 0 12px rgba(229, 9, 20, 0.5);
-        text-transform: uppercase;
-        display: inline-flex;
-        align-items: center;
-        clip-path: polygon(0% 0%, 82% 0%, 100% 50%, 82% 100%, 0% 100%);
-        padding-right: 14px;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 0.8rem;
+        font-weight: 900;
+        letter-spacing: 1px;
+        padding: 4px 10px 4px 8px;
+        border-radius: 4px 0 0 4px;
+        clip-path: polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%);
+        box-shadow: 0 0 12px rgba(229, 9, 20, 0.4);
+        display: inline-block;
         transition: transform 0.25s ease, box-shadow 0.25s ease;
-        -webkit-font-smoothing: antialiased !important;
-        -moz-osx-font-smoothing: grayscale !important;
     }
-    .cinematch-brand:hover .cinematch-ai-badge {
+    .brand-wrapper:hover .ai-badge {
         transform: scale(1.08) translateX(2px);
         box-shadow: 0 0 18px rgba(229, 9, 20, 0.85);
     }
@@ -816,11 +831,9 @@ st.markdown("""
 </div>
 
 <div class="netflix-nav-container">
-<a href="?home=true" target="_self" class="cinematch-brand" title="Return to Home">
-  <div class="cinematch-title">
-    CI<span class="cinematch-accent">N</span>EMATCH
-  </div>
-  <div class="cinematch-ai-badge">AI</div>
+<a href="?home=true" target="_self" class="brand-wrapper" title="Return to Home">
+<div class="brand-title">CI<span class="netflix-n">N</span>EMATCH</div>
+<div class="ai-badge">AI&nbsp;</div>
 </a>
 <div class="nav-middle-tagline">
 <span>🎬 Distributed PySpark ALS Recommender</span>
@@ -1034,8 +1047,6 @@ if mode == "Similar Movie Intelligence":
             sim_data = data_json.get("results", [])
             source_movie = data_json.get("source_movie", {})
             details = source_movie.get("details", {})
-        except Exception as e:
-            st.error(f"Could not reach recommendation service: {e}")
         except Exception as e:
             st.error(f"Could not reach recommendation service: {e}")
 
