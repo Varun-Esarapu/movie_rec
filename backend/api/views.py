@@ -64,7 +64,19 @@ class MovieSimilarView(APIView):
         results = get_similar_movies_for_target(target, limit=limit)
         details = fetch_movie_credits_and_details(target.tmdb_id)
         
+        # Persist and pass real poster_url if missing from local record
+        if details.get("poster_url") and not target.poster_url:
+            target.poster_url = details["poster_url"]
+            try:
+                target.save(update_fields=["poster_url"])
+            except Exception:
+                pass
+
         source_data = MovieSerializer(target).data
+        if not source_data.get("poster_url") and details.get("poster_url"):
+            source_data["poster_url"] = details["poster_url"]
+        if details.get("title") and (not source_data.get("title") or source_data.get("title") == "Selected Film"):
+            source_data["title"] = details["title"]
         source_data["details"] = details
 
         return Response({

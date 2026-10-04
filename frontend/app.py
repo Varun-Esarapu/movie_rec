@@ -853,7 +853,7 @@ if "movie" in st.query_params:
         if found_target:
             st.session_state["selected_movie"] = found_target
         else:
-            st.session_state["selected_movie"] = {"movie_id": int(mid), "title": "Selected Film"}
+            st.session_state["selected_movie"] = {"movie_id": int(mid), "title": ""}
     st.query_params.clear()
 
 if "search" in st.query_params:
@@ -988,11 +988,37 @@ if mode == "Similar Movie Intelligence":
         except Exception as e:
             st.error(f"Could not reach recommendation service: {e}")
 
+        # Synchronize target and session state with real backend metadata
+        if source_movie:
+            real_title = source_movie.get("title") or details.get("title")
+            if real_title and real_title not in ("Selected Film", "Unknown Title", ""):
+                target["title"] = real_title
+            real_poster = source_movie.get("poster_url") or details.get("poster_url")
+            if real_poster:
+                target["poster_url"] = real_poster
+            if source_movie.get("genres"):
+                target["genres"] = source_movie["genres"]
+            st.session_state["selected_movie"] = target
+
         # Render Netflix Hero Showcase Banner
-        hero_poster = target.get("poster_url") or SAFE_PLACEHOLDER
-        genres_raw = (target.get("genres") or "Drama").replace("|", " · ")
-        
-        title_str = target.get('title', 'Unknown Title')
+        title_str = (
+            target.get("title")
+            if (target.get("title") and target.get("title") not in ("Selected Film", "Unknown Title", ""))
+            else (source_movie.get("title") or details.get("title") or "Feature Film")
+        )
+
+        hero_poster = (
+            target.get("poster_url")
+            or source_movie.get("poster_url")
+            or details.get("poster_url")
+            or SAFE_PLACEHOLDER
+        )
+
+        genres_raw = (
+            source_movie.get("genres")
+            or target.get("genres")
+            or "Drama"
+        ).replace("|", " · ")
         year_str = details.get("release_date", "")[:4] or "Classic"
         tagline = details.get("tagline", "")
         overview = details.get("overview") or "A critically acclaimed cinematic masterpiece recognized for its exceptional storytelling, deep thematic development, and iconic performances."

@@ -106,7 +106,15 @@ def fetch_movie_credits_and_details(tmdb_id):
     else:
         runtime_str = ""
 
+    poster_path = details.get("poster_path")
+    poster_url = f"https://image.tmdb.org/t/p/w500{poster_path}" if poster_path else ""
+    backdrop_path = details.get("backdrop_path")
+    backdrop_url = f"https://image.tmdb.org/t/p/original{backdrop_path}" if backdrop_path else ""
+
     result = {
+        "title": details.get("title") or details.get("original_title") or "",
+        "poster_url": poster_url,
+        "backdrop_url": backdrop_url,
         "overview": details.get("overview") or "",
         "tagline": details.get("tagline") or "",
         "director": director,
