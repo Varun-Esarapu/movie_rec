@@ -49,7 +49,7 @@ def fetch_tmdb_data(endpoint):
 
     # Method 1: Requests
     try:
-        resp = requests.get(full_url, timeout=2.0)
+        resp = requests.get(full_url, timeout=4.5)
         if resp.status_code == 200:
             data = resp.json()
             _TMDB_CACHE[endpoint] = data
@@ -113,6 +113,8 @@ def fetch_movie_credits_and_details(tmdb_id):
 
     result = {
         "title": details.get("title") or details.get("original_title") or "",
+        "original_language": details.get("original_language", "en"),
+        "genres": details.get("genres", []),
         "poster_url": poster_url,
         "backdrop_url": backdrop_url,
         "overview": details.get("overview") or "",
@@ -166,7 +168,7 @@ def search_movies_hybrid(query, limit=15):
                 break
 
     if tmdb_search:
-        for item in tmdb_search.get("results", [])[:30]:
+        for item in tmdb_search.get("results", [])[:20]:
             t_id = item.get("id")
             title = item.get("title", "")
             year = (item.get("release_date") or "")[:4]
@@ -321,7 +323,7 @@ def get_similar_movies_for_target(target_movie, limit=8):
 
     # 1. Primary: TMDB Recommendations & Similar Clusters
     if target_movie.tmdb_id:
-        t_details = fetch_tmdb_data(f"movie/{target_movie.tmdb_id}") or {}
+        t_details = fetch_movie_credits_and_details(target_movie.tmdb_id) or {}
         orig_lang = t_details.get("original_language", "en")
 
         data = fetch_tmdb_data(f"movie/{target_movie.tmdb_id}/recommendations")

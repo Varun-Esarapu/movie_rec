@@ -823,29 +823,35 @@ def api_search_movies(query: str):
     if not clean or len(clean) < 2:
         return []
     try:
-        resp = requests.get(f"{API_BASE_URL}/movies/search/?q={urllib.parse.quote(clean)}", timeout=4)
+        resp = requests.get(f"{API_BASE_URL}/movies/search/?q={urllib.parse.quote(clean)}", timeout=8)
         if resp.status_code == 200:
-            return resp.json()
+            data = resp.json()
+            if isinstance(data, list) and data:
+                return data
     except Exception:
         pass
-    return []
+    raise RuntimeError(f"Search failed for '{clean}'")
 
 @st.cache_data(ttl=3600, show_spinner=False)
-def api_get_similar(movie_id: int, limit: int):
+def api_get_similar_cluster(movie_id: int, limit: int):
     try:
-        resp = requests.get(f"{API_BASE_URL}/movies/{movie_id}/similar/?limit={limit}", timeout=5)
+        resp = requests.get(f"{API_BASE_URL}/movies/{movie_id}/similar/?limit={limit}", timeout=12)
         if resp.status_code == 200:
-            return resp.json()
+            data = resp.json()
+            if isinstance(data, dict) and data.get("results"):
+                return data
     except Exception:
         pass
-    return {}
+    raise RuntimeError(f"Could not load similar movies for {movie_id}")
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def api_get_recommendations(user_id: int, limit: int):
     try:
-        resp = requests.get(f"{API_BASE_URL}/recommendations/{user_id}/?limit={limit}", timeout=4)
+        resp = requests.get(f"{API_BASE_URL}/recommendations/{user_id}/?limit={limit}", timeout=6)
         if resp.status_code == 200:
-            return resp.json()
+            data = resp.json()
+            if isinstance(data, dict) and data.get("recommendations"):
+                return data
     except Exception:
         pass
     return {}
@@ -924,6 +930,22 @@ if mode == "Similar Movie Intelligence":
         )
 
         # Native Instant Popular Picks Pills (No Browser Unload / Zero Black Screen)
+        POPULAR_CHIPS_MAP = {
+            "dune": {"movie_id": 234160, "title": "Dune (2021)", "tmdb_id": 438631, "poster_url": "https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg", "genres": "Action · Adventure · Sci-Fi"},
+            "the godfather": {"movie_id": 858, "title": "The Godfather (1972)", "tmdb_id": 238, "poster_url": "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg", "genres": "Crime · Drama"},
+            "the dark knight": {"movie_id": 58559, "title": "The Dark Knight (2008)", "tmdb_id": 155, "poster_url": "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg", "genres": "Action · Crime"},
+            "fight club": {"movie_id": 2959, "title": "Fight Club (1999)", "tmdb_id": 550, "poster_url": "https://image.tmdb.org/t/p/w500/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg", "genres": "Drama · Thriller"},
+            "kill bill": {"movie_id": 6874, "title": "Kill Bill: Vol. 1 (2003)", "tmdb_id": 24, "poster_url": "https://image.tmdb.org/t/p/w500/v7TaX8kXMXs5yFFGR41guUDNcnB.jpg", "genres": "Action · Crime"},
+            "gladiator": {"movie_id": 3578, "title": "Gladiator (2000)", "tmdb_id": 98, "poster_url": "https://image.tmdb.org/t/p/w500/ty8TGRuvJLPUmAR1H1nRIsgwvim.jpg", "genres": "Action · Adventure · Drama"},
+            "inception": {"movie_id": 79132, "title": "Inception (2010)", "tmdb_id": 27205, "poster_url": "https://image.tmdb.org/t/p/w500/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg", "genres": "Action · Sci-Fi"},
+            "interstellar": {"movie_id": 109487, "title": "Interstellar (2014)", "tmdb_id": 157336, "poster_url": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", "genres": "Adventure · Drama · Sci-Fi"},
+            "shutter island": {"movie_id": 74458, "title": "Shutter Island (2010)", "tmdb_id": 11324, "poster_url": "https://image.tmdb.org/t/p/w500/4GDy0PHYX3VRXUtwK5ysagvk2Te.jpg", "genres": "Mystery · Thriller"},
+            "300": {"movie_id": 51662, "title": "300 (2006)", "tmdb_id": 1271, "poster_url": "https://image.tmdb.org/t/p/w500/bYRq9vP64kX4m47k42lVqI0E6s.jpg", "genres": "Action · Fantasy"},
+            "rocky": {"movie_id": 1954, "title": "Rocky (1976)", "tmdb_id": 1366, "poster_url": "https://image.tmdb.org/t/p/w500/cqxgwUcfL1C2XkH4JqEecmR1x9.jpg", "genres": "Drama · Sport"},
+            "(500) days of summer": {"movie_id": 69757, "title": "(500) Days of Summer (2009)", "tmdb_id": 19913, "poster_url": "https://image.tmdb.org/t/p/w500/f9mbM0Y6RmgzgUmLa49asJS4uhu.jpg", "genres": "Comedy · Drama · Romance"},
+            "oppenheimer": {"movie_id": 943929, "title": "Oppenheimer (2023)", "tmdb_id": 872585, "poster_url": "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg", "genres": "Biography · Drama · History"},
+            "requiem for a dream": {"movie_id": 3949, "title": "Requiem for a Dream (2000)", "tmdb_id": 641, "poster_url": "https://image.tmdb.org/t/p/w500/nOd6vjEmzCT0k4VYqsA2hwyi8BS.jpg", "genres": "Drama"}
+        }
         POPULAR_CHIPS = [
             "🏜️ Dune", "🍷 The Godfather", "🦇 The Dark Knight", "🕶️ Fight Club",
             "🗡️ Kill Bill", "⚔️ Gladiator", "🌀 Inception", "🌌 Interstellar",
@@ -942,15 +964,23 @@ if mode == "Similar Movie Intelligence":
             chip_clean = re.sub(r"^[^\w\s\(\)]+\s*", "", selected_pill).strip()
             st.session_state["search_input"] = chip_clean
             st.session_state["last_search"] = chip_clean
-            local_hit = next((m for m in FAMOUS_CATALOG if m["title"].lower() == chip_clean.lower()), None)
-            if local_hit:
-                st.session_state["selected_movie"] = local_hit
-                st.session_state["search_matches"] = [local_hit]
+            chip_key = chip_clean.lower()
+            if chip_key in POPULAR_CHIPS_MAP:
+                st.session_state["selected_movie"] = POPULAR_CHIPS_MAP[chip_key]
+                st.session_state["search_matches"] = [POPULAR_CHIPS_MAP[chip_key]]
             else:
-                found = api_search_movies(chip_clean)
-                if found:
-                    st.session_state["selected_movie"] = found[0]
-                    st.session_state["search_matches"] = found[:8]
+                local_hit = next((m for m in FAMOUS_CATALOG if m["title"].lower() == chip_key), None)
+                if local_hit:
+                    st.session_state["selected_movie"] = local_hit
+                    st.session_state["search_matches"] = [local_hit]
+                else:
+                    try:
+                        found = api_search_movies(chip_clean)
+                        if found:
+                            st.session_state["selected_movie"] = found[0]
+                            st.session_state["search_matches"] = found[:8]
+                    except Exception:
+                        pass
             st.rerun()
 
     # Process search if typed
@@ -1003,17 +1033,28 @@ if mode == "Similar Movie Intelligence":
 
         # Fetch Similar Movies & Details from Backend (Cached for Instant Response)
         sim_data = []
+        source_movie = {}
         details = {}
         try:
             loader_box = st.empty()
             loader_box.markdown(render_play_loader("STREAMING CINEMATIC CLUSTERS...", "Evaluating latent embedding vectors across 32M ratings"), unsafe_allow_html=True)
-            data_json = api_get_similar(target['movie_id'], num_recs)
+            data_json = api_get_similar_cluster(target['movie_id'], num_recs)
             loader_box.empty()
             sim_data = data_json.get("results", [])
             source_movie = data_json.get("source_movie", {})
             details = source_movie.get("details", {})
-        except Exception as e:
-            st.error(f"Could not reach recommendation service: {e}")
+        except Exception:
+            loader_box.empty()
+            # Resilient direct retry without cache poisoning
+            try:
+                resp = requests.get(f"{API_BASE_URL}/movies/{target['movie_id']}/similar/?limit={num_recs}", timeout=15)
+                if resp.status_code == 200:
+                    data_json = resp.json()
+                    sim_data = data_json.get("results", [])
+                    source_movie = data_json.get("source_movie", {})
+                    details = source_movie.get("details", {})
+            except Exception as e:
+                st.error(f"Could not reach recommendation service: {e}")
 
         # Synchronize target and session state with real backend metadata
         if source_movie:
