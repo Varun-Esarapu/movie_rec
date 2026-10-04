@@ -15,7 +15,7 @@
 🌐 **Portfolio**: [https://e-varun-portfolio.vercel.app/#intro](https://e-varun-portfolio.vercel.app/#intro)  
 🐙 **GitHub**: [https://github.com/Varun-Esarapu](https://github.com/Varun-Esarapu)  
 💼 **LinkedIn**: [https://www.linkedin.com/in/varun-esarapu/](https://www.linkedin.com/in/varun-esarapu/)  
-✉️ **Email**: `esarapuvarun88596@gmail.com`
+✉️ **Email**: `varunesarapu@gmail.com`
 
 ---
 
