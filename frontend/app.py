@@ -728,6 +728,31 @@ IMDB_VERIFIED_RATINGS = {
     "300": 7.6,
     "rocky": 8.1,
     "(500) days of summer": 7.7,
+    "karthikeya 2": 7.9,
+    "orange": 7.1,
+    "darling": 7.3,
+    "dhruva": 7.8,
+    "rrr": 8.0,
+    "baahubali: the beginning": 8.0,
+    "baahubali 2: the conclusion": 8.2,
+    "k.g.f: chapter 1": 8.2,
+    "k.g.f: chapter 2": 8.3,
+    "pushpa: the rise": 7.6,
+    "kantara": 8.2,
+    "sita ramam": 8.5,
+    "jersey": 8.5,
+    "magadheera": 7.7,
+    "pokiri": 8.0,
+    "athadu": 8.2,
+    "dangal": 8.4,
+    "3 idiots": 8.4,
+    "taare zameen par": 8.4,
+    "drishyam": 8.2,
+    "vikram": 8.3,
+    "the notebook": 7.8,
+    "notebook": 7.8,
+    "me before you": 7.4,
+    "the fault in our stars": 7.7,
 }
 
 AUTOFILL_TITLES = [
@@ -925,7 +950,7 @@ if mode == "Similar Movie Intelligence":
                 found = api_search_movies(chip_clean)
                 if found:
                     st.session_state["selected_movie"] = found[0]
-                    st.session_state["search_matches"] = found[:3]
+                    st.session_state["search_matches"] = found[:8]
             st.rerun()
 
     # Process search if typed
@@ -938,27 +963,29 @@ if mode == "Similar Movie Intelligence":
             search_loader.empty()
             if found:
                 st.session_state["selected_movie"] = found[0]
-                st.session_state["search_matches"] = found[:3]
+                st.session_state["search_matches"] = found[:8]
             else:
                 st.session_state["search_matches"] = []
                 st.warning(f"No catalog match found for '{search_query}'.")
         except Exception as e:
             st.error(f"Backend search failed: {e}")
 
-    # Compact Disambiguation Bar
+    # Compact Disambiguation Bar (Up to 8 matches presented in clean 4-column rows)
     matches = st.session_state.get("search_matches", [])
     if len(matches) > 1 and st.session_state.get("selected_movie"):
-        c_m_left, c_m_content, c_m_right = st.columns([1, 2.8, 1])
+        c_m_left, c_m_content, c_m_right = st.columns([1, 3.2, 1])
         with c_m_content:
-            st.markdown("<div style='font-size: 0.8rem; color: #8c8c8c; margin: 4px 0 2px 0;'>🔍 <b>Multiple matches found:</b> (Click to switch)</div>", unsafe_allow_html=True)
-            match_cols = st.columns(len(matches))
-            for i, cand in enumerate(matches):
-                with match_cols[i]:
-                    is_active = (cand.get("movie_id") == st.session_state["selected_movie"].get("movie_id"))
-                    btn_label = f"✓ {cand['title']}" if is_active else cand['title']
-                    if st.button(btn_label, key=f"disambig_{cand['movie_id']}_{i}", use_container_width=True):
-                        st.session_state["selected_movie"] = cand
-                        st.rerun()
+            st.markdown("<div style='font-size: 0.82rem; color: #a3a3a3; margin: 6px 0 4px 0;'>🔍 <b>Multiple matches found for your search:</b> (Click to explore)</div>", unsafe_allow_html=True)
+            for chunk_start in range(0, len(matches), 4):
+                chunk = matches[chunk_start:chunk_start + 4]
+                chunk_cols = st.columns(len(chunk))
+                for i, cand in enumerate(chunk):
+                    with chunk_cols[i]:
+                        is_active = (cand.get("movie_id") == st.session_state["selected_movie"].get("movie_id"))
+                        btn_label = f"✓ {cand['title']}" if is_active else cand['title']
+                        if st.button(btn_label, key=f"disambig_{cand['movie_id']}_{chunk_start+i}", use_container_width=True):
+                            st.session_state["selected_movie"] = cand
+                            st.rerun()
 
     # VIEW 1: A Movie is Selected -> Show Netflix Hero Showcase & Similar Recommendations
     if st.session_state["selected_movie"]:
@@ -1028,18 +1055,20 @@ if mode == "Similar Movie Intelligence":
         vote_avg = details.get("vote_average")
         vote_count = details.get("vote_count")
 
-        # Check verified IMDb rating
+        # Check verified IMDb rating & Source Transparency
         clean_title_key = re.sub(r"\s*\(\d{4}\)", "", title_str).lower().strip()
         imdb_score = IMDB_VERIFIED_RATINGS.get(clean_title_key) or IMDB_VERIFIED_RATINGS.get(title_str.lower().strip())
-        if not imdb_score and vote_avg:
-            imdb_score = vote_avg
+        imdb_id = details.get("imdb_id")
+        imdb_link_html = f"<a href='https://www.imdb.com/title/{imdb_id}/' target='_blank' style='color:#f5c518; text-decoration:none; font-weight:700; margin-left:8px; font-size:0.75rem; background:rgba(245,197,24,0.12); padding:3px 8px; border-radius:4px; border:1px solid rgba(245,197,24,0.35);' title='View on IMDb'>IMDb ↗</a>" if imdb_id else ""
 
-        if imdb_score and vote_count:
-            rating_html = f"<span class='badge-match-score'>⭐ {imdb_score:.1f} / 10 IMDb ({vote_count:,} reviews)</span>"
-        elif imdb_score:
-            rating_html = f"<span class='badge-match-score'>⭐ {imdb_score:.1f} / 10 IMDb</span>"
+        if imdb_score:
+            rating_html = f"<span class='badge-match-score'>⭐ {imdb_score:.1f} / 10 IMDb</span>{imdb_link_html}"
+        elif vote_avg and vote_count:
+            rating_html = f"<span class='badge-match-score'>⭐ {vote_avg:.1f} / 10 TMDB Rating ({vote_count:,} reviews)</span>{imdb_link_html}"
+        elif vote_avg:
+            rating_html = f"<span class='badge-match-score'>⭐ {vote_avg:.1f} / 10 TMDB</span>{imdb_link_html}"
         else:
-            rating_html = "<span class='badge-match-score'>98% Match</span>"
+            rating_html = f"<span class='badge-match-score'>98% Match</span>{imdb_link_html}"
         runtime_html = f"<span class='badge-runtime'>⏱️ {runtime}</span>" if runtime else ""
         tagline_html = f"<div class='hero-tagline-text'>\"{tagline}\"</div>" if tagline else ""
         

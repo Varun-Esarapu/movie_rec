@@ -122,18 +122,20 @@ def fetch_movie_credits_and_details(tmdb_id):
         "runtime": runtime_str,
         "vote_average": details.get("vote_average"),
         "vote_count": details.get("vote_count"),
-        "release_date": details.get("release_date", "")
+        "release_date": details.get("release_date", ""),
+        "imdb_id": details.get("imdb_id") or ""
     }
 
     _DETAILS_CACHE[tmdb_id] = result
     return result
 
-def search_movies_hybrid(query, limit=10):
+def search_movies_hybrid(query, limit=15):
     """
     Intelligent hybrid search combining:
     1. TMDB Global Search (for latest movies like Oppenheimer, correct popularity, and high-res posters)
     2. Local MovieLens database matching (handling '(500) Days of Summer' and 'Heat, The')
     3. Multi-tier relevance ranking favoring exact title match & high popularity over obscure titles.
+    4. Typo & spelling tolerance (e.g. 'dhurva' -> 'Dhruva').
     """
     clean_q = query.strip()
     if not clean_q or len(clean_q) < 2:
@@ -150,8 +152,21 @@ def search_movies_hybrid(query, limit=10):
     # 1. TMDB Global Search (Pulls blockbusters like Oppenheimer 2023, correct spelling)
     q_encoded = urllib.parse.quote_plus(clean_q)
     tmdb_search = fetch_tmdb_data(f"search/movie?query={q_encoded}")
+
+    # Typo / Transposition Tolerance (e.g. "dhurva" -> "dhruva")
+    if not tmdb_search or not tmdb_search.get("results"):
+        chars = list(clean_q)
+        for i in range(len(chars) - 1):
+            transposed = chars.copy()
+            transposed[i], transposed[i+1] = transposed[i+1], transposed[i]
+            cand_q = "".join(transposed)
+            t_res = fetch_tmdb_data(f"search/movie?query={urllib.parse.quote_plus(cand_q)}")
+            if t_res and t_res.get("results"):
+                tmdb_search = t_res
+                break
+
     if tmdb_search:
-        for item in tmdb_search.get("results", [])[:8]:
+        for item in tmdb_search.get("results", [])[:30]:
             t_id = item.get("id")
             title = item.get("title", "")
             year = (item.get("release_date") or "")[:4]
@@ -306,6 +321,9 @@ def get_similar_movies_for_target(target_movie, limit=8):
 
     # 1. Primary: TMDB Recommendations & Similar Clusters
     if target_movie.tmdb_id:
+        t_details = fetch_tmdb_data(f"movie/{target_movie.tmdb_id}") or {}
+        orig_lang = t_details.get("original_language", "en")
+
         data = fetch_tmdb_data(f"movie/{target_movie.tmdb_id}/recommendations")
         raw_items = data.get("results", []) if data else []
 
@@ -313,6 +331,16 @@ def get_similar_movies_for_target(target_movie, limit=8):
             sim_data = fetch_tmdb_data(f"movie/{target_movie.tmdb_id}/similar")
             if sim_data:
                 raw_items.extend(sim_data.get("results", []))
+
+        # Language-Aware Regional Clustering (e.g. Telugu 'te', Hindi 'hi', Tamil 'ta', Korean 'ko')
+        # Recommend authentic cinema from the same language/culture rather than defaulting to unrelated Hollywood titles
+        if orig_lang and orig_lang != "en":
+            genre_list = [g.get("id") for g in t_details.get("genres", []) if g.get("id")]
+            genre_param = f"&with_genres={','.join(map(str, genre_list[:2]))}" if genre_list else ""
+            regional_data = fetch_tmdb_data(f"discover/movie?with_original_language={orig_lang}{genre_param}&sort_by=vote_count.desc")
+            if regional_data and regional_data.get("results"):
+                reg_films = [f for f in regional_data["results"] if f.get("id") != target_movie.tmdb_id]
+                raw_items = reg_films[:limit] + raw_items
 
         for item in raw_items:
             t_id = item.get("id")
