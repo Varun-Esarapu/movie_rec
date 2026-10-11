@@ -11,14 +11,15 @@ if env_path.exists():
 else:
     load_dotenv()
 
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "django-insecure-production-ready-key-movielens-spark-2026")
-DEBUG = os.getenv("DJANGO_DEBUG", "True").lower() in ("true", "1", "t")
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY") or os.getenv("SECRET_KEY", "django-insecure-production-ready-key-movielens-spark-2026")
+debug_env = os.getenv("DJANGO_DEBUG") or os.getenv("DEBUG", "True")
+DEBUG = debug_env.lower() in ("true", "1", "t")
 
-allowed_hosts_env = os.getenv("DJANGO_ALLOWED_HOSTS", "*")
+allowed_hosts_env = os.getenv("DJANGO_ALLOWED_HOSTS") or os.getenv("ALLOWED_HOSTS", "*")
 ALLOWED_HOSTS = [h.strip() for h in allowed_hosts_env.split(",") if h.strip()]
 if "testserver" not in ALLOWED_HOSTS:
     ALLOWED_HOSTS.append("testserver")
-if DEBUG and "*" not in ALLOWED_HOSTS:
+if "*" not in ALLOWED_HOSTS:
     ALLOWED_HOSTS.append("*")
 
 INSTALLED_APPS = [

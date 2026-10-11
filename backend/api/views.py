@@ -66,13 +66,28 @@ class MovieSearchView(APIView):
         results = search_movies_hybrid(query, limit=10)
         return Response(results)
 
+MOVIELENS_TO_TMDB = {
+    318: 278, 858: 238, 58559: 155, 1221: 240, 1203: 389,
+    527: 424, 7153: 122, 296: 680, 4993: 120, 2959: 550,
+    356: 13, 79132: 27205, 5952: 121, 1213: 769, 2571: 603,
+    234160: 438631, 6874: 24, 3578: 98, 109487: 157336,
+    74458: 11324, 51662: 1271, 1954: 1366, 69757: 19913,
+    943929: 872585, 3949: 641
+}
+
 class MovieSimilarView(APIView):
     def get(self, request, movie_id):
         limit = int(request.query_params.get('limit', 8))
-        target = Movie.objects.filter(movie_id=movie_id).first() or Movie.objects.filter(tmdb_id=movie_id).first()
+        mapped_tmdb_id = MOVIELENS_TO_TMDB.get(int(movie_id))
+        target = (
+            Movie.objects.filter(movie_id=movie_id).first()
+            or Movie.objects.filter(tmdb_id=movie_id).first()
+            or (Movie.objects.filter(tmdb_id=mapped_tmdb_id).first() if mapped_tmdb_id else None)
+        )
         if not target:
-            # Dynamically fetch from TMDB so any movie ID works
-            tmdb_info = fetch_tmdb_data(f"movie/{movie_id}")
+            lookup_tmdb_id = mapped_tmdb_id or movie_id
+            # Dynamically fetch from TMDB so any movie ID works even on a fresh cloud database
+            tmdb_info = fetch_tmdb_data(f"movie/{lookup_tmdb_id}")
             if tmdb_info and tmdb_info.get("id"):
                 t_id = tmdb_info.get("id")
                 title = tmdb_info.get("title") or tmdb_info.get("original_title") or f"Movie {movie_id}"
@@ -84,7 +99,7 @@ class MovieSimilarView(APIView):
                 target, _ = Movie.objects.get_or_create(
                     tmdb_id=t_id,
                     defaults={
-                        "movie_id": t_id,
+                        "movie_id": movie_id,
                         "title": title,
                         "genres": genres_str,
                         "poster_url": poster_url
