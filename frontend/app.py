@@ -791,7 +791,59 @@ IMDB_VERIFIED_RATINGS = {
     "notebook": 7.8,
     "me before you": 7.4,
     "the fault in our stars": 7.7,
+    "the godfather part iii": 7.6,
+    "the godfather: part iii": 7.6,
+    "once upon a time in america": 8.3,
+    "casino": 8.2,
+    "a bronx tale": 7.8,
+    "carlito's way": 7.9,
+    "scarface": 8.3,
+    "taxi driver": 8.2,
+    "raging bull": 8.1,
+    "reservoir dogs": 8.3,
+    "se7en": 8.6,
+    "seven": 8.6,
+    "the usual suspects": 8.5,
+    "the silence of the lambs": 8.6,
+    "saving private ryan": 8.6,
+    "requiem for a dream": 8.3,
+    "memento": 8.4,
+    "donnie brasco": 7.7,
+    "american psycho": 7.6,
+    "no country for old men": 8.2,
+    "there will be blood": 8.2,
+    "zodiac": 7.7,
+    "prisoners": 8.2,
+    "gone girl": 8.1,
 }
+
+def format_display_title(raw_title: str) -> str:
+    """Converts MovieLens inverted titles like 'Godfather, The (1972)' -> 'The Godfather (1972)'."""
+    if not raw_title:
+        return ""
+    t = raw_title.strip()
+    year_match = re.search(r"\s*(\(\d{4}\))$", t)
+    year_suffix = f" {year_match.group(1)}" if year_match else ""
+    base = t[:year_match.start()].strip() if year_match else t
+    # Remove MovieLens a.k.a. parentheticals
+    base = re.sub(r"\s*\(a\.k\.a\.[^)]+\)", "", base, flags=re.IGNORECASE).strip()
+    article_match = re.match(r"^(.*),\s*(The|A|An)$", base, flags=re.IGNORECASE)
+    if article_match:
+        base = f"{article_match.group(2)} {article_match.group(1).strip()}"
+    return f"{base}{year_suffix}"
+
+def get_verified_imdb_score(title_str: str):
+    """Looks up official IMDb rating across normalized, un-inverted, and punctuation-stripped title variants."""
+    if not title_str:
+        return None
+    cleaned_display = format_display_title(title_str)
+    no_year = re.sub(r"\s*\(\d{4}\)", "", cleaned_display).lower().strip()
+    no_colon = no_year.replace(":", "").replace("  ", " ").strip()
+    no_article = re.sub(r"^(the|a|an)\s+", "", no_year).strip()
+    for candidate in (no_year, no_colon, f"the {no_article}", no_article, title_str.lower().strip()):
+        if candidate in IMDB_VERIFIED_RATINGS:
+            return IMDB_VERIFIED_RATINGS[candidate]
+    return None
 
 AUTOFILL_TITLES = [
     "Requiem for a Dream", "The Usual Suspects", "Dead Poets Society", "Dune", "Dune (2021)",
@@ -1237,7 +1289,8 @@ if mode == "Similar Movie Intelligence":
                 for i, cand in enumerate(chunk):
                     with chunk_cols[i]:
                         is_active = (cand.get("movie_id") == st.session_state["selected_movie"].get("movie_id"))
-                        btn_label = f"✓ {cand['title']}" if is_active else cand['title']
+                        clean_cand_title = format_display_title(cand['title'])
+                        btn_label = f"✓ {clean_cand_title}" if is_active else clean_cand_title
                         if st.button(btn_label, key=f"disambig_{cand['movie_id']}_{chunk_start+i}", use_container_width=True):
                             st.session_state["selected_movie"] = cand
                             st.rerun()
@@ -1289,9 +1342,9 @@ if mode == "Similar Movie Intelligence":
 
         # Synchronize target and session state with real backend metadata
         if source_movie:
-            real_title = source_movie.get("title") or details.get("title")
+            real_title = details.get("title") or source_movie.get("title")
             if real_title and real_title not in ("Selected Film", "Unknown Title", ""):
-                target["title"] = real_title
+                target["title"] = format_display_title(real_title)
             real_poster = source_movie.get("poster_url") or details.get("poster_url")
             if real_poster:
                 target["poster_url"] = real_poster
@@ -1300,11 +1353,13 @@ if mode == "Similar Movie Intelligence":
             st.session_state["selected_movie"] = target
 
         # Render Netflix Hero Showcase Banner
-        title_str = (
-            target.get("title")
-            if (target.get("title") and target.get("title") not in ("Selected Film", "Unknown Title", ""))
-            else (source_movie.get("title") or details.get("title") or "Feature Film")
+        raw_title_str = (
+            details.get("title")
+            or target.get("title")
+            or source_movie.get("title")
+            or "Feature Film"
         )
+        title_str = format_display_title(raw_title_str)
 
         hero_poster = (
             target.get("poster_url")
@@ -1327,9 +1382,12 @@ if mode == "Similar Movie Intelligence":
         vote_avg = details.get("vote_average")
         vote_count = details.get("vote_count")
 
-        # Check verified IMDb rating & Source Transparency
-        clean_title_key = re.sub(r"\s*\(\d{4}\)", "", title_str).lower().strip()
-        imdb_score = IMDB_VERIFIED_RATINGS.get(clean_title_key) or IMDB_VERIFIED_RATINGS.get(title_str.lower().strip())
+        # Check verified IMDb rating & Source Transparency (handles MovieLens inverted titles too)
+        imdb_score = (
+            get_verified_imdb_score(title_str)
+            or get_verified_imdb_score(source_movie.get("title", ""))
+            or get_verified_imdb_score(target.get("title", ""))
+        )
         imdb_id = details.get("imdb_id")
         imdb_link_html = f"<a href='https://www.imdb.com/title/{imdb_id}/' target='_blank' style='color:#f5c518; text-decoration:none; font-weight:700; margin-left:8px; font-size:0.75rem; background:rgba(245,197,24,0.12); padding:3px 8px; border-radius:4px; border:1px solid rgba(245,197,24,0.35);' title='View on IMDb'>IMDb ↗</a>" if imdb_id else ""
 
@@ -1378,15 +1436,18 @@ if mode == "Similar Movie Intelligence":
                 m = item["movie"]
                 col = cols[idx % 4]
                 poster = m.get("poster_url") or SAFE_PLACEHOLDER
+                clean_card_title = format_display_title(m.get("title", ""))
+                verified_card_imdb = get_verified_imdb_score(clean_card_title) or get_verified_imdb_score(m.get("title", ""))
+                score_badge = f"⭐ {verified_card_imdb:.1f} IMDb" if verified_card_imdb else f"⭐ {item['score']} TMDB"
                 
                 with col:
                     card_html = f"""<a href="?movie={m['movie_id']}" target="_self" class="netflix-card">
 <img src="{poster}" class="card-poster-img" />
 <div class="card-footer">
-<div class="card-movie-title">{m['title']}</div>
+<div class="card-movie-title">{clean_card_title}</div>
 <div class="card-movie-meta">
 <span class="match-percent">#{item['rank']} Match</span>
-<span class="card-year-tag">⭐ {item['score']}</span>
+<span class="card-year-tag">{score_badge}</span>
 <span class="card-quality">HD</span>
 </div>
 </div>
