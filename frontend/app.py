@@ -1427,18 +1427,27 @@ if mode == "Similar Movie Intelligence":
 </div>"""
         st.markdown(hero_html, unsafe_allow_html=True)
 
-        st.markdown(f"<div id='trending-section' class='section-header-title'>✨ More Like *{title_str}*</div>", unsafe_allow_html=True)
-        st.markdown("<div class='section-header-caption'>Deep thematic matches based on genre overlap, director signatures, and collaborative viewer behavior (Click any card to explore)</div>", unsafe_allow_html=True)
+        st.markdown(f"<div id='trending-section' class='section-header-title'>✨ More Like <span style='color:#E50914; font-style:italic;'>{title_str}</span></div>", unsafe_allow_html=True)
+        st.markdown("<div class='section-header-caption'>Deep thematic matches sorted from highest to lowest rating based on genre overlap, director signatures, and viewer behavior (Click any card to explore)</div>", unsafe_allow_html=True)
 
         if sim_data:
+            # Resolve each card's authoritative rating and sort descending from highest to lowest
+            enriched_sim = []
+            for item in sim_data:
+                m = item["movie"]
+                clean_card_title = format_display_title(m.get("title", ""))
+                verified_card_imdb = get_verified_imdb_score(clean_card_title) or get_verified_imdb_score(m.get("title", ""))
+                numeric_score = float(verified_card_imdb) if verified_card_imdb else float(item.get("score") or 0.0)
+                score_badge = f"⭐ {verified_card_imdb:.1f} IMDb" if verified_card_imdb else f"⭐ {numeric_score:.1f} TMDB"
+                enriched_sim.append((numeric_score, clean_card_title, score_badge, item))
+
+            enriched_sim.sort(key=lambda x: x[0], reverse=True)
+
             cols = st.columns(4)
-            for idx, item in enumerate(sim_data):
+            for idx, (numeric_score, clean_card_title, score_badge, item) in enumerate(enriched_sim):
                 m = item["movie"]
                 col = cols[idx % 4]
                 poster = m.get("poster_url") or SAFE_PLACEHOLDER
-                clean_card_title = format_display_title(m.get("title", ""))
-                verified_card_imdb = get_verified_imdb_score(clean_card_title) or get_verified_imdb_score(m.get("title", ""))
-                score_badge = f"⭐ {verified_card_imdb:.1f} IMDb" if verified_card_imdb else f"⭐ {item['score']} TMDB"
                 
                 with col:
                     card_html = f"""<a href="?movie={m['movie_id']}" target="_self" class="netflix-card">
@@ -1446,7 +1455,7 @@ if mode == "Similar Movie Intelligence":
 <div class="card-footer">
 <div class="card-movie-title">{clean_card_title}</div>
 <div class="card-movie-meta">
-<span class="match-percent">#{item['rank']} Match</span>
+<span class="match-percent">#{idx + 1} Match</span>
 <span class="card-year-tag">{score_badge}</span>
 <span class="card-quality">HD</span>
 </div>

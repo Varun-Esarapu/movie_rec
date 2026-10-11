@@ -344,6 +344,16 @@ def get_similar_movies_for_target(target_movie, limit=8):
                 reg_films = [f for f in regional_data["results"] if f.get("id") != target_movie.tmdb_id]
                 raw_items = reg_films[:limit] + raw_items
 
+        # Sort candidate pool by rating descending so the highest-acclaimed matches appear first
+        raw_items.sort(
+            key=lambda x: (
+                1 if int(x.get("vote_count") or 0) >= 20 else 0,
+                float(x.get("vote_average") or 0.0),
+                float(x.get("popularity") or 0.0)
+            ),
+            reverse=True
+        )
+
         for item in raw_items:
             t_id = item.get("id")
             if not t_id or t_id in seen_tmdb_ids:
@@ -353,7 +363,7 @@ def get_similar_movies_for_target(target_movie, limit=8):
             title = item.get("title", "")
             poster_path = item.get("poster_path")
             poster_url = f"https://image.tmdb.org/t/p/w500{poster_path}" if poster_path else None
-            vote_avg = item.get("vote_average", 8.0)
+            vote_avg = float(item.get("vote_average") or 8.0)
             genre_ids = item.get("genre_ids", [])
             genres_str = "|".join([TMDB_GENRES[gid] for gid in genre_ids if gid in TMDB_GENRES])
 
@@ -418,6 +428,11 @@ def get_similar_movies_for_target(target_movie, limit=8):
                 "movie": MovieSerializer(cand).data
             })
             seen_movie_ids.add(cand.movie_id)
+
+    # Ensure final list is sorted in descending order of score and ranks are numbered 1..N
+    results.sort(key=lambda r: float(r.get("score") or 0.0), reverse=True)
+    for idx, r in enumerate(results):
+        r["rank"] = idx + 1
 
     _SIMILAR_CACHE[cache_key] = results
     return results
