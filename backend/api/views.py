@@ -13,6 +13,7 @@ from api.recommender import (
     get_similar_movies_for_target,
     search_movies_hybrid,
     fetch_movie_credits_and_details,
+    fetch_director_filmography,
     fetch_tmdb_data
 )
 import urllib.parse
@@ -152,3 +153,14 @@ class MovieSimilarView(APIView):
             "source_movie": source_data,
             "results": results
         })
+
+
+class DirectorFilmographyView(APIView):
+    def get(self, request):
+        director_name = request.query_params.get('name', '').strip()
+        director_id_raw = request.query_params.get('id', '').strip()
+        director_id = int(director_id_raw) if director_id_raw.isdigit() else None
+        if not director_name and not director_id:
+            return Response({"error": "Director name or id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        data = fetch_director_filmography(director_name=director_name, director_id=director_id)
+        return Response(data, status=status.HTTP_200_OK)

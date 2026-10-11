@@ -542,6 +542,46 @@ st.markdown("""
         border-left: 3px solid #E50914;
     }
 
+    .director-link-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #ffffff !important;
+        font-weight: 700;
+        font-size: 0.94rem;
+        text-decoration: none !important;
+        padding: 5px 12px;
+        margin-top: 4px;
+        border-radius: 9999px;
+        background: linear-gradient(135deg, rgba(229, 9, 20, 0.25) 0%, rgba(212, 175, 55, 0.15) 100%);
+        border: 1px solid rgba(229, 9, 20, 0.55);
+        transition: all 0.22s ease;
+        box-shadow: 0 2px 10px rgba(229, 9, 20, 0.2);
+    }
+    .director-link-badge:hover {
+        background: #E50914;
+        color: #ffffff !important;
+        border-color: #ff3b47;
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 18px rgba(229, 9, 20, 0.55);
+    }
+    .chrono-year-ribbon {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(15, 15, 15, 0.88);
+        border: 1px solid rgba(212, 175, 55, 0.65);
+        color: #D4AF37;
+        font-weight: 800;
+        font-size: 0.76rem;
+        padding: 3px 9px;
+        border-radius: 6px;
+        backdrop-filter: blur(6px);
+        z-index: 10;
+        letter-spacing: 0.04em;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.65);
+    }
+
     /* Section Headers */
     .section-header-title {
         font-size: 1.45rem;
@@ -758,7 +798,21 @@ IMDB_VERIFIED_RATINGS = {
     "dune": 8.0,
     "dune (2021)": 8.0,
     "dune: part two": 8.5,
-    "oppenheimer": 8.9,
+    "oppenheimer": 8.2,
+    "django unchained": 8.5,
+    "inglourious basterds": 8.4,
+    "the hateful eight": 7.8,
+    "once upon a time in hollywood": 7.6,
+    "once upon a time... in hollywood": 7.6,
+    "kill bill: vol. 2": 8.0,
+    "jackie brown": 7.5,
+    "death proof": 7.0,
+    "dunkirk": 7.8,
+    "tenet": 7.3,
+    "batman begins": 8.2,
+    "the dark knight rises": 8.4,
+    "insomnia": 7.2,
+    "following": 7.4,
     "kill bill: vol. 1": 8.2,
     "kill bill": 8.2,
     "shutter island": 8.2,
@@ -773,6 +827,14 @@ IMDB_VERIFIED_RATINGS = {
     "rrr": 8.0,
     "baahubali: the beginning": 8.0,
     "baahubali 2: the conclusion": 8.2,
+    "eega": 7.7,
+    "chatrapathi": 7.7,
+    "vikramarkudu": 7.7,
+    "sye": 7.6,
+    "simhadri": 7.3,
+    "maryada ramanna": 7.5,
+    "student no. 1": 6.9,
+    "yamadonga": 7.2,
     "k.g.f: chapter 1": 8.2,
     "k.g.f: chapter 2": 8.3,
     "pushpa: the rise": 7.6,
@@ -793,6 +855,9 @@ IMDB_VERIFIED_RATINGS = {
     "the fault in our stars": 7.7,
     "the godfather part iii": 7.6,
     "the godfather: part iii": 7.6,
+    "apocalypse now": 8.4,
+    "the conversation": 7.7,
+    "bram stoker's dracula": 7.4,
     "once upon a time in america": 8.3,
     "casino": 8.2,
     "a bronx tale": 7.8,
@@ -800,13 +865,36 @@ IMDB_VERIFIED_RATINGS = {
     "scarface": 8.3,
     "taxi driver": 8.2,
     "raging bull": 8.1,
+    "the wolf of wall street": 8.2,
+    "the irishman": 7.8,
+    "killers of the flower moon": 7.6,
+    "the aviator": 7.5,
+    "gangs of new york": 7.5,
     "reservoir dogs": 8.3,
     "se7en": 8.6,
     "seven": 8.6,
+    "the social network": 7.8,
+    "the curious case of benjamin button": 7.8,
+    "the girl with the dragon tattoo": 7.8,
+    "the game": 7.7,
+    "panic room": 6.8,
+    "the killer": 6.7,
+    "mank": 6.8,
+    "alien 3": 6.4,
     "the usual suspects": 8.5,
     "the silence of the lambs": 8.6,
     "saving private ryan": 8.6,
+    "jurassic park": 8.2,
+    "jaws": 8.1,
+    "catch me if you can": 8.1,
+    "raiders of the lost ark": 8.4,
+    "indiana jones and the last crusade": 8.2,
+    "the fabelmans": 7.5,
     "requiem for a dream": 8.3,
+    "black swan": 8.0,
+    "the wrestler": 7.9,
+    "the whale": 7.7,
+    "pi": 7.3,
     "memento": 8.4,
     "donnie brasco": 7.7,
     "american psycho": 7.6,
@@ -814,6 +902,11 @@ IMDB_VERIFIED_RATINGS = {
     "there will be blood": 8.2,
     "zodiac": 7.7,
     "prisoners": 8.2,
+    "arrival": 7.9,
+    "blade runner 2049": 8.0,
+    "sicario": 7.6,
+    "incendies": 8.3,
+    "enemy": 6.9,
     "gone girl": 8.1,
 }
 
@@ -927,21 +1020,38 @@ TMDB_GENRE_NAMES = {
 def _tmdb_direct_get(endpoint: str):
     sep = "&" if "?" in endpoint else "?"
     url = f"https://api.themoviedb.org/3/{endpoint}{sep}api_key={TMDB_API_KEY}&language=en-US"
+    # On Windows, prioritize curl.exe IPv4 first to bypass Python ISP IPv6/SSL 4.5s timeouts
+    if os.name == "nt":
+        for _ in range(4):
+            try:
+                res = subprocess.run(
+                    ["curl.exe", "-s", "-4", "--connect-timeout", "3", "--max-time", "5", url],
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=6
+                )
+                if res.returncode == 0 and res.stdout:
+                    data = json.loads(res.stdout)
+                    if isinstance(data, dict) and ("status_code" not in data or data.get("id") or data.get("results")):
+                        return data
+            except Exception:
+                pass
     try:
         r = requests.get(url, timeout=4.5)
         if r.status_code == 200:
             return r.json()
     except Exception:
         pass
-    # System curl IPv4 fallback (bypasses Windows SSL handshake resets)
-    for _ in range(2):
+    # System curl IPv4 fallback for non-Windows or retry
+    for _ in range(3):
         try:
             res = subprocess.run(
-                ["curl.exe", "-s", "-4", "--retry", "2", url],
+                ["curl", "-s", "-4", "--connect-timeout", "3", "--max-time", "5", url],
                 capture_output=True,
                 encoding="utf-8",
                 errors="replace",
-                timeout=5
+                timeout=6
             )
             if res.returncode == 0 and res.stdout:
                 data = json.loads(res.stdout)
@@ -957,7 +1067,7 @@ def api_search_movies(query: str):
     if not clean or len(clean) < 2:
         return []
     try:
-        resp = requests.get(f"{API_BASE_URL}/movies/search/?q={urllib.parse.quote(clean)}", timeout=6)
+        resp = requests.get(f"{API_BASE_URL}/movies/search/?q={urllib.parse.quote(clean)}", timeout=10)
         if resp.status_code == 200:
             data = resp.json()
             if isinstance(data, list) and data:
@@ -1003,12 +1113,128 @@ def api_search_movies(query: str):
         if out:
             return out
 
-    raise RuntimeError(f"Search failed for '{clean}'")
+    # Local offline catalog fallback so search never crashes on transient network drops
+    q_low = clean.lower()
+    local_matches = [
+        {
+            "movie_id": m["movie_id"],
+            "title": f"{m['title']} ({m['year']})",
+            "genres": m["genres"],
+            "tmdb_id": m["tmdb_id"],
+            "poster_url": m["poster_url"]
+        }
+        for m in FAMOUS_CATALOG
+        if q_low in m["title"].lower()
+    ]
+    return local_matches
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def api_get_director_filmography(director_name: str, director_id: int = None):
+    params = []
+    if director_name:
+        params.append(f"name={urllib.parse.quote(director_name)}")
+    if director_id:
+        params.append(f"id={director_id}")
+    q_str = "&".join(params)
+    try:
+        resp = requests.get(f"{API_BASE_URL}/directors/filmography/?{q_str}", timeout=10)
+        if resp.status_code == 200:
+            data = resp.json()
+            if isinstance(data, dict) and data.get("movies"):
+                return data
+    except Exception:
+        pass
+
+    # Standalone Cloud Fallback (Direct TMDB Person Credits sorted chronologically)
+    person_id = director_id
+    resolved_name = director_name
+    profile_url = ""
+    bio = ""
+
+    if not person_id and director_name:
+        p_search = _tmdb_direct_get(f"search/person?query={urllib.parse.quote_plus(director_name)}")
+        if p_search and p_search.get("results"):
+            best = next(
+                (p for p in p_search["results"] if p.get("known_for_department") == "Directing"),
+                p_search["results"][0]
+            )
+            person_id = best.get("id")
+            resolved_name = best.get("name") or director_name
+
+    if not person_id:
+        return {"director_name": director_name, "director_id": None, "movies": []}
+
+    p_data = _tmdb_direct_get(f"person/{person_id}?append_to_response=movie_credits")
+    if not p_data:
+        return {"director_name": resolved_name, "director_id": person_id, "movies": []}
+
+    resolved_name = p_data.get("name") or resolved_name
+    prof_path = p_data.get("profile_path")
+    if prof_path:
+        profile_url = f"https://image.tmdb.org/t/p/w500{prof_path}"
+    bio = p_data.get("biography") or ""
+
+    crew_list = p_data.get("movie_credits", {}).get("crew", [])
+    seen_ids = set()
+    raw_candidates = []
+    for item in crew_list:
+        if item.get("job") != "Director":
+            continue
+        t_id = item.get("id")
+        if not t_id or t_id in seen_ids:
+            continue
+        rel_date = (item.get("release_date") or "").strip()
+        if not rel_date or len(rel_date) < 4:
+            continue
+        year_str = rel_date[:4]
+        if not year_str.isdigit():
+            continue
+        p_path = item.get("poster_path")
+        if not p_path:
+            continue
+        v_cnt = int(item.get("vote_count") or 0)
+        if v_cnt == 0:
+            continue
+        g_ids = item.get("genre_ids", [])
+        if 99 in g_ids and v_cnt < 150:
+            continue
+        seen_ids.add(t_id)
+        title = item.get("title") or item.get("original_title") or "Untitled"
+        g_str = "|".join([TMDB_GENRE_NAMES[g] for g in g_ids if g in TMDB_GENRE_NAMES]) or "Drama"
+        raw_candidates.append({
+            "movie_id": t_id,
+            "tmdb_id": t_id,
+            "title": f"{title} ({year_str})",
+            "clean_title": title,
+            "year": int(year_str),
+            "release_date": rel_date,
+            "genres": g_str,
+            "poster_url": f"https://image.tmdb.org/t/p/w500{p_path}",
+            "vote_average": round(float(item.get("vote_average") or 0.0), 1),
+            "vote_count": v_cnt,
+            "overview": item.get("overview") or ""
+        })
+
+    max_votes = max((c["vote_count"] for c in raw_candidates), default=0)
+    min_vote_threshold = 400 if max_votes >= 5000 else (15 if max_votes >= 200 else 3)
+    directed_movies = [c for c in raw_candidates if c["vote_count"] >= min_vote_threshold]
+    if not directed_movies:
+        directed_movies = raw_candidates
+
+    # Strictly sort in ascending chronological order by release date / release year
+    directed_movies.sort(key=lambda m: (m["release_date"], m["vote_count"]))
+    return {
+        "director_id": person_id,
+        "director_name": resolved_name,
+        "profile_url": profile_url,
+        "biography": bio,
+        "movies": directed_movies
+    }
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def api_get_similar_cluster(movie_id: int, limit: int):
     try:
-        resp = requests.get(f"{API_BASE_URL}/movies/{movie_id}/similar/?limit={limit}", timeout=8)
+        resp = requests.get(f"{API_BASE_URL}/movies/{movie_id}/similar/?limit={limit}", timeout=10)
         if resp.status_code == 200:
             data = resp.json()
             if isinstance(data, dict) and data.get("results"):
@@ -1021,7 +1247,9 @@ def api_get_similar_cluster(movie_id: int, limit: int):
     det = _tmdb_direct_get(f"movie/{tmdb_id}?append_to_response=credits")
     if det and det.get("id"):
         credits_data = det.get("credits", {})
-        director = next((m.get("name", "") for m in credits_data.get("crew", []) if m.get("job") == "Director"), "")
+        director_member = next((m for m in credits_data.get("crew", []) if m.get("job") == "Director"), {})
+        director = director_member.get("name", "") if director_member else ""
+        director_id = director_member.get("id") if director_member else None
         cast_str = ", ".join([a.get("name", "") for a in credits_data.get("cast", [])[:5] if a.get("name")])
         rt = det.get("runtime") or 0
         runtime_str = f"{rt // 60}h {rt % 60}m" if rt >= 60 else (f"{rt}m" if rt > 0 else "")
@@ -1088,6 +1316,7 @@ def api_get_similar_cluster(movie_id: int, limit: int):
                         "overview": det.get("overview") or "",
                         "tagline": det.get("tagline") or "",
                         "director": director,
+                        "director_id": director_id,
                         "cast": cast_str,
                         "runtime": runtime_str,
                         "vote_average": det.get("vote_average"),
@@ -1136,6 +1365,8 @@ def api_get_recommendations(user_id: int, limit: int):
 # State management
 if "selected_movie" not in st.session_state:
     st.session_state["selected_movie"] = None
+if "selected_director" not in st.session_state:
+    st.session_state["selected_director"] = None
 if "search_input" not in st.session_state:
     st.session_state["search_input"] = ""
 if "last_search" not in st.session_state:
@@ -1148,15 +1379,25 @@ if "search_matches" not in st.session_state:
 # URL Query Param Navigation Handling (Streamlined, Non-Blocking)
 if "home" in st.query_params:
     st.session_state["selected_movie"] = None
+    st.session_state["selected_director"] = None
     st.session_state["search_input"] = ""
     st.session_state["last_search"] = ""
     st.session_state["last_pill"] = None
     st.session_state["search_matches"] = []
     st.query_params.clear()
 
+if "director" in st.query_params:
+    d_name = st.query_params.get("director", "").strip()
+    d_id_raw = st.query_params.get("director_id", "").strip()
+    d_id = int(d_id_raw) if d_id_raw.isdigit() else None
+    if d_name or d_id:
+        st.session_state["selected_director"] = {"name": d_name, "id": d_id}
+    st.query_params.clear()
+
 if "movie" in st.query_params:
     mid = st.query_params.get("movie")
     if mid:
+        st.session_state["selected_director"] = None
         found_target = next((m for m in FAMOUS_CATALOG if str(m["movie_id"]) == str(mid)), None)
         if found_target:
             st.session_state["selected_movie"] = found_target
@@ -1167,6 +1408,7 @@ if "movie" in st.query_params:
 if "search" in st.query_params:
     sq = st.query_params.get("search")
     if sq:
+        st.session_state["selected_director"] = None
         st.session_state["search_input"] = sq
         st.session_state["last_search"] = sq
         local_hit = next((m for m in FAMOUS_CATALOG if m["title"].lower() == sq.lower()), None)
@@ -1238,6 +1480,7 @@ if mode == "Similar Movie Intelligence":
         )
         if selected_pill and selected_pill != st.session_state.get("last_pill"):
             st.session_state["last_pill"] = selected_pill
+            st.session_state["selected_director"] = None
             chip_clean = re.sub(r"^[^\w\s\(\)]+\s*", "", selected_pill).strip()
             st.session_state["search_input"] = chip_clean
             st.session_state["last_search"] = chip_clean
@@ -1263,8 +1506,9 @@ if mode == "Similar Movie Intelligence":
     # Process search if typed
     if search_query.strip() and search_query != st.session_state.get("last_search"):
         st.session_state["last_search"] = search_query
+        st.session_state["selected_director"] = None
+        search_loader = st.empty()
         try:
-            search_loader = st.empty()
             search_loader.markdown(render_play_loader("SEARCHING NEURAL CATALOG...", f"Querying global index & latent vectors for '{search_query.strip()}'"), unsafe_allow_html=True)
             found = api_search_movies(search_query.strip())
             search_loader.empty()
@@ -1275,11 +1519,14 @@ if mode == "Similar Movie Intelligence":
                 st.session_state["search_matches"] = []
                 st.warning(f"No catalog match found for '{search_query}'.")
         except Exception as e:
+            search_loader.empty()
             st.error(f"Backend search failed: {e}")
+        finally:
+            search_loader.empty()
 
     # Compact Disambiguation Bar (Up to 8 matches presented in clean 4-column rows)
     matches = st.session_state.get("search_matches", [])
-    if len(matches) > 1 and st.session_state.get("selected_movie"):
+    if len(matches) > 1 and st.session_state.get("selected_movie") and not st.session_state.get("selected_director"):
         c_m_left, c_m_content, c_m_right = st.columns([1, 3.2, 1])
         with c_m_content:
             st.markdown("<div style='font-size: 0.82rem; color: #a3a3a3; margin: 6px 0 4px 0;'>🔍 <b>Multiple matches found for your search:</b> (Click to explore)</div>", unsafe_allow_html=True)
@@ -1293,16 +1540,116 @@ if mode == "Similar Movie Intelligence":
                         btn_label = f"✓ {clean_cand_title}" if is_active else clean_cand_title
                         if st.button(btn_label, key=f"disambig_{cand['movie_id']}_{chunk_start+i}", use_container_width=True):
                             st.session_state["selected_movie"] = cand
+                            st.session_state["selected_director"] = None
                             st.rerun()
 
+    # VIEW 0: Director's Chronological Filmography Showcase
+    if st.session_state.get("selected_director"):
+        dir_info = st.session_state["selected_director"]
+        d_name = dir_info.get("name", "")
+        d_id = dir_info.get("id")
+
+        nav_col1, nav_col2, _ = st.columns([2.2, 2.2, 5.6])
+        with nav_col1:
+            if st.session_state.get("selected_movie"):
+                prev_title = format_display_title(st.session_state["selected_movie"].get("title", "Selected Film"))
+                if st.button(f"← Back to {prev_title[:24]}", key="btn_back_to_movie", use_container_width=True):
+                    st.session_state["selected_director"] = None
+                    st.rerun()
+        with nav_col2:
+            if st.button("🏠 Return to All Movies", key="btn_dir_home", use_container_width=True):
+                st.session_state["selected_director"] = None
+                st.session_state["selected_movie"] = None
+                st.session_state["search_input"] = ""
+                st.session_state["last_search"] = ""
+                st.session_state["last_pill"] = None
+                st.session_state["search_matches"] = []
+                st.rerun()
+
+        dir_loader = st.empty()
+        try:
+            dir_loader.markdown(render_play_loader("CURATING DIRECTOR FILMOGRAPHY...", f"Sorting {d_name or 'Director'}'s feature films in chronological order"), unsafe_allow_html=True)
+            filmo_data = api_get_director_filmography(director_name=d_name, director_id=d_id)
+        finally:
+            dir_loader.empty()
+
+        resolved_dir_name = filmo_data.get("director_name") or d_name or "Director"
+        dir_profile = filmo_data.get("profile_url") or SAFE_PLACEHOLDER
+        dir_bio = filmo_data.get("biography") or f"Explore the complete feature directing career of {resolved_dir_name}, ordered chronologically from debut feature to latest theatrical release."
+        if len(dir_bio) > 520:
+            dir_bio = dir_bio[:517].rsplit(" ", 1)[0] + "..."
+        dir_movies = filmo_data.get("movies", [])
+
+        if dir_movies:
+            years = [m.get("year") for m in dir_movies if m.get("year")]
+            span_str = f"{min(years)} – {max(years)}" if years else "Career"
+            count_str = f"{len(dir_movies)} Directed Feature Films"
+        else:
+            span_str = "Feature Career"
+            count_str = "Filmography"
+
+        dir_hero_html = f"""<div class="netflix-hero-banner">
+<div style="display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap;">
+<img src="{dir_profile}" style="width: 155px; aspect-ratio: 2/3; object-fit: cover; border-radius: 10px; box-shadow: 0 16px 36px rgba(0,0,0,0.85); flex-shrink: 0; border: 1px solid rgba(212,175,55,0.4);" />
+<div style="flex: 1; min-width: 300px;">
+<div style="font-size: 0.8rem; color: #D4AF37; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;">🎬 Director's Chronological Filmography</div>
+<h1 class="hero-title-text">{resolved_dir_name}</h1>
+<div class="hero-badges-row">
+<span class="badge-match-score">📅 {span_str} (Chronological Order)</span>
+<span class="badge-hd">{count_str}</span>
+<span class="badge-runtime">Sorted Earliest → Latest Release Year</span>
+</div>
+<p class="hero-overview">{dir_bio}</p>
+</div>
+</div>
+</div>"""
+        st.markdown(dir_hero_html, unsafe_allow_html=True)
+
+        st.markdown(f"<div class='section-header-title'>🎞️ Directed by <span style='color:#E50914; font-style:italic;'>{resolved_dir_name}</span> <span style='font-size:0.9rem; color:#D4AF37; font-weight:700; margin-left:8px;'>({span_str})</span></div>", unsafe_allow_html=True)
+        st.markdown("<div class='section-header-caption'>Presented in strict chronological order by release year — click any film to inspect its details and neural similarity cluster</div>", unsafe_allow_html=True)
+
+        if dir_movies:
+            f_cols = st.columns(4)
+            for idx, m in enumerate(dir_movies):
+                col = f_cols[idx % 4]
+                poster = m.get("poster_url") or SAFE_PLACEHOLDER
+                clean_m_title = format_display_title(m.get("title", ""))
+                verified_imdb = get_verified_imdb_score(clean_m_title) or get_verified_imdb_score(m.get("clean_title", ""))
+                raw_vote = float(m.get("vote_average") or 0.0)
+                if verified_imdb:
+                    score_str = f"⭐ {verified_imdb:.1f} IMDb"
+                elif raw_vote > 0:
+                    score_str = f"⭐ {raw_vote:.1f} TMDB"
+                else:
+                    score_str = "Feature"
+                rel_year = m.get("year") or (m.get("release_date") or "")[:4] or "—"
+
+                with col:
+                    card_html = f"""<a href="?movie={m['movie_id']}" target="_self" class="netflix-card">
+<div class="chrono-year-ribbon">#{idx + 1} • {rel_year}</div>
+<img src="{poster}" class="card-poster-img" />
+<div class="card-footer">
+<div class="card-movie-title">{clean_m_title}</div>
+<div class="card-movie-meta">
+<span class="match-percent">{score_str}</span>
+<span class="card-year-tag">{m.get('genres', 'Drama').split('|')[0]}</span>
+<span class="card-quality">{rel_year}</span>
+</div>
+</div>
+</a>"""
+                    st.markdown(card_html, unsafe_allow_html=True)
+        else:
+            st.info(f"No feature films found for {resolved_dir_name}.")
+
     # VIEW 1: A Movie is Selected -> Show Netflix Hero Showcase & Similar Recommendations
-    if st.session_state["selected_movie"]:
+    elif st.session_state["selected_movie"]:
         target = st.session_state["selected_movie"]
         
         col_back, _ = st.columns([2, 8])
         with col_back:
             if st.button("← Return to All Movies", key="btn_back"):
                 st.session_state["selected_movie"] = None
+                st.session_state["selected_director"] = None
                 st.session_state["search_input"] = ""
                 st.session_state["last_search"] = ""
                 st.session_state["last_pill"] = None
@@ -1313,8 +1660,8 @@ if mode == "Similar Movie Intelligence":
         sim_data = []
         source_movie = {}
         details = {}
+        loader_box = st.empty()
         try:
-            loader_box = st.empty()
             loader_box.markdown(render_play_loader("STREAMING CINEMATIC CLUSTERS...", "Evaluating latent embedding vectors across 32M ratings"), unsafe_allow_html=True)
             data_json = api_get_similar_cluster(target['movie_id'], num_recs)
             loader_box.empty()
@@ -1339,6 +1686,8 @@ if mode == "Similar Movie Intelligence":
                 }
                 for idx, m in enumerate(fallback_items)
             ]
+        finally:
+            loader_box.empty()
 
         # Synchronize target and session state with real backend metadata
         if source_movie:
@@ -1377,6 +1726,7 @@ if mode == "Similar Movie Intelligence":
         tagline = details.get("tagline", "")
         overview = details.get("overview") or "A critically acclaimed cinematic masterpiece recognized for its exceptional storytelling, deep thematic development, and iconic performances."
         director = details.get("director", "")
+        director_id = details.get("director_id")
         cast = details.get("cast", "")
         runtime = details.get("runtime", "")
         vote_avg = details.get("vote_average")
@@ -1402,8 +1752,12 @@ if mode == "Similar Movie Intelligence":
         runtime_html = f"<span class='badge-runtime'>⏱️ {runtime}</span>" if runtime else ""
         tagline_html = f"<div class='hero-tagline-text'>\"{tagline}\"</div>" if tagline else ""
         
-        director_html = f"<div><span style='color: #8c8c8c; font-size: 0.78rem; text-transform: uppercase; font-weight: 700;'>Director</span><div style='color: #ffffff; font-weight: 700; font-size: 0.95rem; margin-top: 2px;'>🎬 {director}</div></div>" if director else ""
-        cast_html = f"<div><span style='color: #8c8c8c; font-size: 0.78rem; text-transform: uppercase; font-weight: 700;'>Starring Cast</span><div style='color: #d2d2d2; font-size: 0.88rem; line-height: 1.4; margin-top: 2px;'>🌟 {cast}</div></div>" if cast else ""
+        if director:
+            dir_url_param = f"?director={urllib.parse.quote(director)}" + (f"&director_id={director_id}" if director_id else "")
+            director_html = f"<div><span style='color: #8c8c8c; font-size: 0.76rem; text-transform: uppercase; font-weight: 700; display:block;'>Director (Click for Filmography)</span><a href='{dir_url_param}' target='_self' class='director-link-badge' title='Explore all movies directed by {director} in chronological order'>🎬 {director} <span style='font-size:0.75rem; color:#D4AF37; font-weight:800;'>• Filmography ↗</span></a></div>"
+        else:
+            director_html = ""
+        cast_html = f"<div><span style='color: #8c8c8c; font-size: 0.78rem; text-transform: uppercase; font-weight: 700;'>Starring Cast</span><div style='color: #d2d2d2; font-size: 0.88rem; line-height: 1.4; margin-top: 4px;'>🌟 {cast}</div></div>" if cast else ""
         
         meta_grid = f"<div class='hero-credits-box'>{director_html}{cast_html}</div>" if (director or cast) else ""
 

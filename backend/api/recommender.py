@@ -38,7 +38,7 @@ def normalize_movie_title(raw_title):
     return t.lower().strip()
 
 def fetch_tmdb_data(endpoint):
-    """Robust TMDB API fetcher with requests + curl.exe fallback with IPv4 & retry, cached in memory."""
+    """Robust TMDB API fetcher with fast IPv4 curl on Windows + requests fallback, cached in memory."""
     if endpoint in _TMDB_CACHE:
         return _TMDB_CACHE[endpoint]
 
@@ -47,9 +47,29 @@ def fetch_tmdb_data(endpoint):
     sep = "&" if "?" in endpoint else "?"
     full_url = f"{url}{sep}api_key={key}&language=en-US"
 
-    # Method 1: Requests
+    # On Windows, prioritize curl.exe -4 first to bypass ISP IPv6/SSL handshake resets (completes in ~0.8-1.2s)
+    if os.name == "nt":
+        for attempt in range(4):
+            try:
+                res = subprocess.run(
+                    ["curl.exe", "-s", "-4", "--connect-timeout", "3", "--max-time", "5", full_url],
+                    capture_output=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=6
+                )
+                if res.returncode == 0 and res.stdout:
+                    data = json.loads(res.stdout)
+                    if isinstance(data, dict) and ("status_code" not in data or data.get("id") or data.get("results")):
+                        _TMDB_CACHE[endpoint] = data
+                        return data
+            except Exception:
+                pass
+            time.sleep(0.1)
+
+    # Standard HTTP Requests (Primary on Linux/Cloud, Fallback on Windows)
     try:
-        resp = requests.get(full_url, timeout=4.5)
+        resp = requests.get(full_url, timeout=4.0)
         if resp.status_code == 200:
             data = resp.json()
             _TMDB_CACHE[endpoint] = data
@@ -57,29 +77,10 @@ def fetch_tmdb_data(endpoint):
     except Exception:
         pass
 
-    # Method 2: System curl fallback with IPv4 & retry (bypasses Windows SSL handshake reset)
-    for attempt in range(3):
-        try:
-            res = subprocess.run(
-                ["curl.exe", "-s", "-4", "--retry", "2", full_url],
-                capture_output=True,
-                encoding="utf-8",
-                errors="replace",
-                timeout=5
-            )
-            if res.returncode == 0 and res.stdout:
-                data = json.loads(res.stdout)
-                if isinstance(data, dict):
-                    _TMDB_CACHE[endpoint] = data
-                    return data
-        except Exception:
-            pass
-        time.sleep(0.12)
-
     return None
 
 def fetch_movie_credits_and_details(tmdb_id):
-    """Fetches overview, director, top cast, runtime, and ratings for the selected title."""
+    """Fetches overview, director, director_id, top cast, runtime, and ratings for the selected title."""
     if not tmdb_id:
         return {}
 
@@ -90,9 +91,11 @@ def fetch_movie_credits_and_details(tmdb_id):
     credits_data = details.get("credits", {})
 
     director = ""
+    director_id = None
     for member in credits_data.get("crew", []):
         if member.get("job") == "Director":
             director = member.get("name", "")
+            director_id = member.get("id")
             break
 
     cast_names = [actor.get("name", "") for actor in credits_data.get("cast", [])[:5] if actor.get("name")]
@@ -120,6 +123,7 @@ def fetch_movie_credits_and_details(tmdb_id):
         "overview": details.get("overview") or "",
         "tagline": details.get("tagline") or "",
         "director": director,
+        "director_id": director_id,
         "cast": cast_str,
         "runtime": runtime_str,
         "vote_average": details.get("vote_average"),
@@ -130,6 +134,96 @@ def fetch_movie_credits_and_details(tmdb_id):
 
     _DETAILS_CACHE[tmdb_id] = result
     return result
+
+def fetch_director_filmography(director_name="", director_id=None):
+    """Fetches a director's complete feature filmography sorted chronologically by release year."""
+    person_id = director_id
+    resolved_name = director_name.strip()
+
+    if not person_id and resolved_name:
+        q_enc = urllib.parse.quote_plus(resolved_name)
+        search_data = fetch_tmdb_data(f"search/person?query={q_enc}") or {}
+        results = search_data.get("results", [])
+        if results:
+            best = next((p for p in results if p.get("known_for_department") == "Directing"), results[0])
+            person_id = best.get("id")
+            resolved_name = best.get("name") or resolved_name
+
+    if not person_id:
+        return {"director": resolved_name, "director_name": resolved_name, "director_id": None, "films": [], "movies": []}
+
+    person_details = fetch_tmdb_data(f"person/{person_id}?append_to_response=movie_credits") or {}
+    if not resolved_name:
+        resolved_name = person_details.get("name", "Director")
+    profile_path = person_details.get("profile_path")
+    profile_url = f"https://image.tmdb.org/t/p/w500{profile_path}" if profile_path else ""
+    biography = person_details.get("biography") or ""
+    birthplace = person_details.get("place_of_birth") or ""
+    birthday = person_details.get("birthday") or ""
+
+    crew_credits = person_details.get("movie_credits", {}).get("crew", [])
+    seen_ids = set()
+    raw_candidates = []
+
+    for item in crew_credits:
+        if item.get("job") != "Director":
+            continue
+        tid = item.get("id")
+        if not tid or tid in seen_ids:
+            continue
+        release_date = (item.get("release_date") or "").strip()
+        year_str = release_date[:4] if len(release_date) >= 4 else ""
+        p_path = item.get("poster_path")
+        if not year_str or not year_str.isdigit() or not p_path:
+            continue
+        vote_cnt = int(item.get("vote_count") or 0)
+        # Skip unreleased future projects with 0 votes
+        if vote_cnt == 0:
+            continue
+        genre_ids = item.get("genre_ids", [])
+        if 99 in genre_ids and vote_cnt < 150:
+            continue
+
+        seen_ids.add(tid)
+        title = item.get("title") or item.get("original_title") or ""
+        genres_str = "|".join([TMDB_GENRES[g] for g in genre_ids if g in TMDB_GENRES]) or "Drama"
+        vote_avg = round(float(item.get("vote_average") or 7.5), 1)
+        raw_candidates.append({
+            "movie_id": tid,
+            "tmdb_id": tid,
+            "title": f"{title} ({year_str})",
+            "clean_title": title,
+            "year": int(year_str),
+            "release_date": release_date,
+            "poster_url": f"https://image.tmdb.org/t/p/w500{p_path}",
+            "score": vote_avg,
+            "vote_average": vote_avg,
+            "vote_count": vote_cnt,
+            "genres": genres_str,
+            "overview": item.get("overview") or ""
+        })
+
+    # Adaptive filter: exclude student short films/anthology segments for globally famous directors while preserving regional cinema
+    max_votes = max((c["vote_count"] for c in raw_candidates), default=0)
+    min_vote_threshold = 400 if max_votes >= 5000 else (15 if max_votes >= 200 else 3)
+    films = [c for c in raw_candidates if c["vote_count"] >= min_vote_threshold]
+    if not films:
+        films = raw_candidates
+
+    # Sort strictly in chronological order (by release_date / year ascending)
+    films.sort(key=lambda x: (x["release_date"], x["vote_count"]))
+
+    return {
+        "director": resolved_name,
+        "director_name": resolved_name,
+        "director_id": person_id,
+        "profile_url": profile_url,
+        "biography": biography,
+        "birthplace": birthplace,
+        "birthday": birthday,
+        "films": films,
+        "movies": films
+    }
 
 def search_movies_hybrid(query, limit=15):
     """
