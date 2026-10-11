@@ -581,6 +581,50 @@ st.markdown("""
         letter-spacing: 0.04em;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.65);
     }
+    details.director-bio-details {
+        margin-top: -6px;
+        margin-bottom: 16px;
+        max-width: 820px;
+    }
+    details.director-bio-details > summary {
+        list-style: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        color: #D4AF37;
+        font-size: 0.82rem;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 9999px;
+        background: rgba(212, 175, 55, 0.12);
+        border: 1px solid rgba(212, 175, 55, 0.38);
+        transition: all 0.2s ease;
+        user-select: none;
+    }
+    details.director-bio-details > summary::-webkit-details-marker {
+        display: none;
+    }
+    details.director-bio-details > summary:hover {
+        background: rgba(212, 175, 55, 0.24);
+        border-color: #D4AF37;
+        transform: translateY(-1px);
+    }
+    details.director-bio-details[open] > summary .bio-more-label {
+        display: none;
+    }
+    details.director-bio-details:not([open]) > summary .bio-less-label {
+        display: none;
+    }
+    .director-bio-extra {
+        margin-top: 12px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        color: #c8c8c8;
+        font-size: 0.92rem;
+        line-height: 1.6;
+        animation: heroFadeIn 0.3s ease;
+    }
 
     /* Section Headers */
     .section-header-title {
@@ -1228,6 +1272,8 @@ def api_get_director_filmography(director_name: str, director_id: int = None):
         "director_name": resolved_name,
         "profile_url": profile_url,
         "biography": bio,
+        "birthplace": p_data.get("place_of_birth") or "",
+        "birthday": p_data.get("birthday") or "",
         "movies": directed_movies
     }
 
@@ -1575,9 +1621,7 @@ if mode == "Similar Movie Intelligence":
 
         resolved_dir_name = filmo_data.get("director_name") or d_name or "Director"
         dir_profile = filmo_data.get("profile_url") or SAFE_PLACEHOLDER
-        dir_bio = filmo_data.get("biography") or f"Explore the complete feature directing career of {resolved_dir_name}, ordered chronologically from debut feature to latest theatrical release."
-        if len(dir_bio) > 520:
-            dir_bio = dir_bio[:517].rsplit(" ", 1)[0] + "..."
+        raw_bio = (filmo_data.get("biography") or "").strip()
         dir_movies = filmo_data.get("movies", [])
 
         if dir_movies:
@@ -1588,9 +1632,74 @@ if mode == "Similar Movie Intelligence":
             span_str = "Feature Career"
             count_str = "Filmography"
 
+        # Cleanly split biography on paragraph / complete sentence boundaries (never cut mid-sentence with '...')
+        default_bio = f"{resolved_dir_name} is an acclaimed filmmaker whose feature directing career spans {span_str} across {len(dir_movies)} major theatrical releases."
+        if raw_bio:
+            paragraphs = [p.strip() for p in re.split(r"\n\s*\n|\r\n\s*\r\n|\n", raw_bio) if p.strip()]
+            first_para = paragraphs[0] if paragraphs else raw_bio
+            sentences = re.split(r"(?<=[.!?])\s+", first_para)
+            if len(first_para) > 440 and len(sentences) > 2:
+                short_bio = " ".join(sentences[:3]).strip()
+                extra_first = " ".join(sentences[3:]).strip()
+                extra_paras = ([extra_first] if extra_first else []) + paragraphs[1:]
+            else:
+                short_bio = first_para
+                extra_paras = paragraphs[1:]
+        else:
+            short_bio = default_bio
+            extra_paras = []
+
+        if extra_paras:
+            extra_bio_html = "<br><br>".join(extra_paras[:4])
+            bio_toggle_html = f"""<details class="director-bio-details">
+<summary><span class="bio-more-label">📖 Show More Biography ▾</span><span class="bio-less-label">📖 Show Less ▴</span></summary>
+<div class="director-bio-extra">{extra_bio_html}</div>
+</details>"""
+        else:
+            bio_toggle_html = ""
+
+        # Build concise, high-value Director Career Snapshot (Top Acclaimed Works, Signature Genres, Debut & Origin)
+        if dir_movies:
+            scored_films = []
+            genre_counts = {}
+            for m in dir_movies:
+                c_title = format_display_title(m.get("clean_title") or re.sub(r"\s*\(\d{4}\)", "", m.get("title", "")))
+                v_imdb = get_verified_imdb_score(m.get("title", "")) or get_verified_imdb_score(c_title)
+                s_val = float(v_imdb) if v_imdb else float(m.get("vote_average") or 0.0)
+                scored_films.append((s_val, c_title, m.get("year", "")))
+                for g in (m.get("genres") or "").replace("·", "|").split("|"):
+                    g_cl = g.strip()
+                    if g_cl:
+                        genre_counts[g_cl] = genre_counts.get(g_cl, 0) + 1
+            scored_films.sort(key=lambda x: x[0], reverse=True)
+            top_works_str = ", ".join([f"{t} ({y}) ⭐ {s:.1f}" for s, t, y in scored_films[:3]])
+            top_genres = sorted(genre_counts.items(), key=lambda x: x[1], reverse=True)[:3]
+            sig_genres_str = " · ".join([g[0] for g in top_genres]) or "Drama · Cinema"
+            debut_film = dir_movies[0]
+            debut_title = format_display_title(debut_film.get("clean_title") or debut_film.get("title", ""))
+            debut_str = f"{debut_title} ({debut_film.get('year', '')})" if debut_film.get("year") and str(debut_film.get("year")) not in debut_title else debut_title
+        else:
+            top_works_str = "Feature Catalog"
+            sig_genres_str = "Drama"
+            debut_str = "—"
+
+        birthplace = filmo_data.get("birthplace") or ""
+        birthday = filmo_data.get("birthday") or ""
+        origin_parts = []
+        if birthday:
+            origin_parts.append(f"Born {birthday[:4]}")
+        if birthplace:
+            origin_parts.append(birthplace)
+        origin_str = f"{' • '.join(origin_parts)} | Debut: {debut_str}" if origin_parts else f"Debut Feature: {debut_str}"
+
+        dir_meta_grid = f"""<div class="hero-credits-box">
+<div><span style="color: #8c8c8c; font-size: 0.76rem; text-transform: uppercase; font-weight: 700;">🏆 Highest-Rated Works</span><div style="color: #ffffff; font-weight: 600; font-size: 0.88rem; margin-top: 3px; line-height: 1.4;">{top_works_str}</div></div>
+<div><span style="color: #8c8c8c; font-size: 0.76rem; text-transform: uppercase; font-weight: 700;">🎭 Signature Genres & Career</span><div style="color: #d2d2d2; font-size: 0.88rem; margin-top: 3px; line-height: 1.4;">{sig_genres_str}<br><span style="color:#a3a3a3; font-size:0.8rem;">{origin_str}</span></div></div>
+</div>"""
+
         dir_hero_html = f"""<div class="netflix-hero-banner">
 <div style="display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap;">
-<img src="{dir_profile}" style="width: 155px; aspect-ratio: 2/3; object-fit: cover; border-radius: 10px; box-shadow: 0 16px 36px rgba(0,0,0,0.85); flex-shrink: 0; border: 1px solid rgba(212,175,55,0.4);" />
+<img src="{dir_profile}" style="width: 165px; aspect-ratio: 2/3; object-fit: cover; border-radius: 10px; box-shadow: 0 16px 36px rgba(0,0,0,0.85); flex-shrink: 0; border: 1px solid rgba(212,175,55,0.4);" />
 <div style="flex: 1; min-width: 300px;">
 <div style="font-size: 0.8rem; color: #D4AF37; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;">🎬 Director's Chronological Filmography</div>
 <h1 class="hero-title-text">{resolved_dir_name}</h1>
@@ -1599,7 +1708,9 @@ if mode == "Similar Movie Intelligence":
 <span class="badge-hd">{count_str}</span>
 <span class="badge-runtime">Sorted Earliest → Latest Release Year</span>
 </div>
-<p class="hero-overview">{dir_bio}</p>
+<p class="hero-overview" style="margin-bottom: 12px;">{short_bio}</p>
+{bio_toggle_html}
+{dir_meta_grid}
 </div>
 </div>
 </div>"""
