@@ -9,8 +9,8 @@ services:
       - key: PYTHON_VERSION
         value: 3.11.9
       - key: TMDB_API_KEY
-        value: 3a1ff8b883fd4c71a563201decf380b1
-      - key: DEBUG
+        sync: false
+      - key: DJANGO_DEBUG
         value: "False"
-      - key: ALLOWED_HOSTS
+      - key: DJANGO_ALLOWED_HOSTS
         value: "*"
