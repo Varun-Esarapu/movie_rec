@@ -30,3 +30,6 @@ backend/db.sqlite3
 Thumbs.db
 .idea/
 .vscode/
+
+# Streamlit secrets
+.streamlit/secrets.toml
