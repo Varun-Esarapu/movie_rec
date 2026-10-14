@@ -346,6 +346,43 @@ st.markdown("""
         transform: translateY(-3px) scale(1.04);
         box-shadow: 0 6px 18px rgba(229, 9, 20, 0.45);
     }
+    .netflix-chip.active {
+        background: #E50914 !important;
+        color: #ffffff !important;
+        border-color: #E50914 !important;
+        box-shadow: 0 0 16px rgba(229, 9, 20, 0.6) !important;
+    }
+
+    /* Disambiguation Bar Pill Links */
+    .disambig-chip {
+        display: block;
+        text-align: center;
+        padding: 7px 10px;
+        background: rgba(30, 30, 30, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #e5e5e5 !important;
+        font-size: 0.82rem;
+        font-weight: 600;
+        border-radius: 6px;
+        text-decoration: none !important;
+        transition: all 0.2s ease;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-bottom: 6px;
+    }
+    .disambig-chip:hover {
+        background: rgba(229, 9, 20, 0.8);
+        border-color: #E50914;
+        color: #ffffff !important;
+        transform: translateY(-1px);
+    }
+    .disambig-chip.active {
+        background: #E50914 !important;
+        border-color: #E50914 !important;
+        color: #ffffff !important;
+        box-shadow: 0 0 12px rgba(229, 9, 20, 0.55);
+    }
 
     /* Native Streamlit Pills Styled as Glowing Netflix Chips (No Page Reload) */
     div[data-testid="stPills"] {
@@ -400,6 +437,10 @@ st.markdown("""
         box-sizing: border-box !important;
         animation: cardCascadeIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) backwards;
         will-change: transform, box-shadow;
+        max-width: 210px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
     }
     
     @keyframes cardCascadeIn {
@@ -417,6 +458,7 @@ st.markdown("""
     .card-poster-img {
         width: 100% !important;
         aspect-ratio: 2 / 3 !important;
+        max-height: 315px !important;
         height: auto !important;
         object-fit: cover !important;
         display: block !important;
@@ -648,6 +690,17 @@ st.markdown("""
         margin: 18px 0 !important;
         padding: 12px 0 !important;
     }
+    /* Completely silence skeleton shimmer - zero flashes, zero text popups */
+    [data-testid="stSkeleton"], .stSkeleton {
+        background: transparent !important;
+        animation: none !important;
+        display: none !important;
+        visibility: hidden !important;
+        height: 0px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
 
     /* Cinema Play Fill Loader (Screenshot 5 - #15 Play Fill Loader) */
     .play-loader-container {
@@ -1423,41 +1476,116 @@ if "last_pill" not in st.session_state:
 if "search_matches" not in st.session_state:
     st.session_state["search_matches"] = []
 
-# URL Query Param Navigation Handling (Streamlined, Non-Blocking)
-if "home" in st.query_params:
+# Quick map lookup for catalog & popular items by movie_id
+CATALOG_BY_ID = {str(m["movie_id"]): m for m in FAMOUS_CATALOG}
+
+POPULAR_CHIPS_MAP = {
+    "dune": {"movie_id": 234160, "title": "Dune (2021)", "tmdb_id": 438631, "poster_url": "https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg", "genres": "Action · Adventure · Sci-Fi"},
+    "the godfather": {"movie_id": 858, "title": "The Godfather (1972)", "tmdb_id": 238, "poster_url": "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg", "genres": "Crime · Drama"},
+    "the dark knight": {"movie_id": 58559, "title": "The Dark Knight (2008)", "tmdb_id": 155, "poster_url": "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg", "genres": "Action · Crime"},
+    "fight club": {"movie_id": 2959, "title": "Fight Club (1999)", "tmdb_id": 550, "poster_url": "https://image.tmdb.org/t/p/w500/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg", "genres": "Drama · Thriller"},
+    "kill bill": {"movie_id": 6874, "title": "Kill Bill: Vol. 1 (2003)", "tmdb_id": 24, "poster_url": "https://image.tmdb.org/t/p/w500/v7TaX8kXMXs5yFFGR41guUDNcnB.jpg", "genres": "Action · Crime"},
+    "gladiator": {"movie_id": 3578, "title": "Gladiator (2000)", "tmdb_id": 98, "poster_url": "https://image.tmdb.org/t/p/w500/ty8TGRuvJLPUmAR1H1nRIsgwvim.jpg", "genres": "Action · Adventure · Drama"},
+    "inception": {"movie_id": 79132, "title": "Inception (2010)", "tmdb_id": 27205, "poster_url": "https://image.tmdb.org/t/p/w500/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg", "genres": "Action · Sci-Fi"},
+    "interstellar": {"movie_id": 109487, "title": "Interstellar (2014)", "tmdb_id": 157336, "poster_url": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", "genres": "Adventure · Drama · Sci-Fi"},
+    "shutter island": {"movie_id": 74458, "title": "Shutter Island (2010)", "tmdb_id": 11324, "poster_url": "https://image.tmdb.org/t/p/w500/4GDy0PHYX3VRXUtwK5ysagvk2Te.jpg", "genres": "Mystery · Thriller"},
+    "300": {"movie_id": 51662, "title": "300 (2006)", "tmdb_id": 1271, "poster_url": "https://image.tmdb.org/t/p/w500/bYRq9vP64kX4m47k42lVqI0E6s.jpg", "genres": "Action · Fantasy"},
+    "rocky": {"movie_id": 1954, "title": "Rocky (1976)", "tmdb_id": 1366, "poster_url": "https://image.tmdb.org/t/p/w500/cqxgwUcfL1C2XkH4JqEecmR1x9.jpg", "genres": "Drama · Sport"},
+    "(500) days of summer": {"movie_id": 69757, "title": "(500) Days of Summer (2009)", "tmdb_id": 19913, "poster_url": "https://image.tmdb.org/t/p/w500/f9mbM0Y6RmgzgUmLa49asJS4uhu.jpg", "genres": "Comedy · Drama · Romance"},
+    "oppenheimer": {"movie_id": 943929, "title": "Oppenheimer (2023)", "tmdb_id": 872585, "poster_url": "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg", "genres": "Biography · Drama · History"},
+    "requiem for a dream": {"movie_id": 3949, "title": "Requiem for a Dream (2000)", "tmdb_id": 641, "poster_url": "https://image.tmdb.org/t/p/w500/nOd6vjEmzCT0k4VYqsA2hwyi8BS.jpg", "genres": "Drama"}
+}
+POPULAR_CHIPS = [
+    "🏜️ Dune", "🍷 The Godfather", "🦇 The Dark Knight", "🕶️ Fight Club",
+    "🗡️ Kill Bill", "⚔️ Gladiator", "🌀 Inception", "🌌 Interstellar",
+    "🏝️ Shutter Island", "🛡️ 300", "🥊 Rocky", "☀️ (500) Days of Summer",
+    "⚛️ Oppenheimer", "💊 Requiem for a Dream"
+]
+# Map movie_id (string) to exact pill string representation
+MOVIE_ID_TO_PILL = {}
+for p in POPULAR_CHIPS:
+    clean_p = re.sub(r"^[^\w\s\(\)]+\s*", "", p).strip().lower()
+    if clean_p in POPULAR_CHIPS_MAP:
+        MOVIE_ID_TO_PILL[str(POPULAR_CHIPS_MAP[clean_p]["movie_id"])] = p
+
+# URL Query Param Navigation Handling (Primary Single Source of Truth for Browser History Stack)
+url_home = "home" in st.query_params
+url_director = st.query_params.get("director")
+url_movie = st.query_params.get("movie")
+url_search = st.query_params.get("search")
+
+prev_routed_movie = st.session_state.get("_routed_movie")
+prev_routed_director = st.session_state.get("_routed_director")
+
+if url_home:
     st.session_state["selected_movie"] = None
     st.session_state["selected_director"] = None
     st.session_state["search_input"] = ""
     st.session_state["last_search"] = ""
     st.session_state["last_pill"] = None
+    st.session_state["popular_picks_pills"] = None
     st.session_state["search_matches"] = []
+    st.session_state["_routed_movie"] = None
+    st.session_state["_routed_director"] = None
+    if "movie_search_widget" in st.session_state:
+        st.session_state["movie_search_widget"] = ""
     st.query_params.clear()
-
-if "director" in st.query_params:
-    d_name = st.query_params.get("director", "").strip()
+elif url_director:
+    d_name = url_director.strip()
     d_id_raw = st.query_params.get("director_id", "").strip()
     d_id = int(d_id_raw) if d_id_raw.isdigit() else None
     if d_name or d_id:
+        st.session_state["selected_movie"] = None
         st.session_state["selected_director"] = {"name": d_name, "id": d_id}
-    st.query_params.clear()
-
-if "movie" in st.query_params:
-    mid = st.query_params.get("movie")
+        st.session_state["popular_picks_pills"] = None
+        st.session_state["search_matches"] = []
+        st.session_state["search_input"] = ""
+        st.session_state["last_search"] = ""
+        st.session_state["_routed_director"] = d_name
+        st.session_state["_routed_movie"] = None
+        if "movie_search_widget" in st.session_state:
+            st.session_state["movie_search_widget"] = ""
+elif url_movie:
+    mid = url_movie.strip()
     if mid:
         st.session_state["selected_director"] = None
-        found_target = next((m for m in FAMOUS_CATALOG if str(m["movie_id"]) == str(mid)), None)
-        if found_target:
-            st.session_state["selected_movie"] = found_target
-        else:
-            st.session_state["selected_movie"] = {"movie_id": int(mid), "title": ""}
-    st.query_params.clear()
+        st.session_state["_routed_movie"] = mid
+        st.session_state["_routed_director"] = None
+        curr = st.session_state.get("selected_movie")
+        if not curr or str(curr.get("movie_id")) != str(mid):
+            # Check CATALOG, then POPULAR_CHIPS_MAP, then existing search_matches, or fallback placeholder
+            found_target = CATALOG_BY_ID.get(str(mid))
+            if not found_target:
+                for pm in POPULAR_CHIPS_MAP.values():
+                    if str(pm["movie_id"]) == str(mid):
+                        found_target = pm
+                        break
+            if not found_target:
+                for sm in st.session_state.get("search_matches", []):
+                    if str(sm.get("movie_id")) == str(mid):
+                        found_target = sm
+                        break
+            if found_target:
+                st.session_state["selected_movie"] = found_target
+            else:
+                st.session_state["selected_movie"] = {"movie_id": int(mid), "title": ""}
 
-if "search" in st.query_params:
-    sq = st.query_params.get("search")
-    if sq:
+        # If mid is not part of active search matches, clear disambiguation matches & search box
+        active_match_ids = [str(sm.get("movie_id")) for sm in st.session_state.get("search_matches", [])]
+        if not active_match_ids or str(mid) not in active_match_ids:
+            st.session_state["search_matches"] = []
+            st.session_state["search_input"] = ""
+            st.session_state["last_search"] = ""
+            if "movie_search_widget" in st.session_state:
+                st.session_state["movie_search_widget"] = ""
+elif url_search:
+    sq = url_search.strip()
+    if sq and sq != st.session_state.get("last_search"):
         st.session_state["selected_director"] = None
         st.session_state["search_input"] = sq
         st.session_state["last_search"] = sq
+        if "movie_search_widget" in st.session_state:
+            st.session_state["movie_search_widget"] = sq
         local_hit = next((m for m in FAMOUS_CATALOG if m["title"].lower() == sq.lower()), None)
         if local_hit:
             st.session_state["selected_movie"] = local_hit
@@ -1466,8 +1594,27 @@ if "search" in st.query_params:
             found = api_search_movies(sq)
             if found:
                 st.session_state["selected_movie"] = found[0]
-                st.session_state["search_matches"] = found[:3]
-    st.query_params.clear()
+                st.session_state["search_matches"] = found[:8]
+else:
+    # URL has no query parameters (Home page)
+    # Check if user navigated back from a movie/director:
+    if prev_routed_movie is not None or prev_routed_director is not None:
+        # Popped back in browser history to Home!
+        st.session_state["selected_movie"] = None
+        st.session_state["selected_director"] = None
+        st.session_state["search_matches"] = []
+        st.session_state["search_input"] = ""
+        st.session_state["last_search"] = ""
+        st.session_state["_routed_movie"] = None
+        st.session_state["_routed_director"] = None
+        if "movie_search_widget" in st.session_state:
+            st.session_state["movie_search_widget"] = ""
+    else:
+        # Actively on Home (user can type searches, etc.)
+        st.session_state["selected_movie"] = None
+        st.session_state["selected_director"] = None
+        st.session_state["_routed_movie"] = None
+        st.session_state["_routed_director"] = None
 
 # Sidebar settings (Engine Controls)
 with st.sidebar:
@@ -1490,81 +1637,47 @@ if mode == "Similar Movie Intelligence":
     with c_search:
         search_query = st.text_input(
             "Search Movie",
-            value=st.session_state["search_input"],
             placeholder="Search movie (e.g. Requiem for a Dream, Dune, The Godfather, Interstellar...)",
-            label_visibility="collapsed"
+            label_visibility="collapsed",
+            key="movie_search_widget"
         )
 
-        # Native Instant Popular Picks Pills (No Browser Unload / Zero Black Screen)
-        POPULAR_CHIPS_MAP = {
-            "dune": {"movie_id": 234160, "title": "Dune (2021)", "tmdb_id": 438631, "poster_url": "https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg", "genres": "Action · Adventure · Sci-Fi"},
-            "the godfather": {"movie_id": 858, "title": "The Godfather (1972)", "tmdb_id": 238, "poster_url": "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg", "genres": "Crime · Drama"},
-            "the dark knight": {"movie_id": 58559, "title": "The Dark Knight (2008)", "tmdb_id": 155, "poster_url": "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg", "genres": "Action · Crime"},
-            "fight club": {"movie_id": 2959, "title": "Fight Club (1999)", "tmdb_id": 550, "poster_url": "https://image.tmdb.org/t/p/w500/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg", "genres": "Drama · Thriller"},
-            "kill bill": {"movie_id": 6874, "title": "Kill Bill: Vol. 1 (2003)", "tmdb_id": 24, "poster_url": "https://image.tmdb.org/t/p/w500/v7TaX8kXMXs5yFFGR41guUDNcnB.jpg", "genres": "Action · Crime"},
-            "gladiator": {"movie_id": 3578, "title": "Gladiator (2000)", "tmdb_id": 98, "poster_url": "https://image.tmdb.org/t/p/w500/ty8TGRuvJLPUmAR1H1nRIsgwvim.jpg", "genres": "Action · Adventure · Drama"},
-            "inception": {"movie_id": 79132, "title": "Inception (2010)", "tmdb_id": 27205, "poster_url": "https://image.tmdb.org/t/p/w500/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg", "genres": "Action · Sci-Fi"},
-            "interstellar": {"movie_id": 109487, "title": "Interstellar (2014)", "tmdb_id": 157336, "poster_url": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", "genres": "Adventure · Drama · Sci-Fi"},
-            "shutter island": {"movie_id": 74458, "title": "Shutter Island (2010)", "tmdb_id": 11324, "poster_url": "https://image.tmdb.org/t/p/w500/4GDy0PHYX3VRXUtwK5ysagvk2Te.jpg", "genres": "Mystery · Thriller"},
-            "300": {"movie_id": 51662, "title": "300 (2006)", "tmdb_id": 1271, "poster_url": "https://image.tmdb.org/t/p/w500/bYRq9vP64kX4m47k42lVqI0E6s.jpg", "genres": "Action · Fantasy"},
-            "rocky": {"movie_id": 1954, "title": "Rocky (1976)", "tmdb_id": 1366, "poster_url": "https://image.tmdb.org/t/p/w500/cqxgwUcfL1C2XkH4JqEecmR1x9.jpg", "genres": "Drama · Sport"},
-            "(500) days of summer": {"movie_id": 69757, "title": "(500) Days of Summer (2009)", "tmdb_id": 19913, "poster_url": "https://image.tmdb.org/t/p/w500/f9mbM0Y6RmgzgUmLa49asJS4uhu.jpg", "genres": "Comedy · Drama · Romance"},
-            "oppenheimer": {"movie_id": 943929, "title": "Oppenheimer (2023)", "tmdb_id": 872585, "poster_url": "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg", "genres": "Biography · Drama · History"},
-            "requiem for a dream": {"movie_id": 3949, "title": "Requiem for a Dream (2000)", "tmdb_id": 641, "poster_url": "https://image.tmdb.org/t/p/w500/nOd6vjEmzCT0k4VYqsA2hwyi8BS.jpg", "genres": "Drama"}
-        }
-        POPULAR_CHIPS = [
-            "🏜️ Dune", "🍷 The Godfather", "🦇 The Dark Knight", "🕶️ Fight Club",
-            "🗡️ Kill Bill", "⚔️ Gladiator", "🌀 Inception", "🌌 Interstellar",
-            "🏝️ Shutter Island", "🛡️ 300", "🥊 Rocky", "☀️ (500) Days of Summer",
-            "⚛️ Oppenheimer", "💊 Requiem for a Dream"
-        ]
-        st.markdown("<div class='quick-chips-label' style='text-align:center; margin-bottom: 2px;'>POPULAR PICKS:</div>", unsafe_allow_html=True)
-        selected_pill = st.pills(
-            "Popular Picks",
-            options=POPULAR_CHIPS,
-            label_visibility="collapsed",
-            key="popular_picks_pills"
-        )
-        if selected_pill and selected_pill != st.session_state.get("last_pill"):
-            st.session_state["last_pill"] = selected_pill
-            st.session_state["selected_director"] = None
-            chip_clean = re.sub(r"^[^\w\s\(\)]+\s*", "", selected_pill).strip()
-            st.session_state["search_input"] = chip_clean
-            st.session_state["last_search"] = chip_clean
-            chip_key = chip_clean.lower()
-            if chip_key in POPULAR_CHIPS_MAP:
-                st.session_state["selected_movie"] = POPULAR_CHIPS_MAP[chip_key]
-                st.session_state["search_matches"] = [POPULAR_CHIPS_MAP[chip_key]]
-            else:
-                local_hit = next((m for m in FAMOUS_CATALOG if m["title"].lower() == chip_key), None)
-                if local_hit:
-                    st.session_state["selected_movie"] = local_hit
-                    st.session_state["search_matches"] = [local_hit]
-                else:
-                    try:
-                        found = api_search_movies(chip_clean)
-                        if found:
-                            st.session_state["selected_movie"] = found[0]
-                            st.session_state["search_matches"] = found[:8]
-                    except Exception:
-                        pass
-            st.rerun()
+        # Generate Popular Picks Chips as clean native links with browser history support
+        chips_html = []
+        for p in POPULAR_CHIPS:
+            clean_p = re.sub(r"^[^\w\s\(\)]+\s*", "", p).strip().lower()
+            chip_info = POPULAR_CHIPS_MAP.get(clean_p)
+            if chip_info:
+                m_id = chip_info["movie_id"]
+                is_active = (str(url_movie) == str(m_id))
+                active_class = " active" if is_active else ""
+                chips_html.append(f'<a href="?movie={m_id}" target="_self" class="netflix-chip{active_class}">{p}</a>')
+
+        st.markdown(f"""<div class="quick-chips-wrapper">
+<span class="quick-chips-label">POPULAR PICKS:</span>
+{''.join(chips_html)}
+</div>""", unsafe_allow_html=True)
 
     # Process search if typed
-    if search_query.strip() and search_query != st.session_state.get("last_search"):
-        st.session_state["last_search"] = search_query
+    if search_query.strip() and search_query.strip() != st.session_state.get("last_search", ""):
+        search_term = search_query.strip()
+        st.session_state["last_search"] = search_term
+        st.session_state["search_input"] = search_term
         st.session_state["selected_director"] = None
         search_loader = st.empty()
         try:
-            search_loader.markdown(render_play_loader("SEARCHING NEURAL CATALOG...", f"Querying global index & latent vectors for '{search_query.strip()}'"), unsafe_allow_html=True)
-            found = api_search_movies(search_query.strip())
+            search_loader.markdown(render_play_loader("SEARCHING NEURAL CATALOG...", f"Querying global index & latent vectors for '{search_term}'"), unsafe_allow_html=True)
+            found = api_search_movies(search_term)
             search_loader.empty()
             if found:
                 st.session_state["selected_movie"] = found[0]
                 st.session_state["search_matches"] = found[:8]
+                st.session_state["_routed_movie"] = str(found[0]["movie_id"])
+                st.query_params["movie"] = str(found[0]["movie_id"])
+                st.rerun()
             else:
                 st.session_state["search_matches"] = []
-                st.warning(f"No catalog match found for '{search_query}'.")
+                st.warning(f"No catalog match found for '{search_term}'.")
         except Exception as e:
             search_loader.empty()
             st.error(f"Backend search failed: {e}")
@@ -1584,11 +1697,10 @@ if mode == "Similar Movie Intelligence":
                     with chunk_cols[i]:
                         is_active = (cand.get("movie_id") == st.session_state["selected_movie"].get("movie_id"))
                         clean_cand_title = format_display_title(cand['title'])
-                        btn_label = f"✓ {clean_cand_title}" if is_active else clean_cand_title
-                        if st.button(btn_label, key=f"disambig_{cand['movie_id']}_{chunk_start+i}", use_container_width=True):
-                            st.session_state["selected_movie"] = cand
-                            st.session_state["selected_director"] = None
-                            st.rerun()
+                        active_cls = " active" if is_active else ""
+                        cand_label = f"✓ {clean_cand_title}" if is_active else clean_cand_title
+                        cand_html = f'<a href="?movie={cand["movie_id"]}" target="_self" class="disambig-chip{active_cls}" title="{clean_cand_title}">{cand_label}</a>'
+                        st.markdown(cand_html, unsafe_allow_html=True)
 
     # VIEW 0: Director's Chronological Filmography Showcase
     if st.session_state.get("selected_director"):
@@ -1605,12 +1717,16 @@ if mode == "Similar Movie Intelligence":
                     st.rerun()
         with nav_col2:
             if st.button("🏠 Return to All Movies", key="btn_dir_home", use_container_width=True):
+                st.query_params.clear()
                 st.session_state["selected_director"] = None
                 st.session_state["selected_movie"] = None
                 st.session_state["search_input"] = ""
                 st.session_state["last_search"] = ""
                 st.session_state["last_pill"] = None
                 st.session_state["search_matches"] = []
+                st.session_state["_routed_movie"] = None
+                st.session_state["_routed_director"] = None
+                st.session_state["movie_search_widget"] = ""
                 st.rerun()
 
         dir_loader = st.empty()
@@ -1760,12 +1876,16 @@ if mode == "Similar Movie Intelligence":
         col_back, _ = st.columns([2, 8])
         with col_back:
             if st.button("← Return to All Movies", key="btn_back"):
+                st.query_params.clear()
                 st.session_state["selected_movie"] = None
                 st.session_state["selected_director"] = None
                 st.session_state["search_input"] = ""
                 st.session_state["last_search"] = ""
                 st.session_state["last_pill"] = None
                 st.session_state["search_matches"] = []
+                st.session_state["_routed_movie"] = None
+                st.session_state["_routed_director"] = None
+                st.session_state["movie_search_widget"] = ""
                 st.rerun()
 
         # Fetch Similar Movies & Details from Backend (Cached for Instant Response)
