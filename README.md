@@ -1,11 +1,13 @@
 # 🍿 CineMatch AI — Distributed Movie Recommendation Engine
-
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io)
+ 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://cine-matchai.streamlit.app/)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
 [![Apache Spark](https://img.shields.io/badge/Apache%20Spark-3.5-orange.svg)](https://spark.apache.org/)
 [![Django REST Framework](https://img.shields.io/badge/Django-5.0-green.svg)](https://www.django-rest-framework.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+> 🚀 **Live Production App**: **[https://cine-matchai.streamlit.app/](https://cine-matchai.streamlit.app/)**  
+> ⚡ **Live Production Backend**: **[https://cinematchai-pvbq.onrender.com/](https://cinematchai-pvbq.onrender.com/)**  
 > An end-to-end distributed machine learning movie discovery platform trained on **32 Million MovieLens ratings**, served via **Django REST Framework**, enriched in real-time with **The Movie Database (TMDB)**, and presented in an authentic **Netflix-styled glassmorphism UI**.
 
 ---
@@ -128,7 +130,7 @@ Open **[http://localhost:8501](http://localhost:8501)** in your browser.
 - **Main file path**: `frontend/app.py`
 - **Secrets / Config**:
   ```toml
-  API_BASE_URL = "https://your-backend-service.onrender.com/api/v1"
+  API_BASE_URL = "https://cinematchai-pvbq.onrender.com/api/v1"
   TMDB_API_KEY = "your_tmdb_api_key"
   ```
 

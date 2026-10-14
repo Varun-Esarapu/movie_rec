@@ -46,22 +46,27 @@ def _ensure_local_backend():
             pass
 
 def resolve_api_base_url():
-    configured_url = (
+    explicit_url = (
         get_secret_or_env("API_BASE_URL")
         or get_secret_or_env("BACKEND_API_URL")
         or get_secret_or_env("DJANGO_API_URL")
-        or "http://127.0.0.1:8000/api/v1"
     )
-    if "127.0.0.1:8000" in configured_url or "localhost:8000" in configured_url:
-        _ensure_local_backend()
+    if explicit_url:
+        return explicit_url.rstrip("/")
+
+    # If running locally and local Django backend is listening on 8000, prefer local
     try:
-        parsed = urllib.parse.urlparse(configured_url)
-        host = parsed.hostname
-        if host and host not in ("localhost", "127.0.0.1"):
-            socket.gethostbyname(host)
-        return configured_url.rstrip("/")
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(0.3)
+        res = sock.connect_ex(('127.0.0.1', 8000))
+        sock.close()
+        if res == 0:
+            return "http://127.0.0.1:8000/api/v1"
     except Exception:
-        return "http://127.0.0.1:8000/api/v1"
+        pass
+
+    # Production Render Backend URL
+    return "https://cinematchai-pvbq.onrender.com/api/v1"
 
 API_BASE_URL = resolve_api_base_url()
 
