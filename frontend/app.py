@@ -48,7 +48,7 @@ def _ensure_local_backend():
 def resolve_api_base_url():
     configured_url = (
         get_secret_or_env("API_BASE_URL")
-        or get_secret_or_env("BACKEND_API_URL")
+        or get_secret_or_env("BACKEND_API_URL")`n        or get_secret_or_env("DJANGO_API_URL")
         or "http://127.0.0.1:8000/api/v1"
     )
     if "127.0.0.1:8000" in configured_url or "localhost:8000" in configured_url:
