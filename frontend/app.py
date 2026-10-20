@@ -84,19 +84,15 @@ st.markdown("""
     
     :root {
         --background: #08090b;
-        --surface: #131418;
+        --surface: #121318;
         --surface-raised: #1c1e24;
-        --foreground: #f2f1ec;
-        --muted: #9a9ba3;
-        --ember: #f2f2f2;
-        --ember-dim: #c7c7cc;
-        --gold: #f0b429;
-        --danger: #ef4444;
-        --danger-dim: #dc2626;
-        --border: rgba(242, 241, 236, 0.08);
-        --border-subtle: rgba(242, 241, 236, 0.08);
-        --border-default: rgba(242, 241, 236, 0.12);
-        --border-strong: rgba(242, 241, 236, 0.25);
+        --foreground: #ffffff;
+        --muted: #9ca3af;
+        --border: rgba(255, 255, 255, 0.08);
+        --border-subtle: rgba(255, 255, 255, 0.08);
+        --border-default: rgba(255, 255, 255, 0.12);
+        --border-strong: rgba(255, 255, 255, 0.22);
+        --accent: #E50914;
         --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         --font-display: 'Plus Jakarta Sans', 'Inter', sans-serif;
     }
@@ -104,13 +100,13 @@ st.markdown("""
     html, body, [data-testid="stAppViewContainer"], section.main, .stApp {
         scroll-behavior: smooth !important;
         color-scheme: dark;
-        scrollbar-gutter: stable;
+        scrollbar-gutter: auto !important;
     }
     
     * {
         box-sizing: border-box;
         scrollbar-width: thin;
-        scrollbar-color: var(--ember-dim) transparent;
+        scrollbar-color: #4b5563 transparent;
     }
     
     html, body, .stApp, p, a, button, input, textarea, select, h1, h2, h3, h4, h5, h6,
@@ -195,29 +191,42 @@ st.markdown("""
         letter-spacing: -0.025em !important;
     }
     
-    /* Sleek Custom Scrollbar matching user snippet */
+    /* Sleek Custom Scrollbar Flush Against Window Edge (Screenshot 2 Alignment) */
     ::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
+        width: 6px !important;
+        height: 6px !important;
+    }
+    ::-webkit-scrollbar-button {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
     }
     ::-webkit-scrollbar-thumb {
-        background: #383a42;
-        border: 2px solid var(--background);
-        border-radius: 999px;
+        background: #4b5563 !important;
+        border-radius: 999px !important;
+        border: none !important;
     }
     ::-webkit-scrollbar-thumb:hover {
-        background: #50525c;
+        background: #E50914 !important;
     }
     ::-webkit-scrollbar-track {
-        background: transparent;
+        background: transparent !important;
+        margin: 0 !important;
     }
     
-    /* Eliminate Streamlit Default Header Bar & Black Gap (Screenshot 2 Fix) */
+    /* Eliminate Streamlit Default Header Bar & Black Gap */
     header[data-testid="stHeader"] {
         background: transparent !important;
         height: 0px !important;
         display: none !important;
         visibility: hidden !important;
+    }
+
+    [data-testid="stAppViewContainer"], section.main, .stApp {
+        width: 100% !important;
+        margin: 0 !important;
+        padding-right: 0 !important;
+        scrollbar-gutter: auto !important;
     }
 
     [data-testid="stAppViewContainer"] > .main {
@@ -237,23 +246,248 @@ st.markdown("""
     .stApp {
         background-color: var(--background) !important;
         background-image: 
-            radial-gradient(circle at 50% 120px, rgba(229, 9, 20, 0.09) 0%, rgba(19, 20, 24, 0.65) 40%, var(--background) 80%) !important;
+            radial-gradient(circle at 50% 120px, rgba(229, 9, 20, 0.08) 0%, rgba(18, 19, 24, 0.65) 40%, var(--background) 80%) !important;
         color: var(--foreground) !important;
         min-height: 100vh;
-        transition: background-color 0.4s ease, color 0.4s ease;
+        transition: background-color 0.35s ease, color 0.35s ease;
     }
 
-    html.theme-warm-slate, html.theme-warm-slate body, html.theme-warm-slate .stApp {
-        --background: #0f1015 !important;
-        --surface: #181a24 !important;
-        --surface-raised: #222634 !important;
-        --foreground: #ffffff !important;
-        --border-default: rgba(255, 255, 255, 0.16) !important;
+    /* =========================================================================
+       Ultra-Realistic, Crisp, Minimal Light Theme (Monochrome + Crimson Red)
+       ========================================================================= */
+    html.theme-light, html.theme-light body, html.theme-light .stApp {
+        --background: #f8f9fa !important;
+        --surface: #ffffff !important;
+        --surface-raised: #f1f3f7 !important;
+        --foreground: #111827 !important;
+        --muted: #64748b !important;
+        --border: #e5e7eb !important;
+        --border-subtle: #f1f3f7 !important;
+        --border-default: #e5e7eb !important;
+        --border-strong: #cbd5e1 !important;
+        --accent: #E50914 !important;
+        color-scheme: light !important;
     }
-    html.theme-warm-slate .stApp {
-        background-color: #0f1015 !important;
-        background-image: 
-            radial-gradient(circle at 50% 120px, rgba(245, 158, 11, 0.12) 0%, rgba(24, 26, 36, 0.75) 45%, #0f1015 80%) !important;
+    html.theme-light [data-testid="stAppViewContainer"],
+    html.theme-light .main,
+    html.theme-light .stApp {
+        background-color: #f8f9fa !important;
+        background-image: radial-gradient(circle at 50% 120px, rgba(229, 9, 20, 0.04) 0%, rgba(248, 249, 250, 0.95) 45%, #f8f9fa 80%) !important;
+        color: #111827 !important;
+    }
+    html.theme-light .ambient-glow-orb-1,
+    html.theme-light .ambient-glow-orb-2 {
+        display: none !important;
+    }
+    html.theme-light .netflix-nav-container {
+        border-bottom: 1px solid #e5e7eb !important;
+    }
+    html.theme-light .brand-title {
+        color: #111827 !important;
+    }
+    html.theme-light .floating-pill-nav {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
+    }
+    html.theme-light .pill-nav-item {
+        color: #64748b !important;
+        border-radius: 9999px !important;
+    }
+    html.theme-light .pill-nav-item:hover {
+        color: #111827 !important;
+        background: #f1f3f7 !important;
+        border-radius: 9999px !important;
+    }
+    html.theme-light .pill-nav-item.active {
+        background: #111827 !important;
+        color: #ffffff !important;
+        border: 1px solid #111827 !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+        border-radius: 9999px !important;
+    }
+    html.theme-light .switch-mode-track {
+        background: #e2e8f0 !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.08) !important;
+    }
+    html.theme-light .switch-thumb {
+        background: #ffffff !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
+    }
+    html.theme-light .switch-icon.sun {
+        color: #E50914 !important;
+    }
+    html.theme-light .switch-icon.moon {
+        color: #94a3b8 !important;
+    }
+    html.theme-light .nav-github-btn {
+        background: #ffffff !important;
+        color: #111827 !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+    html.theme-light .nav-github-btn:hover {
+        background: #f1f3f7 !important;
+        border-color: #cbd5e1 !important;
+    }
+    html.theme-light .hero-headline {
+        color: #111827 !important;
+    }
+    html.theme-light .hero-lead {
+        color: #374151 !important;
+    }
+    html.theme-light .hero-sublead {
+        color: #6b7280 !important;
+    }
+    html.theme-light div[data-testid="stTextInput"] > div > div {
+        background: #ffffff !important;
+        border: 1px solid #d1d5db !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04) !important;
+    }
+    html.theme-light div[data-testid="stTextInput"] > div > div:focus-within {
+        border-color: #E50914 !important;
+        box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.15) !important;
+    }
+    html.theme-light div[data-testid="stTextInput"] input {
+        color: #111827 !important;
+    }
+    html.theme-light div[data-testid="stTextInput"] input::placeholder {
+        color: #9ca3af !important;
+    }
+    html.theme-light .category-pill {
+        background: #ffffff !important;
+        border: 1px solid #e5e7eb !important;
+        color: #4b5563 !important;
+    }
+    html.theme-light .category-pill:hover {
+        background: #f8f9fa !important;
+        color: #111827 !important;
+        border-color: #cbd5e1 !important;
+    }
+    html.theme-light .category-pill.active {
+        background: #111827 !important;
+        color: #ffffff !important;
+        border-color: #111827 !important;
+    }
+    html.theme-light .hero-slider-pill {
+        background: rgba(255, 255, 255, 0.88) !important;
+        border: 1px solid #e5e7eb !important;
+        color: #4b5563 !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+    }
+    html.theme-light .hero-slider-pill:hover {
+        color: #111827 !important;
+        border-color: #E50914 !important;
+        background: #ffffff !important;
+        box-shadow: 0 4px 14px rgba(229, 9, 20, 0.14) !important;
+    }
+    html.theme-light .mood-card {
+        background: #ffffff !important;
+        border: 1px solid #e5e7eb !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+    }
+    html.theme-light .mood-card:hover {
+        border-color: #E50914 !important;
+        background: #ffffff !important;
+        box-shadow: 0 4px 16px rgba(229, 9, 20, 0.12) !important;
+    }
+    html.theme-light .mood-title {
+        color: #111827 !important;
+    }
+    html.theme-light .mood-sub {
+        color: #64748b !important;
+    }
+    html.theme-light .mood-icon-box {
+        background: #f1f3f7 !important;
+        border: 1px solid #e2e8f0 !important;
+        color: #111827 !important;
+    }
+    html.theme-light .section-main-heading {
+        color: #111827 !important;
+    }
+    html.theme-light .section-sub-heading {
+        color: #64748b !important;
+    }
+    html.theme-light .section-view-all {
+        color: #E50914 !important;
+    }
+    html.theme-light .movie-card {
+        background: #ffffff !important;
+        border: 1px solid #e5e7eb !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
+    }
+    html.theme-light .movie-card:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+        border-color: #E50914 !important;
+    }
+    html.theme-light .movie-card-title {
+        color: #111827 !important;
+    }
+    html.theme-light .movie-card-meta {
+        color: #64748b !important;
+    }
+    html.theme-light div[data-testid="stExpander"] {
+        background: #ffffff !important;
+        border: 1px solid #e5e7eb !important;
+    }
+    html.theme-light div[data-testid="stExpander"] summary {
+        background: #f8f9fa !important;
+        color: #111827 !important;
+    }
+    html.theme-light div[data-testid="stExpander"] summary p {
+        color: #111827 !important;
+    }
+    html.theme-light .tech-stack-card {
+        background: #ffffff !important;
+        border: 1px solid #e5e7eb !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+    }
+    html.theme-light .tech-card-header {
+        border-bottom: 1px solid #f1f3f7 !important;
+    }
+    html.theme-light .tech-card-icon-box {
+        background: #f8f9fa !important;
+        border-color: #e5e7eb !important;
+        color: #111827 !important;
+    }
+    html.theme-light .tech-card-title {
+        color: #111827 !important;
+    }
+    html.theme-light .tech-spec-label {
+        color: #64748b !important;
+    }
+    html.theme-light .tech-spec-val {
+        color: #374151 !important;
+    }
+    html.theme-light .tech-spec-val code {
+        background: #f1f3f7 !important;
+        color: #111827 !important;
+    }
+    html.theme-light .netflix-footer {
+        background: #ffffff !important;
+        border-top: 1px solid #e5e7eb !important;
+    }
+    html.theme-light .netflix-footer h3 {
+        color: #111827 !important;
+    }
+    html.theme-light .netflix-footer p {
+        color: #64748b !important;
+    }
+    html.theme-light .footer-github {
+        background: #f1f3f7 !important;
+        color: #111827 !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+    html.theme-light section[data-testid="stSidebar"] {
+        background: #ffffff !important;
+        border-right: 1px solid #e5e7eb !important;
+        color: #111827 !important;
+    }
+    html.theme-light section[data-testid="stSidebar"] * {
+        color: #111827 !important;
+    }
+    html.theme-light section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
+        color: #4b5563 !important;
     }
 
 
@@ -395,7 +629,7 @@ st.markdown("""
         font-size: 0.85rem;
         font-weight: 500;
         padding: 7px 18px;
-        border-radius: 9999px;
+        border-radius: 9999px !important;
         text-decoration: none !important;
         transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
         display: inline-flex;
@@ -408,10 +642,12 @@ st.markdown("""
     .pill-nav-item:hover {
         color: #ffffff !important;
         background: rgba(255, 255, 255, 0.06);
+        border-radius: 9999px !important;
     }
     .pill-nav-item:active {
         transform: scale(0.94);
         background: rgba(255, 255, 255, 0.12) !important;
+        border-radius: 9999px !important;
     }
     .pill-nav-item.active {
         background: #252833 !important;
@@ -419,6 +655,11 @@ st.markdown("""
         font-weight: 600;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.14);
         border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 9999px !important;
+    }
+    .floating-pill-nav a,
+    .floating-pill-nav .pill-nav-item {
+        border-radius: 9999px !important;
     }
     .pill-contact-item {
         background: transparent !important;
@@ -469,10 +710,10 @@ st.markdown("""
         pointer-events: none;
     }
     .switch-icon.sun {
-        color: #fbbf24;
+        color: #ffffff !important;
     }
     .switch-icon.moon {
-        color: #94a3b8;
+        color: #64748b;
     }
     .switch-thumb {
         position: absolute;
@@ -495,7 +736,7 @@ st.markdown("""
         color: #64748b;
     }
     .switch-mode-track.is-active .switch-icon.moon {
-        color: #c084fc;
+        color: #ffffff;
     }
 
     .nav-right-links {
@@ -883,7 +1124,7 @@ st.markdown("""
         font-size: 0.74rem;
     }
     .cinematch-card-score {
-        color: #f5c518;
+        color: #E50914;
         font-weight: 700;
         display: inline-flex;
         align-items: center;
@@ -944,36 +1185,40 @@ st.markdown("""
         }
     }
     .mood-card {
-        background: rgba(20, 22, 28, 0.7);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: var(--surface);
+        border: 1px solid var(--border-default);
         border-radius: 12px;
-        padding: 14px 16px;
+        padding: 12px 14px;
         display: flex;
         align-items: center;
         gap: 12px;
         text-decoration: none !important;
-        backdrop-filter: blur(8px);
-        transition: all 0.22s ease;
+        transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
         box-sizing: border-box;
     }
     .mood-card:hover {
-        border-color: rgba(229, 9, 20, 0.5);
-        background: rgba(28, 30, 38, 0.9);
+        border-color: #E50914 !important;
+        background: var(--surface-raised);
         transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(229, 9, 20, 0.15);
+        box-shadow: 0 4px 18px rgba(229, 9, 20, 0.18);
     }
     .mood-icon-box {
-        width: 38px;
-        height: 38px;
-        border-radius: 10px;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        transition: transform 0.22s ease, box-shadow 0.22s ease;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #d1d5db;
+        transition: all 0.22s ease;
     }
     .mood-card:hover .mood-icon-box {
-        transform: scale(1.08);
+        border-color: #E50914;
+        color: #E50914;
+        transform: scale(1.05);
     }
     .section-icon-badge {
         display: inline-flex;
@@ -1003,23 +1248,123 @@ st.markdown("""
         margin-top: 2px;
     }
 
-    /* Equal Proportion Tech Stack Cards */
+    /* Well-Groomed Executive Tech Stack Architecture Grid (Screenshot 3 Alignment) */
+    .tech-stack-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        width: 100%;
+        margin: 8px 0 6px 0;
+        box-sizing: border-box;
+    }
+    @media (max-width: 960px) {
+        .tech-stack-grid {
+            grid-template-columns: 1fr;
+        }
+    }
     .tech-stack-card {
-        background: rgba(255, 255, 255, 0.03);
+        background: #111218;
         border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        padding: 18px 20px;
-        min-height: 180px !important;
-        height: 100% !important;
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: flex-start !important;
-        box-sizing: border-box !important;
-        transition: border-color 0.25s ease, transform 0.25s ease;
+        border-radius: 14px;
+        padding: 22px 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-sizing: border-box;
+        transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    .tech-stack-card:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: transparent;
+        transition: background 0.25s ease;
     }
     .tech-stack-card:hover {
         border-color: rgba(229, 9, 20, 0.5);
-        transform: translateY(-2px);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65), 0 0 16px rgba(229, 9, 20, 0.15);
+    }
+    .tech-stack-card:hover:before {
+        background: #E50914;
+    }
+    .tech-card-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 18px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .tech-card-icon-box {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        flex-shrink: 0;
+        transition: all 0.25s ease;
+    }
+    .tech-stack-card:hover .tech-card-icon-box {
+        color: #E50914;
+        border-color: rgba(229, 9, 20, 0.45);
+        background: rgba(229, 9, 20, 0.1);
+    }
+    .tech-card-pill {
+        font-size: 0.68rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #E50914;
+        margin-bottom: 3px;
+    }
+    .tech-card-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0;
+        letter-spacing: -0.01em;
+    }
+    .tech-card-body {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        flex: 1;
+    }
+    .tech-spec-row {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    .tech-spec-label {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        color: #8c8c8c;
+        text-transform: uppercase;
+    }
+    .tech-spec-val {
+        font-size: 0.86rem;
+        color: #e2e8f0;
+        line-height: 1.45;
+        font-weight: 500;
+    }
+    .tech-spec-val code {
+        background: rgba(255, 255, 255, 0.08);
+        color: #ffffff;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.76rem;
+        font-family: monospace;
     }
 
     /* Disambiguation Bar Pill Links */
@@ -1104,7 +1449,7 @@ st.markdown("""
         font-size: 0.74rem;
     }
     .match-percent {
-        color: #46d369;
+        color: #ffffff;
         font-weight: 700;
     }
     .card-year-tag {
@@ -1196,13 +1541,17 @@ st.markdown("""
         flex-direction: column;
         justify-content: center;
         overflow: hidden;
-        animation: heroSlideCycle 24s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        animation: heroSlideCycle 48s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     }
 
     .hero-slide:nth-child(1) { animation-delay: 0s; }
-    .hero-slide:nth-child(2) { animation-delay: -18s; }
-    .hero-slide:nth-child(3) { animation-delay: -12s; }
-    .hero-slide:nth-child(4) { animation-delay: -6s; }
+    .hero-slide:nth-child(2) { animation-delay: -42s; }
+    .hero-slide:nth-child(3) { animation-delay: -36s; }
+    .hero-slide:nth-child(4) { animation-delay: -30s; }
+    .hero-slide:nth-child(5) { animation-delay: -24s; }
+    .hero-slide:nth-child(6) { animation-delay: -18s; }
+    .hero-slide:nth-child(7) { animation-delay: -12s; }
+    .hero-slide:nth-child(8) { animation-delay: -6s; }
 
     @keyframes heroSlideCycle {
         0% {
@@ -1210,15 +1559,15 @@ st.markdown("""
             visibility: visible;
             pointer-events: none;
         }
-        3% {
+        2% {
             opacity: 1;
             pointer-events: auto;
         }
-        22% {
+        10.5% {
             opacity: 1;
             pointer-events: auto;
         }
-        25% {
+        12.5% {
             opacity: 0;
             pointer-events: none;
             visibility: hidden;
@@ -1228,6 +1577,22 @@ st.markdown("""
             visibility: hidden;
             pointer-events: none;
         }
+    }
+
+    .hero-slider-container:hover .hero-slide {
+        animation-play-state: paused !important;
+    }
+
+    .hero-slide-backdrop-link {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        z-index: 1;
+        cursor: pointer;
+        text-decoration: none !important;
     }
 
     .hero-slide-bg {
@@ -1241,6 +1606,12 @@ st.markdown("""
         background-repeat: no-repeat;
         z-index: 0;
         transform: scale(1.02);
+        transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s ease;
+    }
+
+    .hero-slide:hover .hero-slide-bg {
+        transform: scale(1.048);
+        filter: brightness(1.08) contrast(1.03);
     }
 
     .hero-slide:before {
@@ -1270,37 +1641,48 @@ st.markdown("""
 
     .hero-slider-nav {
         position: absolute;
-        bottom: 24px;
-        right: 32px;
+        bottom: 20px;
+        right: 28px;
+        left: 28px;
         z-index: 10;
         display: flex;
         gap: 8px;
         align-items: center;
-        flex-wrap: wrap;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding: 4px 0;
+        justify-content: flex-end;
+    }
+    .hero-slider-nav::-webkit-scrollbar {
+        display: none;
     }
 
     .hero-slider-pill {
-        background: rgba(19, 20, 24, 0.78);
-        border: 1px solid rgba(242, 241, 236, 0.12);
+        background: rgba(19, 20, 24, 0.85);
+        border: 1px solid rgba(242, 241, 236, 0.14);
         backdrop-filter: blur(12px);
         border-radius: 9999px;
         padding: 5px 13px;
-        color: var(--muted) !important;
-        font-family: var(--font-inter) !important;
+        color: #9a9ba3 !important;
+        font-family: var(--font-sans) !important;
         font-size: 0.76rem;
         font-weight: 600;
         text-decoration: none !important;
         transition: all 0.22s ease;
         display: inline-flex;
         align-items: center;
-        gap: 5px;
+        gap: 6px;
+        white-space: nowrap;
+        flex-shrink: 0;
     }
 
     .hero-slider-pill:hover {
         color: #ffffff !important;
-        border-color: rgba(229, 9, 20, 0.65);
-        background: rgba(30, 32, 40, 0.9);
+        border-color: #E50914;
+        background: rgba(30, 32, 40, 0.95);
         transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(229, 9, 20, 0.25);
     }
 
     .hero-content {
@@ -1311,6 +1693,44 @@ st.markdown("""
         gap: 34px;
         align-items: flex-start;
         flex-wrap: wrap;
+        pointer-events: none;
+    }
+
+    .hero-content a,
+    .hero-content button,
+    .hero-actions-row a,
+    .hero-title-link,
+    .hero-spotlight-badge {
+        pointer-events: auto !important;
+    }
+
+    .hero-spotlight-badge-row {
+        display: block !important;
+        width: 100% !important;
+        text-align: left !important;
+        margin: 0 0 10px 0 !important;
+        clear: both !important;
+    }
+
+    .hero-title-link,
+    .hero-title-link:link,
+    .hero-title-link:visited,
+    .hero-title-link:hover,
+    .hero-title-link:active {
+        color: #ffffff !important;
+        text-decoration: none !important;
+        display: block !important;
+        width: 100% !important;
+        text-align: left !important;
+        cursor: pointer;
+        margin: 0 0 8px 0 !important;
+        clear: both !important;
+    }
+
+    .hero-title-link:hover .hero-title-text {
+        color: #ffffff !important;
+        text-shadow: 0 0 24px rgba(229, 9, 20, 0.75), 0 2px 14px rgba(0, 0, 0, 0.9);
+        transition: text-shadow 0.25s ease;
     }
 
     .hero-poster-img {
@@ -1337,7 +1757,7 @@ st.markdown("""
         align-items: center;
         gap: 6px;
         font-size: 0.78rem;
-        color: #E50914;
+        color: #E50914 !important;
         background: rgba(229, 9, 20, 0.16);
         border: 1px solid rgba(229, 9, 20, 0.45);
         padding: 3px 12px;
@@ -1346,15 +1766,28 @@ st.markdown("""
         text-transform: uppercase;
         letter-spacing: 0.08em;
         margin-bottom: 8px;
+        cursor: pointer;
+        text-decoration: none !important;
+        transition: all 0.22s ease;
+    }
+
+    .hero-spotlight-badge:hover {
+        background: rgba(229, 9, 20, 0.28);
+        border-color: #E50914;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 10px rgba(229, 9, 20, 0.3);
     }
 
     .hero-title-text {
         font-family: 'Bebas Neue', 'Montserrat', sans-serif;
         font-size: 3.5rem;
         letter-spacing: 0.03em;
-        line-height: 1;
-        color: #ffffff;
+        line-height: 1.05;
+        color: #ffffff !important;
         margin: 0 0 8px 0;
+        text-align: left !important;
+        display: block !important;
+        width: 100% !important;
         text-shadow: 0 2px 14px rgba(0,0,0,0.9);
     }
     .hero-tagline-text {
@@ -1371,7 +1804,7 @@ st.markdown("""
         margin-bottom: 16px;
     }
     .badge-match-score {
-        color: #46d369;
+        color: #E50914;
         font-weight: 800;
         font-size: 0.95rem;
     }
@@ -1485,8 +1918,8 @@ st.markdown("""
         top: 10px;
         left: 10px;
         background: rgba(15, 15, 15, 0.88);
-        border: 1px solid rgba(212, 175, 55, 0.65);
-        color: #D4AF37;
+        border: 1px solid rgba(229, 9, 20, 0.65);
+        color: #E50914;
         font-weight: 800;
         font-size: 0.76rem;
         padding: 3px 9px;
@@ -1507,13 +1940,13 @@ st.markdown("""
         align-items: center;
         gap: 6px;
         cursor: pointer;
-        color: #D4AF37;
+        color: #ffffff;
         font-size: 0.82rem;
         font-weight: 700;
         padding: 4px 12px;
         border-radius: 9999px;
-        background: rgba(212, 175, 55, 0.12);
-        border: 1px solid rgba(212, 175, 55, 0.38);
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.22);
         transition: all 0.2s ease;
         user-select: none;
     }
@@ -1521,8 +1954,8 @@ st.markdown("""
         display: none;
     }
     details.director-bio-details > summary:hover {
-        background: rgba(212, 175, 55, 0.24);
-        border-color: #D4AF37;
+        background: rgba(229, 9, 20, 0.15);
+        border-color: #E50914;
         transform: translateY(-1px);
     }
     details.director-bio-details[open] > summary .bio-more-label {
@@ -1691,16 +2124,15 @@ st.markdown("""
         color: #ffffff !important;
     }
     .footer-linkedin {
-        background: rgba(10, 102, 194, 0.16);
-        border-color: rgba(10, 102, 194, 0.45);
-        color: #60a5fa !important;
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.15);
+        color: #f2f1ec !important;
     }
     .footer-linkedin:hover {
-        background: #0a66c2;
-        border-color: #38bdf8;
+        background: rgba(255, 255, 255, 0.14);
+        border-color: rgba(255, 255, 255, 0.32);
         color: #ffffff !important;
         transform: translateY(-2px);
-        box-shadow: 0 0 20px rgba(10, 102, 194, 0.45);
     }
     .footer-mail {
         background: rgba(255, 255, 255, 0.06);
@@ -1984,14 +2416,14 @@ def render_cinematch_card(movie_id, title, poster_url, score, year, is_featured=
 <div class="cinematch-card-overlay">
 <div class="cinematch-card-title" title="{clean_title}">{clean_title}</div>
 <div class="cinematch-card-meta">
-<div class="cinematch-card-score"><span style="color:#f5c518; margin-right:2px;">⭐</span> {score_val} <span class="imdb-text">IMDb</span></div>
+<div class="cinematch-card-score"><svg width="11" height="11" viewBox="0 0 24 24" fill="#E50914" stroke="#E50914" stroke-width="1.5" style="margin-right:2px; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> {score_val} <span class="imdb-text">IMDb</span></div>
 <div class="cinematch-card-year">{year_val}</div>
 </div>
 </div>
 </a>"""
 
 def render_cards_grid(cards_html_list, show_arrow=False, arrow_href="#more-iconic-section"):
-    arrow_html = f'<a href="{arrow_href}" target="_self" class="carousel-arrow-btn" title="View More Iconic Films">❯</a>' if show_arrow else ''
+    arrow_html = f'<a href="{arrow_href}" target="_self" class="carousel-arrow-btn" title="View More Iconic Films"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a>' if show_arrow else ''
     wrapper_class = "cinematch-row-with-arrow" if show_arrow else "cinematch-grid-container"
     return f"""<div class="{wrapper_class}">
 <div class="cinematch-cards-grid">
@@ -2015,51 +2447,39 @@ CATEGORY_PILLS = [
 
 MOOD_CARDS = [
     {
-        "svg": """<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>""",
-        "badge_color": "rgba(245, 158, 11, 0.14)",
-        "badge_border": "rgba(245, 158, 11, 0.35)",
+        "svg": """<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>""",
         "title": "Feel Good",
-        "sub": "Uplifting & happy",
+        "sub": "Uplifting & Inspiring",
         "link": "?movie=356"
     },
     {
-        "svg": """<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="m4.93 4.93 2.83 2.83"/><path d="m16.24 16.24 2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="m4.93 19.07 2.83-2.83"/><path d="m16.24 7.76 2.83-2.83"/></svg>""",
-        "badge_color": "rgba(168, 85, 247, 0.14)",
-        "badge_border": "rgba(168, 85, 247, 0.35)",
+        "svg": """<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="m4.93 4.93 2.83 2.83"/><path d="m16.24 16.24 2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="m4.93 19.07 2.83-2.83"/><path d="m16.24 7.76 2.83-2.83"/></svg>""",
         "title": "Mind Bending",
-        "sub": "Thought provoking",
+        "sub": "Thought Provoking",
         "link": "?movie=79132"
     },
     {
-        "svg": """<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>""",
-        "badge_color": "rgba(239, 68, 68, 0.14)",
-        "badge_border": "rgba(239, 68, 68, 0.35)",
+        "svg": """<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>""",
         "title": "Dark & Intense",
-        "sub": "Gritty and serious",
+        "sub": "Gritty & Suspenseful",
         "link": "?movie=858"
     },
     {
-        "svg": """<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fb7185" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>""",
-        "badge_color": "rgba(244, 63, 94, 0.14)",
-        "badge_border": "rgba(244, 63, 94, 0.35)",
+        "svg": """<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>""",
         "title": "Romantic",
-        "sub": "Love and emotions",
+        "sub": "Emotional & Poignant",
         "link": "?movie=69757"
     },
     {
-        "svg": """<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>""",
-        "badge_color": "rgba(6, 182, 212, 0.14)",
-        "badge_border": "rgba(6, 182, 212, 0.35)",
+        "svg": """<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>""",
         "title": "Adventurous",
-        "sub": "Epic journeys",
+        "sub": "Epic & Majestic",
         "link": "?movie=109487"
     },
     {
-        "svg": """<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/></svg>""",
-        "badge_color": "rgba(16, 185, 129, 0.14)",
-        "badge_border": "rgba(16, 185, 129, 0.35)",
-        "title": "Funny",
-        "sub": "Laugh out loud",
+        "svg": """<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/></svg>""",
+        "title": "Witty & Satirical",
+        "sub": "Smart & Humorous",
         "link": "?movie=296"
     },
 ]
@@ -2067,7 +2487,7 @@ MOOD_CARDS = [
 def render_discover_by_mood_section():
     mood_cards_html = [
         f"""<a href="{mood['link']}" target="_self" class="mood-card">
-<div class="mood-icon-box" style="background: {mood['badge_color']}; border: 1px solid {mood['badge_border']};">
+<div class="mood-icon-box">
 {mood['svg']}
 </div>
 <div class="mood-info">
@@ -2241,37 +2661,37 @@ components.html("""
                 });
             });
 
-            // 2. Switch Mode Animated Spring Toggle (Screenshot 4)
+            // 2. Switch Mode Animated Spring Toggle (Realistic Minimal Light / Dark Theme)
             const switchToggle = doc.getElementById('theme-switch-toggle');
             if (switchToggle && switchToggle.dataset.bound !== 'true') {
                 switchToggle.dataset.bound = 'true';
                 
+                function setAppTheme(mode) {
+                    if (mode === 'light') {
+                        switchToggle.classList.remove('is-active');
+                        doc.documentElement.classList.add('theme-light');
+                        if (doc.body) doc.body.classList.add('theme-light');
+                    } else {
+                        switchToggle.classList.add('is-active');
+                        doc.documentElement.classList.remove('theme-light');
+                        if (doc.body) doc.body.classList.remove('theme-light');
+                    }
+                }
+                
                 // Retrieve saved theme preference
                 const savedMode = localStorage.getItem('cinematch_theme_mode') || 'dark';
-                if (savedMode === 'sun') {
-                    switchToggle.classList.remove('is-active');
-                    doc.documentElement.classList.add('theme-warm-slate');
-                    if (doc.body) doc.body.classList.add('theme-warm-slate');
-                } else {
-                    switchToggle.classList.add('is-active');
-                    doc.documentElement.classList.remove('theme-warm-slate');
-                    if (doc.body) doc.body.classList.remove('theme-warm-slate');
-                }
+                setAppTheme(savedMode);
                 
                 switchToggle.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    const isNowActive = !this.classList.contains('is-active');
-                    if (isNowActive) {
-                        this.classList.add('is-active');
-                        doc.documentElement.classList.remove('theme-warm-slate');
-                        if (doc.body) doc.body.classList.remove('theme-warm-slate');
-                        localStorage.setItem('cinematch_theme_mode', 'dark');
+                    const currentlyActive = this.classList.contains('is-active');
+                    if (currentlyActive) {
+                        setAppTheme('light');
+                        localStorage.setItem('cinematch_theme_mode', 'light');
                     } else {
-                        this.classList.remove('is-active');
-                        doc.documentElement.classList.add('theme-warm-slate');
-                        if (doc.body) doc.body.classList.add('theme-warm-slate');
-                        localStorage.setItem('cinematch_theme_mode', 'sun');
+                        setAppTheme('dark');
+                        localStorage.setItem('cinematch_theme_mode', 'dark');
                     }
                 });
             }
@@ -2291,7 +2711,18 @@ MOVIELENS_TO_TMDB_MAP = {
     356: 13, 79132: 27205, 5952: 121, 1213: 769, 2571: 603,
     234160: 438631, 6874: 24, 3578: 98, 109487: 157336,
     74458: 11324, 51662: 1271, 1954: 1366, 69757: 19913,
-    943929: 872585, 3949: 641
+    943929: 872585, 3949: 641,
+    # Revolutionary World Cinema Classics (Screenshot 4)
+    2019: 346,   # Seven Samurai (Akira Kurosawa, Japan)
+    289: 289,    # Casablanca (Michael Curtiz, USA)
+    924: 62,     # 2001: A Space Odyssey (Stanley Kubrick, UK/USA)
+    1172: 11216, # Cinema Paradiso (Giuseppe Tornatore, Italy)
+    5618: 129,   # Spirited Away (Hayao Miyazaki, Japan)
+    6016: 598,   # City of God (Fernando Meirelles, Brazil)
+    3429: 5801,  # Pather Panchali (Satyajit Ray, India)
+    3083: 5156,  # Bicycle Thieves (Vittorio De Sica, Italy)
+    28: 28,      # Apocalypse Now (Francis Ford Coppola, USA)
+    496243: 496243 # Parasite (Bong Joon-ho, South Korea)
 }
 
 TMDB_GENRE_NAMES = {
@@ -2669,6 +3100,310 @@ for glist in GENRE_SHOWCASE_MAP.values():
     for gm in glist:
         CATALOG_BY_ID[str(gm["movie_id"])] = gm
 
+# Landmark Classics that Revolutionized Hollywood and World Cinema Irrespective of Language (Screenshot 4)
+REVOLUTIONARY_CINEMA_CATALOG = [
+    {
+        "movie_id": 858,
+        "title": "The Godfather",
+        "year": "1972",
+        "tmdb_id": 238,
+        "director": "Francis Ford Coppola",
+        "country": "United States",
+        "tagline": "An offer you can't refuse.",
+        "badge": "AMERICAN CINEMA MONUMENT · SPOTLIGHT #1",
+        "score": 9.2,
+        "runtime": "175 min",
+        "genres": "Crime · Drama",
+        "backdrop": "https://image.tmdb.org/t/p/original/tmU7GeKVybMWFButWEGl2M4GeiP.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg",
+        "overview": "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant youngest son. Francis Ford Coppola's monumental masterpiece that revolutionized American cinematic storytelling.",
+        "short_name": "The Godfather"
+    },
+    {
+        "movie_id": 2959,
+        "title": "Fight Club",
+        "year": "1999",
+        "tmdb_id": 550,
+        "director": "David Fincher",
+        "country": "United States",
+        "tagline": "Mischief. Mayhem. Soap.",
+        "badge": "PSYCHOLOGICAL CULT REVOLUTION · SPOTLIGHT #2",
+        "score": 8.8,
+        "runtime": "139 min",
+        "genres": "Drama · Thriller",
+        "backdrop": "https://image.tmdb.org/t/p/original/c6OLXfKAk5BKeR6broC8pYiCquX.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg",
+        "overview": "An insomniac office worker and a devil-may-care soap maker form an underground fight club that evolves into something much more sinister. David Fincher's kinetic psychological tour de force that redefined modern cinematic grit.",
+        "short_name": "Fight Club"
+    },
+    {
+        "movie_id": 296,
+        "title": "Pulp Fiction",
+        "year": "1994",
+        "tmdb_id": 680,
+        "director": "Quentin Tarantino",
+        "country": "United States",
+        "tagline": "You won't know the facts until you've seen the fiction.",
+        "badge": "INDEPENDENT CINEMA REVOLUTION · SPOTLIGHT #3",
+        "score": 8.9,
+        "runtime": "154 min",
+        "genres": "Crime · Drama",
+        "backdrop": "https://image.tmdb.org/t/p/original/suaEOtk1N1sgg2MTM7oZd2cfVp3.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/vQWk5YBFWF4bZaofAbv0tShwBvQ.jpg",
+        "overview": "The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption. Quentin Tarantino's groundbreaking classic that defined 90s cinema and nonlinear storytelling.",
+        "short_name": "Pulp Fiction"
+    },
+    {
+        "movie_id": 1213,
+        "title": "Goodfellas",
+        "year": "1990",
+        "tmdb_id": 769,
+        "director": "Martin Scorsese",
+        "country": "United States",
+        "tagline": "Three decades of life in the mafia.",
+        "badge": "GANGSTER CINEMA MASTERPIECE · SPOTLIGHT #4",
+        "score": 8.7,
+        "runtime": "145 min",
+        "genres": "Biography · Crime · Drama",
+        "backdrop": "https://image.tmdb.org/t/p/original/sw7mordbZxgITU877yTpZCud90M.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/9OkCLM73MIU2CrKZbqiT8Ln1wY2.jpg",
+        "overview": "The story of Henry Hill and his life in the mob, covering his relationship with his wife Karen Hill and his mob partners Jimmy Conway and Tommy DeVito. Martin Scorsese's kinetic masterpiece of pace, voiceover, and editing rhythm.",
+        "short_name": "Goodfellas"
+    },
+    {
+        "movie_id": 109487,
+        "title": "Interstellar",
+        "year": "2014",
+        "tmdb_id": 157336,
+        "director": "Christopher Nolan",
+        "country": "United States",
+        "tagline": "Mankind was born on Earth. It was never meant to die here.",
+        "badge": "MODERN SCI-FI PINNACLE · SPOTLIGHT #5",
+        "score": 8.7,
+        "runtime": "169 min",
+        "genres": "Adventure · Drama · Sci-Fi",
+        "backdrop": "https://image.tmdb.org/t/p/original/xJHokMbljvjADYdit5fK5VQsXEG.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+        "overview": "When Earth becomes uninhabitable in the future, a farmer and ex-NASA pilot, Joseph Cooper, is tasked to pilot a spacecraft along with a team of researchers to find a new planet for humans. Christopher Nolan's emotional and visual sci-fi landmark.",
+        "short_name": "Interstellar"
+    },
+    {
+        "movie_id": 496243,
+        "title": "Parasite",
+        "year": "2019",
+        "tmdb_id": 496243,
+        "director": "Bong Joon-ho",
+        "country": "South Korea",
+        "tagline": "Act like you own the place.",
+        "badge": "PALME D'OR & BEST PICTURE HISTORIC SWEEP · SPOTLIGHT #6",
+        "score": 8.5,
+        "runtime": "132 min",
+        "genres": "Comedy · Drama · Thriller",
+        "backdrop": "https://image.tmdb.org/t/p/original/TU9NIjwzjoKPwQHoHshkFcQUCG.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
+        "overview": "Greed and class discrimination threaten the newly formed symbiotic relationship between the wealthy Park family and the destitute Kim clan. Bong Joon-ho's historic masterpiece that revolutionized international cinema.",
+        "short_name": "Parasite"
+    },
+    {
+        "movie_id": 58559,
+        "title": "The Dark Knight",
+        "year": "2008",
+        "tmdb_id": 155,
+        "director": "Christopher Nolan",
+        "country": "United States",
+        "tagline": "Why so serious?",
+        "badge": "MODERN CINEMA TITAN · SPOTLIGHT #7",
+        "score": 9.0,
+        "runtime": "152 min",
+        "genres": "Action · Crime · Drama",
+        "backdrop": "https://image.tmdb.org/t/p/original/9FE5eD92WfVCiivM9Pq9GVSrlWk.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+        "overview": "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+        "short_name": "The Dark Knight"
+    },
+    {
+        "movie_id": 318,
+        "title": "The Shawshank Redemption",
+        "year": "1994",
+        "tmdb_id": 278,
+        "director": "Frank Darabont",
+        "country": "United States",
+        "tagline": "Fear can hold you prisoner. Hope can set you free.",
+        "badge": "#1 HIGHEST RATED FILM · SPOTLIGHT #8",
+        "score": 9.3,
+        "runtime": "142 min",
+        "genres": "Drama · Crime",
+        "backdrop": "https://image.tmdb.org/t/p/original/kXfqcdQKsToO0OUXHcrrNCHDBzO.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg",
+        "overview": "Over the course of several decades, two imprisoned men find solace and eventual redemption through acts of common decency. An immortal testament to human resilience, friendship, and cinematic hope.",
+        "short_name": "Shawshank"
+    },
+    {
+        "movie_id": 2019,
+        "title": "Seven Samurai",
+        "year": "1954",
+        "tmdb_id": 346,
+        "director": "Akira Kurosawa",
+        "country": "Japan",
+        "tagline": "The Magnificent Seven were eight!",
+        "badge": "EASTERN CINEMA REVOLUTION",
+        "score": 8.6,
+        "runtime": "207 min",
+        "genres": "Action · Drama",
+        "backdrop": "https://image.tmdb.org/t/p/original/qvZ91FwMq6O47VViAr8vZNQz3WI.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/lOMGc8bnSwQhS4XyE1S99uH8NXf.jpg",
+        "overview": "A samurai answers a village's request for protection after they fall on hard times. Akira Kurosawa's towering triumph that revolutionized action editing, cinematography, and multi-camera choreography worldwide.",
+        "short_name": "Seven Samurai"
+    },
+    {
+        "movie_id": 289,
+        "title": "Casablanca",
+        "year": "1942",
+        "tmdb_id": 289,
+        "director": "Michael Curtiz",
+        "country": "United States",
+        "tagline": "Here's looking at you, kid.",
+        "badge": "GOLDEN AGE HOLLYWOOD PINNACLE",
+        "score": 8.5,
+        "runtime": "102 min",
+        "genres": "Drama · Romance · War",
+        "backdrop": "https://image.tmdb.org/t/p/original/tfNuePdHrP9fp6K2VTJwHKKJf8C.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/lGCEKlJo2CnWydQj7aamY7s1S7Q.jpg",
+        "overview": "In Casablanca during WWII, an American expatriate must choose between his love for a woman and helping her husband escape the Nazis to continue his fight against tyranny. The quintessential Hollywood masterpiece.",
+        "short_name": "Casablanca"
+    },
+    {
+        "movie_id": 924,
+        "title": "2001: A Space Odyssey",
+        "year": "1968",
+        "tmdb_id": 62,
+        "director": "Stanley Kubrick",
+        "country": "United Kingdom · USA",
+        "tagline": "The ultimate trip.",
+        "badge": "SCI-FI & CINEMATIC MILESTONE",
+        "score": 8.3,
+        "runtime": "149 min",
+        "genres": "Adventure · Sci-Fi",
+        "backdrop": "https://image.tmdb.org/t/p/original/w5IDXtifKntw0ajv2co7jFlTQDM.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/ve72VxNqjGM69Uky4WTo2bK6rfq.jpg",
+        "overview": "After uncovering a mysterious artifact buried beneath the Lunar surface, a spacecraft is sent to Jupiter to find its origins. Kubrick's technical and philosophical tour de force that forever transformed science fiction in cinema.",
+        "short_name": "2001: Odyssey"
+    },
+    {
+        "movie_id": 1172,
+        "title": "Cinema Paradiso",
+        "year": "1988",
+        "tmdb_id": 11216,
+        "director": "Giuseppe Tornatore",
+        "country": "Italy",
+        "tagline": "A celebration of the magic of the movies.",
+        "badge": "EUROPEAN CINEMATIC HYMN",
+        "score": 8.5,
+        "runtime": "155 min",
+        "genres": "Drama · Romance",
+        "backdrop": "https://image.tmdb.org/t/p/original/zoVeIgKzGJzpdG6Gwnr7iOYfIMU.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/9JhfVOveaY00o8njQu2Xrp4YWud.jpg",
+        "overview": "A prominent filmmaker recalls his childhood in a Sicilian village, falling in love with the silver screen and forming a life-shaping bond with the theater projectionist. An immortal hymn to world cinema.",
+        "short_name": "Cinema Paradiso"
+    },
+    {
+        "movie_id": 5618,
+        "title": "Spirited Away",
+        "year": "2001",
+        "tmdb_id": 129,
+        "director": "Hayao Miyazaki",
+        "country": "Japan",
+        "tagline": "The tunnel led Chihiro to a mysterious world...",
+        "badge": "GLOBAL ANIMATION PINNACLE",
+        "score": 8.6,
+        "runtime": "125 min",
+        "genres": "Animation · Adventure · Fantasy",
+        "backdrop": "https://image.tmdb.org/t/p/original/6oaL4DP75yABrd5EbC4H2zq5ghc.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg",
+        "overview": "During her family's move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits. Hayao Miyazaki's immortal triumph that won the Oscar and Golden Bear.",
+        "short_name": "Spirited Away"
+    },
+    {
+        "movie_id": 6016,
+        "title": "City of God",
+        "year": "2002",
+        "tmdb_id": 598,
+        "director": "Fernando Meirelles & Kátia Lund",
+        "country": "Brazil",
+        "tagline": "If you run away they get you, if you stay they get you.",
+        "badge": "LATIN AMERICAN VISCERAL REVOLUTION",
+        "score": 8.6,
+        "runtime": "130 min",
+        "genres": "Crime · Drama",
+        "backdrop": "https://image.tmdb.org/t/p/original/uvitbjFU4JqvMwIkMWHp69bmUzG.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/k7eYdWvhYQyRQoU2TB2A2Xu2TfD.jpg",
+        "overview": "In the slums of Rio de Janeiro, two kids' paths diverge as one struggles to become a photographer and the other a kingpin. A kinetic, ferocious milestone in world cinema.",
+        "short_name": "City of God"
+    },
+    {
+        "movie_id": 3429,
+        "title": "Pather Panchali",
+        "year": "1955",
+        "tmdb_id": 5801,
+        "director": "Satyajit Ray",
+        "country": "India",
+        "tagline": "Song of the Little Road.",
+        "badge": "INDIAN PARALLEL CINEMA REVOLUTION",
+        "score": 8.2,
+        "runtime": "125 min",
+        "genres": "Drama",
+        "backdrop": "https://image.tmdb.org/t/p/original/wadoNHCMPElgYuOqLxqDQqXpTMx.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/frZj5djlU9hFEjMcL21RJZVuG5O.jpg",
+        "overview": "Impoverished priest Harihar Ray dreams of a better life for himself and his family in rural Bengal. Satyajit Ray's poetic debut that won Best Human Document at Cannes and transformed world cinematic realism.",
+        "short_name": "Pather Panchali"
+    },
+    {
+        "movie_id": 3083,
+        "title": "Bicycle Thieves",
+        "year": "1948",
+        "tmdb_id": 5156,
+        "director": "Vittorio De Sica",
+        "country": "Italy",
+        "tagline": "The masterpiece that defined Italian Neorealism.",
+        "badge": "NEOREALISM FOUNDATION",
+        "score": 8.3,
+        "runtime": "89 min",
+        "genres": "Drama",
+        "backdrop": "https://image.tmdb.org/t/p/original/kTUUiKGKrdRhJsCcYT3Ivtfuuzh.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/iPdVqIpmR3bRvOQJPrn4pr2KR3q.jpg",
+        "overview": "In post-war Rome, a destitute father and his young son search for his stolen bicycle, without which he will lose his job. The touchstone of Italian Neorealism that influenced filmmakers worldwide.",
+        "short_name": "Bicycle Thieves"
+    },
+    {
+        "movie_id": 1203,
+        "title": "12 Angry Men",
+        "year": "1957",
+        "tmdb_id": 389,
+        "director": "Sidney Lumet",
+        "country": "United States",
+        "tagline": "Life is in their hands. Death is on their minds.",
+        "badge": "DRAMATIC STAGING MASTERCLASS",
+        "score": 9.0,
+        "runtime": "96 min",
+        "genres": "Crime · Drama",
+        "backdrop": "https://image.tmdb.org/t/p/original/qqHQsStV6exghCM7zbObuYBiYxw.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/zhG3vKWyDRaZYoaww1UVAi29T9h.jpg",
+        "overview": "The jury in a New York City murder trial is frustrated by a single member whose skeptical caution forces them to more carefully consider the evidence before jumping to a guilty verdict.",
+        "short_name": "12 Angry Men"
+    }
+]
+
+for rm in REVOLUTIONARY_CINEMA_CATALOG:
+    CATALOG_BY_ID[str(rm["movie_id"])] = {
+        "movie_id": rm["movie_id"],
+        "title": rm["title"],
+        "year": rm["year"],
+        "tmdb_id": rm["tmdb_id"],
+        "poster_url": rm["poster"],
+        "score": rm["score"],
+        "genres": rm["genres"]
+    }
+
 POPULAR_CHIPS_MAP = {
     "dune": {"movie_id": 234160, "title": "Dune (2021)", "tmdb_id": 438631, "poster_url": "https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg", "genres": "Action · Adventure · Sci-Fi"},
     "the godfather": {"movie_id": 858, "title": "The Godfather (1972)", "tmdb_id": 238, "poster_url": "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg", "genres": "Crime · Drama"},
@@ -2687,10 +3422,10 @@ POPULAR_CHIPS_MAP = {
 
 }
 POPULAR_CHIPS = [
-    "🏜️ Dune", "🍷 The Godfather", "🦇 The Dark Knight", "🕶️ Fight Club",
-    "🗡️ Kill Bill", "⚔️ Gladiator", "🌀 Inception", "🌌 Interstellar",
-    "🏝️ Shutter Island", "🛡️ 300", "🥊 Rocky", "☀️ (500) Days of Summer",
-    "⚛️ Oppenheimer", "💊 Requiem for a Dream"
+    "Dune", "The Godfather", "The Dark Knight", "Fight Club",
+    "Kill Bill", "Gladiator", "Inception", "Interstellar",
+    "Shutter Island", "300", "Rocky", "(500) Days of Summer",
+    "Oppenheimer", "Requiem for a Dream"
 ]
 # Map movie_id (string) to exact pill string representation
 MOVIE_ID_TO_PILL = {}
@@ -2800,7 +3535,7 @@ else:
 
 # Sidebar settings (Engine Controls)
 with st.sidebar:
-    st.markdown("<h3 style='color:#E50914;'>⚙️ Engine Controls</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color:#E50914;'>Engine Controls</h3>", unsafe_allow_html=True)
     st.caption("Customize how recommendations are generated and explore the PySpark ALS model.")
     mode = st.radio(
         "Discovery Engine Mode",
@@ -2809,114 +3544,48 @@ with st.sidebar:
     )
     num_recs = st.slider("Recommendations Count", min_value=4, max_value=12, value=8, step=2)
     st.divider()
-    st.markdown(f"**Serving Backend:**  \n`{API_BASE_URL}`  \n**Status:** <span style='color:#46d369; font-weight:700;'>● Online</span>", unsafe_allow_html=True)
+    st.markdown(f"**Serving Backend:**  \n`{API_BASE_URL}`  \n**Status:** <span style='color:#E50914; font-weight:700;'>Online</span>", unsafe_allow_html=True)
     st.caption("Engine: PySpark 3.5 MLlib ALS (32M Ratings, rank=16, partitions=40)")
 
 if mode == "Similar Movie Intelligence":
     if not st.session_state.get("selected_movie") and not st.session_state.get("selected_director"):
-        hero_slider_html = """<div class="hero-slider-container">
+        slides_html = []
+        for idx, item in enumerate(REVOLUTIONARY_CINEMA_CATALOG[:8]):
+            dir_query = urllib.parse.quote(item["director"])
+            slides_html.append(f"""<!-- Slide {idx+1}: {item["title"]} ({item["year"]}) -->
 <div class="hero-slide">
-<div class="hero-slide-bg" style="background-image: url('https://image.tmdb.org/t/p/original/nMKdUUepR0i5zn0y1T4CsSB5chy.jpg');"></div>
+<a href="?movie={item["movie_id"]}" target="_self" class="hero-slide-backdrop-link" title="Explore {item['title']} ({item['year']}) Intelligence &amp; Recommendations">
+<div class="hero-slide-bg" style="background-image: url('{item["backdrop"]}');"></div>
+</a>
 <div class="hero-content">
-<div class="hero-details-col" style="max-width: 860px;">
-<div class="hero-spotlight-badge">✦ ALL-TIME MASTERPIECE • SPOTLIGHT #1</div>
-<h1 class="hero-title-text" style="font-size: 3.4rem; margin-bottom: 6px;">THE DARK KNIGHT</h1>
-<div class="hero-tagline-text">"Why So Serious?"</div>
+<div class="hero-details-col" style="max-width: 860px; text-align: left;">
+<div class="hero-spotlight-badge-row">
+<a href="?movie={item["movie_id"]}" target="_self" class="hero-spotlight-badge" title="Explore {item['title']} ({item['year']}) Intelligence &amp; Recommendations">{item["badge"]}</a>
+</div>
+<a href="?movie={item["movie_id"]}" target="_self" class="hero-title-link" title="Explore {item['title']} ({item['year']}) Intelligence &amp; Recommendations">
+<h1 class="hero-title-text" style="font-size: 3.4rem; margin-bottom: 6px; text-align: left;">{item["title"].upper()}</h1>
+</a>
+<div class="hero-tagline-text">"{item["tagline"]}"</div>
 <div class="hero-badges-row">
-<span class="badge-match-score">⭐ 9.0 IMDb Top Rated</span>
+<span class="badge-match-score">{item["score"]} IMDb Landmark</span>
 <span class="badge-hd">ULTRA HD 4K</span>
-<span class="badge-runtime">2008 • 152 min</span>
-<span style="color: #c7c7cc; font-size: 0.88rem;">Action · Crime · Drama</span>
-<span style="color: #9a9ba3; font-size: 0.85rem;">Dir. Christopher Nolan</span>
+<span class="badge-runtime">{item["year"]} • {item["runtime"]}</span>
+<span style="color: #c7c7cc; font-size: 0.88rem;">{item["genres"]}</span>
+<span style="color: #9a9ba3; font-size: 0.85rem;">Dir. {item["director"]} ({item["country"]})</span>
 </div>
 <p class="hero-overview" style="font-size: 1.02rem; line-height: 1.6; max-width: 780px; color: #e2e8f0; margin-bottom: 22px;">
-When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.
+{item["overview"]}
 </p>
 <div class="hero-actions-row">
-<a href="?movie=58559" target="_self" class="hero-btn-primary">▶ View Intelligence &amp; Recommendations</a>
-<a href="?director=Christopher%20Nolan" target="_self" class="hero-btn-secondary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg> Christopher Nolan Filmography</a>
+<a href="?movie={item["movie_id"]}" target="_self" class="hero-btn-primary">View Intelligence &amp; Recommendations</a>
+<a href="?director={dir_query}" target="_self" class="hero-btn-secondary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg> {item["director"]} Filmography</a>
 </div>
 </div>
 </div>
-</div>
-<div class="hero-slide">
-<div class="hero-slide-bg" style="background-image: url('https://image.tmdb.org/t/p/original/kXfqcdQKsToO0OUXHcrrNCHDBzO.jpg');"></div>
-<div class="hero-content">
-<div class="hero-details-col" style="max-width: 860px;">
-<div class="hero-spotlight-badge">★ #1 HIGHEST RATED FILM • SPOTLIGHT #2</div>
-<h1 class="hero-title-text" style="font-size: 3.4rem; margin-bottom: 6px;">THE SHAWSHANK REDEMPTION</h1>
-<div class="hero-tagline-text">"Fear can hold you prisoner. Hope can set you free."</div>
-<div class="hero-badges-row">
-<span class="badge-match-score">⭐ 9.3 IMDb #1 of All Time</span>
-<span class="badge-hd">ULTRA HD 4K</span>
-<span class="badge-runtime">1994 • 142 min</span>
-<span style="color: #c7c7cc; font-size: 0.88rem;">Drama · Crime</span>
-<span style="color: #9a9ba3; font-size: 0.85rem;">Dir. Frank Darabont</span>
-</div>
-<p class="hero-overview" style="font-size: 1.02rem; line-height: 1.6; max-width: 780px; color: #e2e8f0; margin-bottom: 22px;">
-Over the course of several decades, two imprisoned men find solace and eventual redemption through acts of common decency. An immortal testament to human resilience and friendship.
-</p>
-<div class="hero-actions-row">
-<a href="?movie=318" target="_self" class="hero-btn-primary">▶ View Intelligence &amp; Recommendations</a>
-<a href="?director=Frank%20Darabont" target="_self" class="hero-btn-secondary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg> Frank Darabont Filmography</a>
-</div>
-</div>
-</div>
-</div>
-<div class="hero-slide">
-<div class="hero-slide-bg" style="background-image: url('https://image.tmdb.org/t/p/original/xJHokMbljvjADYdit5fK5VQsXEG.jpg');"></div>
-<div class="hero-content">
-<div class="hero-details-col" style="max-width: 860px;">
-<div class="hero-spotlight-badge">◈ SCI-FI SCIENTIFIC PINNACLE • SPOTLIGHT #3</div>
-<h1 class="hero-title-text" style="font-size: 3.4rem; margin-bottom: 6px;">INTERSTELLAR</h1>
-<div class="hero-tagline-text">"Mankind was born on Earth. It was never meant to die here."</div>
-<div class="hero-badges-row">
-<span class="badge-match-score">⭐ 8.7 IMDb Epic</span>
-<span class="badge-hd">ULTRA HD 4K</span>
-<span class="badge-runtime">2014 • 169 min</span>
-<span style="color: #c7c7cc; font-size: 0.88rem;">Sci-Fi · Adventure · Drama</span>
-<span style="color: #9a9ba3; font-size: 0.85rem;">Dir. Christopher Nolan</span>
-</div>
-<p class="hero-overview" style="font-size: 1.02rem; line-height: 1.6; max-width: 780px; color: #e2e8f0; margin-bottom: 22px;">
-When Earth becomes uninhabitable in the future, a farmer and ex-NASA pilot, Joseph Cooper, is tasked to pilot a spacecraft along with a team of researchers to find a new home across a wormhole.
-</p>
-<div class="hero-actions-row">
-<a href="?movie=109487" target="_self" class="hero-btn-primary">▶ View Intelligence &amp; Recommendations</a>
-<a href="?director=Christopher%20Nolan" target="_self" class="hero-btn-secondary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg> Christopher Nolan Filmography</a>
-</div>
-</div>
-</div>
-</div>
-<div class="hero-slide">
-<div class="hero-slide-bg" style="background-image: url('https://image.tmdb.org/t/p/original/8ZTVqvKDQ8emSGUEMjsS4yHAwrp.jpg');"></div>
-<div class="hero-content">
-<div class="hero-details-col" style="max-width: 860px;">
-<div class="hero-spotlight-badge">✦ MIND-BENDING MASTERWORK • SPOTLIGHT #4</div>
-<h1 class="hero-title-text" style="font-size: 3.4rem; margin-bottom: 6px;">INCEPTION</h1>
-<div class="hero-tagline-text">"Your mind is the scene of the crime."</div>
-<div class="hero-badges-row">
-<span class="badge-match-score">⭐ 8.8 IMDb Visionary</span>
-<span class="badge-hd">ULTRA HD 4K</span>
-<span class="badge-runtime">2010 • 148 min</span>
-<span style="color: #c7c7cc; font-size: 0.88rem;">Action · Sci-Fi · Thriller</span>
-<span style="color: #9a9ba3; font-size: 0.85rem;">Dir. Christopher Nolan</span>
-</div>
-<p class="hero-overview" style="font-size: 1.02rem; line-height: 1.6; max-width: 780px; color: #e2e8f0; margin-bottom: 22px;">
-A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., leading through recursive dream levels.
-</p>
-<div class="hero-actions-row">
-<a href="?movie=79132" target="_self" class="hero-btn-primary">▶ View Intelligence &amp; Recommendations</a>
-<a href="?director=Christopher%20Nolan" target="_self" class="hero-btn-secondary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg> Christopher Nolan Filmography</a>
-</div>
-</div>
-</div>
-</div>
-<div class="hero-slider-nav">
-<a href="?movie=58559" target="_self" class="hero-slider-pill"><span style="opacity:0.6; font-weight:800;">01</span> The Dark Knight</a>
-<a href="?movie=318" target="_self" class="hero-slider-pill"><span style="opacity:0.6; font-weight:800;">02</span> Shawshank</a>
-<a href="?movie=109487" target="_self" class="hero-slider-pill"><span style="opacity:0.6; font-weight:800;">03</span> Interstellar</a>
-<a href="?movie=79132" target="_self" class="hero-slider-pill"><span style="opacity:0.6; font-weight:800;">04</span> Inception</a>
-</div>
+</div>""")
+
+        hero_slider_html = f"""<div class="hero-slider-container">
+{"".join(slides_html)}
 </div>"""
         st.markdown(hero_slider_html, unsafe_allow_html=True)
 
@@ -2979,7 +3648,7 @@ A thief who steals corporate secrets through the use of dream-sharing technology
     if len(matches) > 1 and st.session_state.get("selected_movie") and not st.session_state.get("selected_director"):
         c_m_left, c_m_content, c_m_right = st.columns([1, 3.2, 1])
         with c_m_content:
-            st.markdown("<div style='font-size: 0.82rem; color: #a3a3a3; margin: 6px 0 4px 0;'>🔍 <b>Multiple matches found for your search:</b> (Click to explore)</div>", unsafe_allow_html=True)
+            st.markdown("<div style='font-size: 0.82rem; color: #a3a3a3; margin: 6px 0 4px 0;'><b>Multiple matches found for your search:</b> (Click to explore)</div>", unsafe_allow_html=True)
             for chunk_start in range(0, len(matches), 4):
                 chunk = matches[chunk_start:chunk_start + 4]
                 chunk_cols = st.columns(len(chunk))
@@ -2988,7 +3657,7 @@ A thief who steals corporate secrets through the use of dream-sharing technology
                         is_active = (cand.get("movie_id") == st.session_state["selected_movie"].get("movie_id"))
                         clean_cand_title = format_display_title(cand['title'])
                         active_cls = " active" if is_active else ""
-                        cand_label = f"✓ {clean_cand_title}" if is_active else clean_cand_title
+                        cand_label = clean_cand_title
                         cand_html = f'<a href="?movie={cand["movie_id"]}" target="_self" class="disambig-chip{active_cls}" title="{clean_cand_title}">{cand_label}</a>'
                         st.markdown(cand_html, unsafe_allow_html=True)
 
@@ -3004,7 +3673,7 @@ A thief who steals corporate secrets through the use of dream-sharing technology
             prev_title = format_display_title(prev_movie.get("title", "Selected Film"))
             prev_mid = prev_movie.get("movie_id", "")
             back_btns_html.append(f'<a href="?movie={prev_mid}" target="_self" class="cinematch-return-btn" title="Back to {prev_title}"><span class="arrow-icon">←</span> Back to {prev_title[:24]}</a>')
-        back_btns_html.append('<a href="?home=true" target="_self" class="cinematch-return-btn" title="Return to All Movies"><span class="arrow-icon">🏠</span> Return to All Movies</a>')
+        back_btns_html.append('<a href="?home=true" target="_self" class="cinematch-return-btn" title="Return to All Movies"><span class="arrow-icon">←</span> Return to All Movies</a>')
         st.markdown(f'<div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">{"".join(back_btns_html)}</div>', unsafe_allow_html=True)
 
 
@@ -3048,7 +3717,7 @@ A thief who steals corporate secrets through the use of dream-sharing technology
         if extra_paras:
             extra_bio_html = "<br><br>".join(extra_paras[:4])
             bio_toggle_html = f"""<details class="director-bio-details">
-<summary><span class="bio-more-label">📖 Show More Biography ▾</span><span class="bio-less-label">📖 Show Less ▴</span></summary>
+<summary><span class="bio-more-label">Show More Biography ▾</span><span class="bio-less-label">Show Less ▴</span></summary>
 <div class="director-bio-extra">{extra_bio_html}</div>
 </details>"""
         else:
@@ -3068,7 +3737,7 @@ A thief who steals corporate secrets through the use of dream-sharing technology
                     if g_cl:
                         genre_counts[g_cl] = genre_counts.get(g_cl, 0) + 1
             scored_films.sort(key=lambda x: x[0], reverse=True)
-            top_works_str = ", ".join([f"{t} ({y}) ⭐ {s:.1f}" for s, t, y in scored_films[:3]])
+            top_works_str = ", ".join([f"{t} ({y}) {s:.1f} IMDb" for s, t, y in scored_films[:3]])
             top_genres = sorted(genre_counts.items(), key=lambda x: x[1], reverse=True)[:3]
             sig_genres_str = " · ".join([g[0] for g in top_genres]) or "Drama · Cinema"
             debut_film = dir_movies[0]
@@ -3089,18 +3758,18 @@ A thief who steals corporate secrets through the use of dream-sharing technology
         origin_str = f"{' • '.join(origin_parts)} | Debut: {debut_str}" if origin_parts else f"Debut Feature: {debut_str}"
 
         dir_meta_grid = f"""<div class="hero-credits-box">
-<div><span style="color: #8c8c8c; font-size: 0.76rem; text-transform: uppercase; font-weight: 700;">🏆 Highest-Rated Works</span><div style="color: #ffffff; font-weight: 600; font-size: 0.88rem; margin-top: 3px; line-height: 1.4;">{top_works_str}</div></div>
-<div><span style="color: #8c8c8c; font-size: 0.76rem; text-transform: uppercase; font-weight: 700;">🎭 Signature Genres & Career</span><div style="color: #d2d2d2; font-size: 0.88rem; margin-top: 3px; line-height: 1.4;">{sig_genres_str}<br><span style="color:#a3a3a3; font-size:0.8rem;">{origin_str}</span></div></div>
+<div><span style="color: #8c8c8c; font-size: 0.76rem; text-transform: uppercase; font-weight: 700;">Highest-Rated Works</span><div style="color: #ffffff; font-weight: 600; font-size: 0.88rem; margin-top: 3px; line-height: 1.4;">{top_works_str}</div></div>
+<div><span style="color: #8c8c8c; font-size: 0.76rem; text-transform: uppercase; font-weight: 700;">Signature Genres &amp; Career</span><div style="color: #d2d2d2; font-size: 0.88rem; margin-top: 3px; line-height: 1.4;">{sig_genres_str}<br><span style="color:#a3a3a3; font-size:0.8rem;">{origin_str}</span></div></div>
 </div>"""
 
         dir_hero_html = f"""<div class="hero director-hero" style="background-image: url('https://image.tmdb.org/t/p/original/ujUwzNV8ZkOzZonvhhHsc9KOKDf.jpg');">
 <div class="hero-content">
-<img src="{dir_profile}" class="hero-poster-img" style="border: 2px solid rgba(212,175,55,0.6);" alt="{resolved_dir_name}" />
+<img src="{dir_profile}" class="hero-poster-img" style="border: 2px solid #E50914;" alt="{resolved_dir_name}" />
 <div class="hero-details-col">
-<div class="hero-spotlight-badge" style="color: #D4AF37; border-color: rgba(212,175,55,0.45); background: rgba(212,175,55,0.12);">🎬 DIRECTOR'S CHRONOLOGICAL FILMOGRAPHY</div>
+<div class="hero-spotlight-badge">DIRECTOR'S CHRONOLOGICAL FILMOGRAPHY</div>
 <h1 class="hero-title-text">{resolved_dir_name}</h1>
 <div class="hero-badges-row">
-<span class="badge-match-score">📅 {span_str} (Chronological Order)</span>
+<span class="badge-match-score">{span_str} • Chronological Order</span>
 <span class="badge-hd">{count_str}</span>
 <span class="badge-runtime">Sorted Earliest → Latest Release Year</span>
 </div>
@@ -3113,7 +3782,7 @@ A thief who steals corporate secrets through the use of dream-sharing technology
 
         st.markdown(dir_hero_html, unsafe_allow_html=True)
 
-        st.markdown(f"<div class='section-header-title'>🎞️ Directed by <span style='color:#E50914; font-style:italic;'>{resolved_dir_name}</span> <span style='font-size:0.9rem; color:#D4AF37; font-weight:700; margin-left:8px;'>({span_str})</span></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='section-header-title'>Directed by <span style='color:#E50914; font-style:italic;'>{resolved_dir_name}</span> <span style='font-size:0.9rem; color:#9ca3af; font-weight:700; margin-left:8px;'>({span_str})</span></div>", unsafe_allow_html=True)
         st.markdown("<div class='section-header-caption'>Presented in strict chronological order by release year — click any film to inspect its details and neural similarity cluster</div>", unsafe_allow_html=True)
 
         if dir_movies:
@@ -3125,9 +3794,9 @@ A thief who steals corporate secrets through the use of dream-sharing technology
                 verified_imdb = get_verified_imdb_score(clean_m_title) or get_verified_imdb_score(m.get("clean_title", ""))
                 raw_vote = float(m.get("vote_average") or 0.0)
                 if verified_imdb:
-                    score_str = f"⭐ {verified_imdb:.1f} IMDb"
+                    score_str = f"{verified_imdb:.1f} IMDb"
                 elif raw_vote > 0:
-                    score_str = f"⭐ {raw_vote:.1f} TMDB"
+                    score_str = f"{raw_vote:.1f} TMDB"
                 else:
                     score_str = "Feature"
                 rel_year = m.get("year") or (m.get("release_date") or "")[:4] or "—"
@@ -3235,25 +3904,25 @@ A thief who steals corporate secrets through the use of dream-sharing technology
             or get_verified_imdb_score(target.get("title", ""))
         )
         imdb_id = details.get("imdb_id")
-        imdb_link_html = f"<a href='https://www.imdb.com/title/{imdb_id}/' target='_blank' style='color:#f5c518; text-decoration:none; font-weight:700; margin-left:8px; font-size:0.75rem; background:rgba(245,197,24,0.12); padding:3px 8px; border-radius:4px; border:1px solid rgba(245,197,24,0.35);' title='View on IMDb'>IMDb ↗</a>" if imdb_id else ""
+        imdb_link_html = f"<a href='https://www.imdb.com/title/{imdb_id}/' target='_blank' style='color:#ffffff; text-decoration:none; font-weight:700; margin-left:8px; font-size:0.75rem; background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:4px; border:1px solid rgba(255,255,255,0.22);' title='View on IMDb'>IMDb ↗</a>" if imdb_id else ""
 
         if imdb_score:
-            rating_html = f"<span class='badge-match-score'>⭐ {imdb_score:.1f} / 10 IMDb</span>{imdb_link_html}"
+            rating_html = f"<span class='badge-match-score'>{imdb_score:.1f} / 10 IMDb</span>{imdb_link_html}"
         elif vote_avg and vote_count:
-            rating_html = f"<span class='badge-match-score'>⭐ {vote_avg:.1f} / 10 TMDB Rating ({vote_count:,} reviews)</span>{imdb_link_html}"
+            rating_html = f"<span class='badge-match-score'>{vote_avg:.1f} / 10 TMDB Rating ({vote_count:,} reviews)</span>{imdb_link_html}"
         elif vote_avg:
-            rating_html = f"<span class='badge-match-score'>⭐ {vote_avg:.1f} / 10 TMDB</span>{imdb_link_html}"
+            rating_html = f"<span class='badge-match-score'>{vote_avg:.1f} / 10 TMDB</span>{imdb_link_html}"
         else:
             rating_html = f"<span class='badge-match-score'>98% Match</span>{imdb_link_html}"
-        runtime_html = f"<span class='badge-runtime'>⏱️ {runtime}</span>" if runtime else ""
+        runtime_html = f"<span class='badge-runtime'>{runtime}</span>" if runtime else ""
         tagline_html = f"<div class='hero-tagline-text'>\"{tagline}\"</div>" if tagline else ""
         
         if director:
             dir_url_param = f"?director={urllib.parse.quote(director)}" + (f"&director_id={director_id}" if director_id else "")
-            director_html = f"<div><span style='color: #8c8c8c; font-size: 0.76rem; text-transform: uppercase; font-weight: 700; display:block;'>Director (Click for Filmography)</span><a href='{dir_url_param}' target='_self' class='director-link-badge' title='Explore all movies directed by {director} in chronological order'>🎬 {director} <span style='font-size:0.75rem; color:#D4AF37; font-weight:800;'>• Filmography ↗</span></a></div>"
+            director_html = f"<div><span style='color: #8c8c8c; font-size: 0.76rem; text-transform: uppercase; font-weight: 700; display:block;'>Director</span><a href='{dir_url_param}' target='_self' class='director-link-badge' title='Explore all movies directed by {director} in chronological order'>{director} <span style='font-size:0.75rem; color:#E50914; font-weight:800;'>• Filmography</span></a></div>"
         else:
             director_html = ""
-        cast_html = f"<div><span style='color: #8c8c8c; font-size: 0.78rem; text-transform: uppercase; font-weight: 700;'>Starring Cast</span><div style='color: #d2d2d2; font-size: 0.88rem; line-height: 1.4; margin-top: 4px;'>🌟 {cast}</div></div>" if cast else ""
+        cast_html = f"<div><span style='color: #8c8c8c; font-size: 0.78rem; text-transform: uppercase; font-weight: 700;'>Starring Cast</span><div style='color: #d2d2d2; font-size: 0.88rem; line-height: 1.4; margin-top: 4px;'>{cast}</div></div>" if cast else ""
         
         meta_grid = f"<div class='hero-credits-box'>{director_html}{cast_html}</div>" if (director or cast) else ""
 
@@ -3277,7 +3946,7 @@ A thief who steals corporate secrets through the use of dream-sharing technology
 <p class="hero-overview">{overview}</p>
 {meta_grid}
 <div class="hero-actions-row">
-<a href="#trending-section" class="hero-btn-primary">▶ View Similar Recommendations</a>
+<a href="#trending-section" class="hero-btn-primary">View Similar Recommendations</a>
 </div>
 </div>
 </div>
@@ -3285,7 +3954,7 @@ A thief who steals corporate secrets through the use of dream-sharing technology
 
         st.markdown(hero_html, unsafe_allow_html=True)
 
-        st.markdown(f"<div id='trending-section' class='section-header-title'>✨ More Like <span style='color:#E50914; font-style:italic;'>{title_str}</span></div>", unsafe_allow_html=True)
+        st.markdown(f"<div id='trending-section' class='section-header-title'>More Like <span style='color:#E50914; font-style:italic;'>{title_str}</span></div>", unsafe_allow_html=True)
         st.markdown("<div class='section-header-caption'>Deep thematic matches sorted from highest to lowest rating based on genre overlap, director signatures, and viewer behavior (Click any card to explore)</div>", unsafe_allow_html=True)
 
         if sim_data:
@@ -3296,7 +3965,7 @@ A thief who steals corporate secrets through the use of dream-sharing technology
                 clean_card_title = format_display_title(m.get("title", ""))
                 verified_card_imdb = get_verified_imdb_score(clean_card_title) or get_verified_imdb_score(m.get("title", ""))
                 numeric_score = float(verified_card_imdb) if verified_card_imdb else float(item.get("score") or 0.0)
-                score_badge = f"⭐ {verified_card_imdb:.1f} IMDb" if verified_card_imdb else f"⭐ {numeric_score:.1f} TMDB"
+                score_badge = f"{verified_card_imdb:.1f} IMDb" if verified_card_imdb else f"{numeric_score:.1f} TMDB"
                 enriched_sim.append((numeric_score, clean_card_title, score_badge, item))
 
             enriched_sim.sort(key=lambda x: x[0], reverse=True)
@@ -3326,7 +3995,7 @@ A thief who steals corporate secrets through the use of dream-sharing technology
         # Check if user clicked a specific category/genre pill (e.g. Thriller, Action, Sci-Fi)
         if url_genre and url_genre != "all":
             active_pill = next((p for p in CATEGORY_PILLS if p["genre"] == url_genre), None)
-            genre_icon = active_pill["icon"] if active_pill else "🎬"
+            genre_icon = active_pill["icon"] if active_pill else """<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg>"""
             display_genre_title = active_pill["label"] if active_pill else url_genre.capitalize()
             genre_movies = GENRE_SHOWCASE_MAP.get(url_genre)
             if not genre_movies:
@@ -3337,13 +4006,13 @@ A thief who steals corporate secrets through the use of dream-sharing technology
             # 1. PRIMARY SECTION: Curated Genre Showcase FIRST!
             st.markdown(f"""<div id="genre-section" class="section-flex-header" style="margin-top: 10px;">
 <div class="section-title-box">
-<div class="section-title-row">
-<span style="font-size: 1.45rem;">{genre_icon}</span>
+<div class="section-title-row" style="display: flex; align-items: center; gap: 10px;">
+<div class="section-icon-badge">{genre_icon}</div>
 <h2 class="section-main-heading">{display_genre_title} Cinema Masterpieces</h2>
 </div>
 <div class="section-sub-heading">Curated highest-rated {display_genre_title.lower()} films recognized worldwide</div>
 </div>
-<a href="?genre=all" target="_self" class="section-view-all">✕ Clear Filter (Show All)</a>
+<a href="?genre=all" target="_self" class="section-view-all">Clear Filter (Show All)</a>
 </div>""", unsafe_allow_html=True)
 
             genre_cards = [
@@ -3364,7 +4033,7 @@ A thief who steals corporate secrets through the use of dream-sharing technology
             st.markdown("""<div id="top-15-section" class="section-flex-header" style="margin-top: 36px;">
 <div class="section-title-box">
 <div class="section-title-row" style="display: flex; align-items: center; gap: 10px;">
-<div class="section-icon-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f5c518" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+<div class="section-icon-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E50914" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
 <h2 class="section-main-heading">Top 15 Highest Rated IMDb Movies</h2>
 </div>
 <div class="section-sub-heading">Cinema's greatest masterpieces arranged in strict descending order of verified IMDb ratings (9.3 → 8.7)</div>
@@ -3391,7 +4060,7 @@ A thief who steals corporate secrets through the use of dream-sharing technology
             st.markdown("""<div id="top-15-section" class="section-flex-header" style="margin-top: 10px;">
 <div class="section-title-box">
 <div class="section-title-row" style="display: flex; align-items: center; gap: 10px;">
-<div class="section-icon-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f5c518" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+<div class="section-icon-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E50914" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
 <h2 class="section-main-heading">Top 15 Highest Rated IMDb Movies</h2>
 </div>
 <div class="section-sub-heading">Cinema's greatest masterpieces arranged in strict descending order of verified IMDb ratings (9.3 → 8.7)</div>
@@ -3416,7 +4085,7 @@ A thief who steals corporate secrets through the use of dream-sharing technology
 
 else:
     # Mode 2: Collaborative Filtering Mode for Individual Users (Spark MLlib ALS)
-    st.markdown("<div class='section-header-title'>👤 User Collaborative Filtering (PySpark ALS)</div>", unsafe_allow_html=True)
+    st.markdown("<div class='section-header-title'>User Collaborative Filtering (PySpark ALS)</div>", unsafe_allow_html=True)
     st.markdown("<div class='section-header-caption'>Serving precomputed offline batch recommendations directly from the 32M interactions dataset</div>", unsafe_allow_html=True)
     
     col_u, _ = st.columns([1, 2])
@@ -3453,33 +4122,90 @@ else:
 
 # Tech Stack & Engineering Pipeline Section
 st.markdown("<div id='tech-stack-section'></div>", unsafe_allow_html=True)
-with st.expander("◈ System Architecture & Engineering Tech Stack (Production Pipeline)", expanded=False):
-    t_c1, t_c2, t_c3 = st.columns(3)
-    with t_c1:
-        st.markdown("""<div class="tech-stack-card">
-<h4 style="margin: 0 0 6px 0; color: #E50914; display: flex; align-items: center; gap: 7px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Big Data & Distributed ML</h4>
-<div style="font-size: 0.85rem; color: #b3b3b3; line-height: 1.5;">
-• <b>Apache Spark 3.5 & MLlib</b>: Distributed ALS Matrix Factorization.<br>
-• <b>Dataset</b>: 32,000,204 MovieLens ratings with explicit StructType schemas.<br>
-• <b>Tuned Hyperparameters</b>: <code>rank=16, partitions=40, coldStartStrategy="drop"</code>.
+with st.expander("System Architecture & Engineering Tech Stack (Production Pipeline)", expanded=False):
+    st.markdown("""<div class="tech-stack-grid">
+<div class="tech-stack-card">
+<div class="tech-card-header">
+<div class="tech-card-icon-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+<div>
+<div class="tech-card-pill">OFFLINE DISTRIBUTED COMPUTE</div>
+<h3 class="tech-card-title">Big Data &amp; Distributed ML</h3>
 </div>
-</div>""", unsafe_allow_html=True)
-    with t_c2:
-        st.markdown("""<div class="tech-stack-card">
-<h4 style="margin: 0 0 6px 0; color: #ffffff; display: flex; align-items: center; gap: 7px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg> Microservice Serving Layer</h4>
-<div style="font-size: 0.85rem; color: #b3b3b3; line-height: 1.5;">
-• <b>Django REST Framework</b>: Production serving boundary.<br>
-• <b>Sub-15ms Latency</b>: Serves precomputed vectors without running heavy Spark jobs.<br>
-• <b>PostgreSQL 15 / SQLite</b>: Indexed on <code>(user_id, rank)</code> for rapid retrieval.
 </div>
-</div>""", unsafe_allow_html=True)
-    with t_c3:
-        st.markdown("""<div class="tech-stack-card">
-<h4 style="margin: 0 0 6px 0; color: #46d369; display: flex; align-items: center; gap: 7px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg> Real-Time Enrichment Graph</h4>
-<div style="font-size: 0.85rem; color: #b3b3b3; line-height: 1.5;">
-• <b>TMDB Live Graph API</b>: Real-time posters, director credits & starring cast.<br>
-• <b>Hybrid Multi-Strategy Search</b>: Title normalization & post-dataset dynamic ingestion.<br>
-• <b>Netflix Cinematic UI</b>: Glassmorphism, 3D hover effects & responsive grid.
+<div class="tech-card-body">
+<div class="tech-spec-row">
+<span class="tech-spec-label">COMPUTE ENGINE</span>
+<span class="tech-spec-val">Apache Spark 3.5 &amp; MLlib ALS Matrix Factorization</span>
+</div>
+<div class="tech-spec-row">
+<span class="tech-spec-label">TRAINING DATASET</span>
+<span class="tech-spec-val">32,000,204 MovieLens user-movie interactions</span>
+</div>
+<div class="tech-spec-row">
+<span class="tech-spec-label">HYPERPARAMETERS</span>
+<span class="tech-spec-val"><code>rank=16, partitions=40, coldStartStrategy="drop"</code></span>
+</div>
+<div class="tech-spec-row">
+<span class="tech-spec-label">OFFLINE EXPORT</span>
+<span class="tech-spec-val">Precomputed latent dot-products stored for sub-15ms inference</span>
+</div>
+</div>
+</div>
+
+<div class="tech-stack-card">
+<div class="tech-card-header">
+<div class="tech-card-icon-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg></div>
+<div>
+<div class="tech-card-pill">HIGH-THROUGHPUT REST API</div>
+<h3 class="tech-card-title">Microservice Serving Layer</h3>
+</div>
+</div>
+<div class="tech-card-body">
+<div class="tech-spec-row">
+<span class="tech-spec-label">API FRAMEWORK</span>
+<span class="tech-spec-val">Django REST Framework (DRF 3.14) Production Boundary</span>
+</div>
+<div class="tech-spec-row">
+<span class="tech-spec-label">SERVING LATENCY</span>
+<span class="tech-spec-val">&lt; 15ms Latency (Zero Spark execution overhead at runtime)</span>
+</div>
+<div class="tech-spec-row">
+<span class="tech-spec-label">DATA STORE</span>
+<span class="tech-spec-val">PostgreSQL 15 / SQLite Indexed on <code>(user_id, rank)</code></span>
+</div>
+<div class="tech-spec-row">
+<span class="tech-spec-label">SERVER STACK</span>
+<span class="tech-spec-val">Gunicorn WSGI + WhiteNoise Static + Render Cloud</span>
+</div>
+</div>
+</div>
+
+<div class="tech-stack-card">
+<div class="tech-card-header">
+<div class="tech-card-icon-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></div>
+<div>
+<div class="tech-card-pill">REAL-TIME GRAPH &amp; UI</div>
+<h3 class="tech-card-title">Enrichment &amp; Discovery Graph</h3>
+</div>
+</div>
+<div class="tech-card-body">
+<div class="tech-spec-row">
+<span class="tech-spec-label">LIVE METADATA</span>
+<span class="tech-spec-val">TMDB Live Graph API (4K Backdrops, Posters &amp; Starring Cast)</span>
+</div>
+<div class="tech-spec-row">
+<span class="tech-spec-label">SEARCH PIPELINE</span>
+<span class="tech-spec-val">Multi-Strategy Normalization &amp; Typo-Tolerant Direct Ingestion</span>
+</div>
+<div class="tech-spec-row">
+<span class="tech-spec-label">STREAMLIT CLIENT</span>
+<span class="tech-spec-val">Glassmorphism UI, 3D Hover &amp; Responsive CSS Grid</span>
+</div>
+<div class="tech-spec-row">
+<span class="tech-spec-label">THEMING ENGINE</span>
+<span class="tech-spec-val">Deep Obsidian Noir vs. Porcelain Light with LocalStorage</span>
+</div>
+</div>
 </div>
 </div>""", unsafe_allow_html=True)
 
@@ -3501,7 +4227,7 @@ Portfolio Website
 GitHub Repository
 </a>
 <a href="https://www.linkedin.com/in/varun-esarapu/" target="_blank" class="footer-btn footer-linkedin">
-<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9h2.79v8.37H6.46v-8.37M7.86 6.78a1.62 1.62 0 1 0 0 3.24 1.62 1.62 0 0 0 0-3.24z"/></svg>
+<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
 LinkedIn Profile
 </a>
 <a href="mailto:varunesarapu@gmail.com" class="footer-btn footer-mail">
