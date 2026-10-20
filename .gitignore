@@ -36,3 +36,10 @@ Thumbs.db
 
 # Scratch files
 scratch/
+
+# Docker configuration
+docker-compose*.yml
+docker-compose*.yaml
+Dockerfile*
+*.dockerfile
+.dockerignore
